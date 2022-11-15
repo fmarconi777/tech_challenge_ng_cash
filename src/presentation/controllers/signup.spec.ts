@@ -24,4 +24,15 @@ describe('Singup Controller', () => {
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('username')))
   })
+
+  test('Should return 400 status if password is not provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        username: 'any_name'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
+  })
 })
