@@ -1,7 +1,7 @@
 import { SignUpController } from './singup'
 import { MissingParamError, InvalidParamError } from './errors'
 import { badRequest, serverError } from './helpers/http-helper'
-import { Validator } from '../protocols/validator'
+import { Validator } from '../protocols'
 
 const makeUserValidatorStub = (): Validator => {
   class UserValidatorStub implements Validator {

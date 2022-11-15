@@ -1,6 +1,4 @@
-import { Controller } from '../protocols/controller'
-import { HttpRequest, HttpResponse } from '../protocols/http'
-import { Validator } from '../protocols/validator'
+import { Controller, HttpRequest, HttpResponse, Validator } from '../protocols'
 import { InvalidParamError, MissingParamError } from './errors'
 import { badRequest, serverError } from './helpers/http-helper'
 
