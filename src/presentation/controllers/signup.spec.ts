@@ -13,17 +13,29 @@ const makeUserValidatorStub = (): Validator => {
   return new UserValidatorStub()
 }
 
+const makePasswordValidatorStub = (): Validator => {
+  class PasswordValidatorStub implements Validator {
+    isValid (param: string): boolean {
+      return true
+    }
+  }
+  return new PasswordValidatorStub()
+}
+
 type SubTypes = {
   sut: SignUpController
   userValidatorStub: Validator
+  passwordValidatorStub: Validator
 }
 
 const makeSut = (): SubTypes => {
+  const passwordValidatorStub = makePasswordValidatorStub()
   const userValidatorStub = makeUserValidatorStub()
-  const sut = new SignUpController(userValidatorStub)
+  const sut = new SignUpController(userValidatorStub, passwordValidatorStub)
   return {
     sut,
-    userValidatorStub
+    userValidatorStub,
+    passwordValidatorStub
   }
 }
 
@@ -87,5 +99,18 @@ describe('Singup Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('username')))
+  })
+
+  test('Should call PasswordValidator with correct param', async () => {
+    const { sut, passwordValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(passwordValidatorStub, 'isValid')
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      }
+    }
+    await sut.handle(httpRequest)
+    expect(isValidSpy).toHaveBeenCalledWith('any_password')
   })
 })
