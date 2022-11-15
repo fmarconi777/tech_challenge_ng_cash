@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --passWithNoTests --no-cache",
-    "test:staged": "jest --passWithNoTests --no-cache"
+    "test:staged": "jest --passWithNoTests --no-cache",
+    "prepare": "husky install"
   },
   "keywords": [],
   "author": "",
