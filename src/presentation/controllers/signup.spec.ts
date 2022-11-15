@@ -113,4 +113,17 @@ describe('Singup Controller', () => {
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_password')
   })
+
+  test('Should return 500 status if PasswordValidator returns an error', async () => {
+    const { sut, passwordValidatorStub } = makeSut()
+    jest.spyOn(passwordValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
 })
