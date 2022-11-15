@@ -16,10 +16,11 @@ export class SignUpController implements Controller {
           return badRequest(new MissingParamError(field))
         }
       }
-      if (!this.userValidator.isValid(httpRequest.body.username)) {
+      const { username, password } = httpRequest.body
+      if (!this.userValidator.isValid(username)) {
         return badRequest(new InvalidParamError('username'))
       }
-      if (!this.passwordValidator.isValid(httpRequest.body.password)) {
+      if (!this.passwordValidator.isValid(password)) {
         return badRequest(new InvalidParamError('password'))
       }
       return {
