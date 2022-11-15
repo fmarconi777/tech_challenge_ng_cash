@@ -2,6 +2,7 @@ import { SignUpController } from './singup'
 import { MissingParamError } from './errors/missing-param-error'
 import { badRequest, serverError } from './helpers/http-helper'
 import { Validator } from '../protocols/validator'
+import { InvalidParamError } from './errors/invalid-param-error'
 
 const makeUserValidatorStub = (): Validator => {
   class UserValidatorStub implements Validator {
@@ -73,5 +74,18 @@ describe('Singup Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 400 status if an invalid username is provided', async () => {
+    const { sut, userValidatorStub } = makeSut()
+    jest.spyOn(userValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const httpRequest = {
+      body: {
+        username: 'invalid_name',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('username')))
   })
 })
