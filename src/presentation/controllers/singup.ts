@@ -22,7 +22,9 @@ export class SignUpController implements Controller {
       if (!this.userValidator.isValid(httpRequest.body.username)) {
         return badRequest(new InvalidParamError('username'))
       }
-      this.passwordValidator.isValid(httpRequest.body.password)
+      if (!this.passwordValidator.isValid(httpRequest.body.password)) {
+        return badRequest(new InvalidParamError('password'))
+      }
       return {
         status: 200,
         body: ''
