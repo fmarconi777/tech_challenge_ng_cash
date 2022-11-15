@@ -8,6 +8,9 @@ export class SignUpController implements Controller {
     if (!httpRequest.body.username) {
       return badRequest(new MissingParamError('username'))
     }
+    if (!httpRequest.body.password) {
+      return badRequest(new MissingParamError('password'))
+    }
     return {
       status: 200,
       body: ''
