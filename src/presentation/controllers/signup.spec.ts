@@ -1,6 +1,6 @@
 import { SignUpController } from './singup'
 import { MissingParamError } from './errors/missing-param-error'
-import { badRequest } from './helpers/http-helper'
+import { badRequest, serverError } from './helpers/http-helper'
 import { Validator } from '../protocols/validator'
 
 const makeUserValidatorStub = (): Validator => {
@@ -60,5 +60,18 @@ describe('Singup Controller', () => {
     }
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_name')
+  })
+
+  test('Should return 500 status if UserValidator returns an error', async () => {
+    const { sut, userValidatorStub } = makeSut()
+    jest.spyOn(userValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
