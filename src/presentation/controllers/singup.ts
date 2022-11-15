@@ -6,7 +6,10 @@ import { MissingParamError } from './errors/missing-param-error'
 import { badRequest, serverError } from './helpers/http-helper'
 
 export class SignUpController implements Controller {
-  constructor (private readonly userValidator: Validator) {}
+  constructor (
+    private readonly userValidator: Validator,
+    private readonly passwordValidator: Validator
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
@@ -19,6 +22,7 @@ export class SignUpController implements Controller {
       if (!this.userValidator.isValid(httpRequest.body.username)) {
         return badRequest(new InvalidParamError('username'))
       }
+      this.passwordValidator.isValid(httpRequest.body.password)
       return {
         status: 200,
         body: ''
