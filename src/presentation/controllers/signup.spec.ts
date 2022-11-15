@@ -85,7 +85,7 @@ describe('Singup Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(serverError(new Error()))
+    expect(httpResponse).toEqual(serverError())
   })
 
   test('Should return 400 status if an invalid username is provided', async () => {
@@ -124,7 +124,7 @@ describe('Singup Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(serverError(new Error()))
+    expect(httpResponse).toEqual(serverError())
   })
 
   test('Should return 400 status if an invalid password is provided', async () => {
