@@ -1,6 +1,7 @@
 import { Controller } from '../protocols/controller'
 import { HttpRequest, HttpResponse } from '../protocols/http'
 import { Validator } from '../protocols/validator'
+import { InvalidParamError } from './errors/invalid-param-error'
 import { MissingParamError } from './errors/missing-param-error'
 import { badRequest, serverError } from './helpers/http-helper'
 
@@ -15,7 +16,9 @@ export class SignUpController implements Controller {
           return badRequest(new MissingParamError(field))
         }
       }
-      this.userValidator.isValid(httpRequest.body.username)
+      if (!this.userValidator.isValid(httpRequest.body.username)) {
+        return badRequest(new InvalidParamError('username'))
+      }
       return {
         status: 200,
         body: ''
