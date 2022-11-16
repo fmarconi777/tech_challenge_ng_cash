@@ -1,7 +1,8 @@
 import { SignUpController } from './singup'
 import { MissingParamError, InvalidParamError } from '../errors'
-import { badRequest, serverError } from '../helpers/http-helper'
+import { badRequest, forbidden, serverError } from '../helpers/http-helper'
 import { Validator, AddUserAccount, UserData } from './singup-protocols'
+import { UsernameInUseError } from '../errors/username-in-use-error'
 
 const makeUserValidatorStub = (): Validator => {
   class UserValidatorStub implements Validator {
@@ -175,5 +176,18 @@ describe('Singup Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Should return 403 status if AddUserAccount returns null', async () => {
+    const { sut, addUserAccountStub } = makeSut()
+    jest.spyOn(addUserAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null))
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(forbidden(new UsernameInUseError()))
   })
 })
