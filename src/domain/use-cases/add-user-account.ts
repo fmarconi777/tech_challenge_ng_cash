@@ -4,5 +4,5 @@ export type UserData = {
 }
 
 export interface AddUserAccount {
-  add: (userData: UserData) => Promise<string | null>
+  addUserAccount: (userData: UserData) => Promise<string | null>
 }

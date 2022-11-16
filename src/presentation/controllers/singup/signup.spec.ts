@@ -24,7 +24,7 @@ const makePasswordValidatorStub = (): Validator => {
 
 const makeAddUserAccountStub = (): AddUserAccount => {
   class AddUserAccountStub implements AddUserAccount {
-    async add (userData: UserData): Promise<string | null> {
+    async addUserAccount (userData: UserData): Promise<string | null> {
       return 'Account succesfully created'
     }
   }
@@ -154,7 +154,7 @@ describe('Singup Controller', () => {
 
   test('Should call AddUserAccount with correct values', async () => {
     const { sut, addUserAccountStub } = makeSut()
-    const addSpy = jest.spyOn(addUserAccountStub, 'add')
+    const addSpy = jest.spyOn(addUserAccountStub, 'addUserAccount')
     const httpRequest = {
       body: {
         username: 'any_name',
@@ -167,7 +167,7 @@ describe('Singup Controller', () => {
 
   test('Should return 500 status if AddUserAccount returns an error', async () => {
     const { sut, addUserAccountStub } = makeSut()
-    jest.spyOn(addUserAccountStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(addUserAccountStub, 'addUserAccount').mockReturnValueOnce(Promise.reject(new Error()))
     const httpRequest = {
       body: {
         username: 'any_name',
@@ -180,7 +180,7 @@ describe('Singup Controller', () => {
 
   test('Should return 403 status if AddUserAccount returns null', async () => {
     const { sut, addUserAccountStub } = makeSut()
-    jest.spyOn(addUserAccountStub, 'add').mockReturnValueOnce(Promise.resolve(null))
+    jest.spyOn(addUserAccountStub, 'addUserAccount').mockReturnValueOnce(Promise.resolve(null))
     const httpRequest = {
       body: {
         username: 'any_name',
