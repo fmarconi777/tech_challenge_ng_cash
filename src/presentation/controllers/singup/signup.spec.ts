@@ -163,4 +163,17 @@ describe('Singup Controller', () => {
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
   })
+
+  test('Should return 500 status if AddUserAccount returns an error', async () => {
+    const { sut, addUserAccountStub } = makeSut()
+    jest.spyOn(addUserAccountStub, 'add').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError())
+  })
 })
