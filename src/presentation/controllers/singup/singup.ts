@@ -1,6 +1,7 @@
 import { Controller, HttpRequest, HttpResponse, Validator, AddUserAccount } from './singup-protocols'
 import { InvalidParamError, MissingParamError } from '../errors'
-import { badRequest, serverError } from '../helpers/http-helper'
+import { badRequest, forbidden, serverError } from '../helpers/http-helper'
+import { UsernameInUseError } from '../errors/username-in-use-error'
 
 export class SignUpController implements Controller {
   constructor (
@@ -24,10 +25,13 @@ export class SignUpController implements Controller {
       if (!this.passwordValidator.isValid(password)) {
         return badRequest(new InvalidParamError('password'))
       }
-      await this.addUserAccount.add({
+      const userAccount = await this.addUserAccount.add({
         username,
         password
       })
+      if (!userAccount) {
+        return forbidden(new UsernameInUseError())
+      }
       return {
         status: 200,
         body: ''
