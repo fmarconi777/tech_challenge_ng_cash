@@ -20,4 +20,11 @@ describe('UserValidator Adapter', () => {
     const isValid = sut.isValid('valid_username')
     expect(isValid).toBeTruthy()
   })
+
+  test('Should call validator with correct username', () => {
+    const sut = new UserValidatorAdapter()
+    const isAlphanumericSpy = jest.spyOn(validator, 'isAlphanumeric')
+    sut.isValid('any_username')
+    expect(isAlphanumericSpy).toHaveBeenCalledWith('any_username')
+  })
 })
