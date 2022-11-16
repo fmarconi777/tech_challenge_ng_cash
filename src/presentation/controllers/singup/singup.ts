@@ -19,7 +19,7 @@ export class SignUpController implements Controller {
         }
       }
       const { username, password } = httpRequest.body
-      if (!this.userValidator.isValid(username)) {
+      if (!this.userValidator.isValid((username as string).trim())) {
         return badRequest(new InvalidParamError('username'))
       }
       if (!this.passwordValidator.isValid(password)) {
