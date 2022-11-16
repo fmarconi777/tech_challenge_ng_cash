@@ -1,4 +1,4 @@
-import { Hasher } from '../../protocols/crytography/hasher'
+import { Hasher } from './db-add-user-account-protocols'
 import { DbAddUserAccount } from './db-add-user-accout'
 
 const userData = {

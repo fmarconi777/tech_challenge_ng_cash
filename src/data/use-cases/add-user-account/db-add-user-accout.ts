@@ -1,5 +1,4 @@
-import { AddUserAccount, UserData } from '../../../domain/use-cases/add-user-account'
-import { Hasher } from '../../protocols/crytography/hasher'
+import { AddUserAccount, UserData, Hasher } from './db-add-user-account-protocols'
 
 export class DbAddUserAccount implements AddUserAccount {
   constructor (
