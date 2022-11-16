@@ -1,6 +1,6 @@
 import { SignUpController } from './singup'
 import { MissingParamError, InvalidParamError } from '../errors'
-import { badRequest, forbidden, serverError } from '../helpers/http-helper'
+import { badRequest, forbidden, okResponse, serverError } from '../helpers/http-helper'
 import { Validator, AddUserAccount, UserData } from './singup-protocols'
 import { UsernameInUseError } from '../errors/username-in-use-error'
 
@@ -189,5 +189,17 @@ describe('Singup Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(forbidden(new UsernameInUseError()))
+  })
+
+  test('Should return 200 status if valid data is provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(okResponse('Account succesfully created'))
   })
 })
