@@ -72,4 +72,10 @@ describe('DbAddUserAccount', () => {
     const userAccount = sut.addUserAccount(userData)
     await expect(userAccount).rejects.toThrow()
   })
+
+  test('Should return the a message on success', async () => {
+    const { sut } = makeSut()
+    const userAccount = await sut.addUserAccount(userData)
+    expect(userAccount).toBe('Account succesfully created')
+  })
 })
