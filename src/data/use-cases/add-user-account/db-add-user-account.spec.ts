@@ -1,4 +1,4 @@
-import { Hasher } from './db-add-user-account-protocols'
+import { Hasher, UserData, AddUserAccountRepository } from './db-add-user-account-protocols'
 import { DbAddUserAccount } from './db-add-user-accout'
 
 const userData = {
@@ -15,17 +15,29 @@ const makeHasherStub = (): Hasher => {
   return new HasherStub()
 }
 
+const makeAddUserAccountRepositoryStub = (): AddUserAccountRepository => {
+  class AddUserAccountRepositoryStub implements AddUserAccountRepository {
+    async addUserAccount (userData: UserData): Promise<string> {
+      return await Promise.resolve('Account succesfully created')
+    }
+  }
+  return new AddUserAccountRepositoryStub()
+}
+
 type SubTypes = {
   sut: DbAddUserAccount
   hasherStub: Hasher
+  addUserAccountRepositoryStub: AddUserAccountRepository
 }
 
 const makeSut = (): SubTypes => {
+  const addUserAccountRepositoryStub = makeAddUserAccountRepositoryStub()
   const hasherStub = makeHasherStub()
-  const sut = new DbAddUserAccount(hasherStub)
+  const sut = new DbAddUserAccount(hasherStub, addUserAccountRepositoryStub)
   return {
     sut,
-    hasherStub
+    hasherStub,
+    addUserAccountRepositoryStub
   }
 }
 
@@ -33,14 +45,24 @@ describe('DbAddUserAccount', () => {
   test('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
     const hashSpy = jest.spyOn(hasherStub, 'hash')
-    await sut.add(userData)
+    await sut.addUserAccount(userData)
     expect(hashSpy).toHaveBeenCalledWith(userData.password)
   })
 
   test('Should throw if Hasher throws', async () => {
     const { sut, hasherStub } = makeSut()
     jest.spyOn(hasherStub, 'hash').mockReturnValueOnce(Promise.reject(new Error()))
-    const userAccount = sut.add(userData)
+    const userAccount = sut.addUserAccount(userData)
     await expect(userAccount).rejects.toThrow()
+  })
+
+  test('Should call AddUserAccountRepository with correct values', async () => {
+    const { sut, addUserAccountRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(addUserAccountRepositoryStub, 'addUserAccount')
+    await sut.addUserAccount(userData)
+    expect(addSpy).toHaveBeenCalledWith({
+      username: 'valid_username',
+      password: 'hashed_password'
+    })
   })
 })
