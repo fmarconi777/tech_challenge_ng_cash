@@ -22,7 +22,7 @@ export class SignUpController implements Controller {
       if (!this.userValidator.isValid((username as string).trim())) {
         return badRequest(new InvalidParamError('username'))
       }
-      if (!this.passwordValidator.isValid(password)) {
+      if (!this.passwordValidator.isValid((password as string).trim())) {
         return badRequest(new InvalidParamError('password'))
       }
       const userAccount = await this.addUserAccount.add({
