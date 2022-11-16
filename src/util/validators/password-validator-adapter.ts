@@ -1,7 +1,8 @@
 import { Validator } from '../../presentation/protocols'
+import validator from 'validator'
 
 export class PasswordValidatorAdapter implements Validator {
   isValid (param: string): boolean {
-    return false
+    return validator.isStrongPassword(param, { minSymbols: 0 })
   }
 }
