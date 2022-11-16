@@ -1,3 +1,4 @@
+import { AddUserAccount } from '../../domain/use-cases/add-user-account'
 import { Controller, HttpRequest, HttpResponse, Validator } from '../protocols'
 import { InvalidParamError, MissingParamError } from './errors'
 import { badRequest, serverError } from './helpers/http-helper'
@@ -5,7 +6,8 @@ import { badRequest, serverError } from './helpers/http-helper'
 export class SignUpController implements Controller {
   constructor (
     private readonly userValidator: Validator,
-    private readonly passwordValidator: Validator
+    private readonly passwordValidator: Validator,
+    private readonly addUserAccount: AddUserAccount
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -23,6 +25,10 @@ export class SignUpController implements Controller {
       if (!this.passwordValidator.isValid(password)) {
         return badRequest(new InvalidParamError('password'))
       }
+      await this.addUserAccount.add({
+        username,
+        password
+      })
       return {
         status: 200,
         body: ''
