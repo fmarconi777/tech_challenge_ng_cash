@@ -18,6 +18,13 @@ describe('Bcrypt Adapter', () => {
     expect(hashSpy).toHaveBeenCalledWith('any_password', +(salt as string))
   })
 
+  test('Should throw if bcrypt throws', async () => {
+    const sut = new BcryptAdapter()
+    jest.spyOn(bcrypt, 'hash').mockImplementationOnce(async () => await Promise.reject(new Error())) // eslint-disable-line
+    const hashedPassword = sut.hash('any_password')
+    await expect(hashedPassword).rejects.toThrow()
+  })
+
   test('Should return a hash on success', async () => {
     const sut = new BcryptAdapter()
     const hashedPassword = await sut.hash('any_password')
