@@ -8,9 +8,12 @@ export class DbAddUserAccount implements AddUserAccount {
   ) {}
 
   async addUserAccount (userData: UserData): Promise<string | null> {
-    await this.checkUserByUsernameRepository.checkByUsername(userData.username)
-    const hashedPassword = await this.hasher.hash(userData.password)
-    const userAccount = await this.addUserAccountRepository.addUserAccount(Object.assign({}, userData, { password: hashedPassword }))
-    return userAccount
+    const user = await this.checkUserByUsernameRepository.checkByUsername(userData.username)
+    if (!user) {
+      const hashedPassword = await this.hasher.hash(userData.password)
+      const userAccount = await this.addUserAccountRepository.addUserAccount(Object.assign({}, userData, { password: hashedPassword }))
+      return userAccount
+    }
+    return null
   }
 }
