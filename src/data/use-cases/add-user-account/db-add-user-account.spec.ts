@@ -35,7 +35,7 @@ const makeAddUserAccountRepositoryStub = (): AddUserAccountRepository => {
 const makeCheckUserByUsernameRepositoryStub = (): CheckUserByUsernameRepository => {
   class CheckUserByUsernameRepositoryStub implements CheckUserByUsernameRepository {
     async checkByUsername (username: string): Promise<UserModel | null> {
-      return await Promise.resolve(fakeUser)
+      return await Promise.resolve(null)
     }
   }
   return new CheckUserByUsernameRepositoryStub()
@@ -64,9 +64,9 @@ const makeSut = (): SubTypes => {
 describe('DbAddUserAccount', () => {
   test('Should call CheckUserByUsernameRepository with correct value', async () => {
     const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername')
+    const checkByUsernameSpy = jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername')
     await sut.addUserAccount(userData)
-    expect(addSpy).toHaveBeenCalledWith('valid_username')
+    expect(checkByUsernameSpy).toHaveBeenCalledWith('valid_username')
   })
 
   test('Should throw if CheckUserByUsernameRepository throws', async () => {
@@ -74,6 +74,13 @@ describe('DbAddUserAccount', () => {
     jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
     const userAccount = sut.addUserAccount(userData)
     await expect(userAccount).rejects.toThrow()
+  })
+
+  test('Should return null if CheckUserByUsernameRepository returns an user', async () => {
+    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.resolve(fakeUser))
+    const userAccount = await sut.addUserAccount(userData)
+    expect(userAccount).toBeNull()
   })
 
   test('Should call Hasher with correct password', async () => {
@@ -92,9 +99,9 @@ describe('DbAddUserAccount', () => {
 
   test('Should call AddUserAccountRepository with correct values', async () => {
     const { sut, addUserAccountRepositoryStub } = makeSut()
-    const addSpy = jest.spyOn(addUserAccountRepositoryStub, 'addUserAccount')
+    const addUserAccountSpy = jest.spyOn(addUserAccountRepositoryStub, 'addUserAccount')
     await sut.addUserAccount(userData)
-    expect(addSpy).toHaveBeenCalledWith({
+    expect(addUserAccountSpy).toHaveBeenCalledWith({
       username: 'valid_username',
       password: 'hashed_password'
     })
