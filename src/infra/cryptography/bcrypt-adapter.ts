@@ -5,7 +5,6 @@ import 'dotenv/config'
 export class BcryptAdapter implements Hasher {
   private readonly salt: number = +(process.env.SALT as string)
   async hash (value: string): Promise<string> {
-    await bcrypt.hash(value, this.salt)
-    return ''
+    return await bcrypt.hash(value, this.salt)
   }
 }
