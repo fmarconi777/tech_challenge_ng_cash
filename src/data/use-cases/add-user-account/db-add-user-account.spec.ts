@@ -69,6 +69,13 @@ describe('DbAddUserAccount', () => {
     expect(addSpy).toHaveBeenCalledWith('valid_username')
   })
 
+  test('Should throw if CheckUserByUsernameRepository throws', async () => {
+    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
+    const userAccount = sut.addUserAccount(userData)
+    await expect(userAccount).rejects.toThrow()
+  })
+
   test('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
     const hashSpy = jest.spyOn(hasherStub, 'hash')
