@@ -1,9 +1,17 @@
-import { Hasher, UserData, AddUserAccountRepository } from './db-add-user-account-protocols'
+import { UserModel } from '../../../domain/models/user'
+import { Hasher, UserData, AddUserAccountRepository, CheckUserByUsernameRepository } from './db-add-user-account-protocols'
 import { DbAddUserAccount } from './db-add-user-accout'
 
 const userData = {
   username: 'valid_username',
   password: 'valid_password'
+}
+
+const fakeUser = {
+  id: 'any_id',
+  username: 'any_username',
+  password: 'any_password',
+  accountId: 'any_accountId'
 }
 
 const makeHasherStub = (): Hasher => {
@@ -24,24 +32,43 @@ const makeAddUserAccountRepositoryStub = (): AddUserAccountRepository => {
   return new AddUserAccountRepositoryStub()
 }
 
+const makeCheckUserByUsernameRepositoryStub = (): CheckUserByUsernameRepository => {
+  class CheckUserByUsernameRepositoryStub implements CheckUserByUsernameRepository {
+    async checkByUsername (username: string): Promise<UserModel | null> {
+      return await Promise.resolve(fakeUser)
+    }
+  }
+  return new CheckUserByUsernameRepositoryStub()
+}
+
 type SubTypes = {
   sut: DbAddUserAccount
   hasherStub: Hasher
   addUserAccountRepositoryStub: AddUserAccountRepository
+  checkUserByUsernameRepositoryStub: CheckUserByUsernameRepository
 }
 
 const makeSut = (): SubTypes => {
+  const checkUserByUsernameRepositoryStub = makeCheckUserByUsernameRepositoryStub()
   const addUserAccountRepositoryStub = makeAddUserAccountRepositoryStub()
   const hasherStub = makeHasherStub()
-  const sut = new DbAddUserAccount(hasherStub, addUserAccountRepositoryStub)
+  const sut = new DbAddUserAccount(hasherStub, addUserAccountRepositoryStub, checkUserByUsernameRepositoryStub)
   return {
     sut,
     hasherStub,
-    addUserAccountRepositoryStub
+    addUserAccountRepositoryStub,
+    checkUserByUsernameRepositoryStub
   }
 }
 
 describe('DbAddUserAccount', () => {
+  test('Should call CheckUserByUsernameRepository with correct value', async () => {
+    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
+    const addSpy = jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername')
+    await sut.addUserAccount(userData)
+    expect(addSpy).toHaveBeenCalledWith('valid_username')
+  })
+
   test('Should call Hasher with correct password', async () => {
     const { sut, hasherStub } = makeSut()
     const hashSpy = jest.spyOn(hasherStub, 'hash')
