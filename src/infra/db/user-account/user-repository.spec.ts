@@ -11,7 +11,7 @@ const fakeUser = {
 
 const makeCheckUserByUserNameORMStub = (): CheckUserByUserNameORM => {
   class CheckUserByUserNameORMStub implements CheckUserByUserNameORM {
-    async checkByUsername (username: string): Promise<UserModel> {
+    async checkByUsername (username: string): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
@@ -45,5 +45,12 @@ describe('User Repository', () => {
     jest.spyOn(checkUserByUserNameORMStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
     const user = sut.checkByUsername('username')
     await expect(user).rejects.toThrow()
+  })
+
+  test('Should return null if ORM returns null', async () => {
+    const { sut, checkUserByUserNameORMStub } = makeSut()
+    jest.spyOn(checkUserByUserNameORMStub, 'checkByUsername').mockReturnValueOnce(Promise.resolve(null))
+    const user = await sut.checkByUsername('username')
+    expect(user).toBeNull()
   })
 })
