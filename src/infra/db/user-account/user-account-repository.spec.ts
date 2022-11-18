@@ -1,5 +1,5 @@
 import { UserData } from '../../../domain/use-cases/add-user-account'
-import { AddUserAccountORM } from '../../protocols/add-user-account-orm'
+import { AddUserAccountORM } from '../../protocols/user-account/add-user-account-orm'
 import { UserAccountRepository } from './user-account-repository'
 
 const userData = {

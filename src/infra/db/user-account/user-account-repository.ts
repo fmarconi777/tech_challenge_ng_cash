@@ -1,5 +1,5 @@
 import { AddUserAccountRepository, UserData } from '../../../data/use-cases/add-user-account/db-add-user-account-protocols'
-import { AddUserAccountORM } from '../../protocols/add-user-account-orm'
+import { AddUserAccountORM } from '../../protocols/user-account/add-user-account-orm'
 
 export class UserAccountRepository implements AddUserAccountRepository {
   constructor (
