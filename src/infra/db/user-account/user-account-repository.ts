@@ -7,7 +7,6 @@ export class UserAccountRepository implements AddUserAccountRepository {
   ) {}
 
   async addUserAccount (userData: UserData): Promise<string> {
-    await this.addUserAccountORM.addUserAccount(userData)
-    return ''
+    return await this.addUserAccountORM.addUserAccount(userData)
   }
 }
