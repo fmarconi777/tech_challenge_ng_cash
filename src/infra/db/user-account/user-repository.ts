@@ -8,7 +8,6 @@ export class UserRepository implements CheckUserByUsernameRepository {
   ) {}
 
   async checkByUsername (username: string): Promise<UserModel | null> {
-    await this.checkUserByUserNameORM.checkByUsername(username)
-    return null
+    return await this.checkUserByUserNameORM.checkByUsername(username)
   }
 }
