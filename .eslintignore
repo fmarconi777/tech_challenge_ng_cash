@@ -3,3 +3,5 @@ dist
 jest.config.js
 coverage
 .env
+database
+pgadmin-data
