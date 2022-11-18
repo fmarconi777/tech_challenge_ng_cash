@@ -41,7 +41,13 @@ describe('UserAccount Repository', () => {
   test('Should throw if ORM throws', async () => {
     const { sut, addUserAccountORMStub } = makeSut()
     jest.spyOn(addUserAccountORMStub, 'addUserAccount').mockReturnValueOnce(Promise.reject(new Error()))
-    const user = sut.addUserAccount(userData)
-    await expect(user).rejects.toThrow()
+    const userAccount = sut.addUserAccount(userData)
+    await expect(userAccount).rejects.toThrow()
+  })
+
+  test('Should return a message on success', async () => {
+    const { sut } = makeSut()
+    const userAccount = await sut.addUserAccount(userData)
+    expect(userAccount).toEqual('Account succesfully created')
   })
 })
