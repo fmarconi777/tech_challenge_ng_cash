@@ -53,4 +53,10 @@ describe('User Repository', () => {
     const user = await sut.checkByUsername('username')
     expect(user).toBeNull()
   })
+
+  test('Should return an user on success', async () => {
+    const { sut } = makeSut()
+    const user = await sut.checkByUsername('username')
+    expect(user).toEqual(fakeUser)
+  })
 })
