@@ -1,5 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
-import { CheckUserByUserNameORM } from '../../protocols/user-account/check-user-by-user-name-orm'
+import { CheckUserByUserNameORM } from './user-account-protocols'
 import { UserRepository } from './user-repository'
 
 const fakeUser = {
