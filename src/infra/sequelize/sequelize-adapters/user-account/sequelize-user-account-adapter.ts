@@ -6,6 +6,7 @@ import { Users } from '../../models/users'
 
 export class SequelizeUserAccountAdapter implements AddUserAccountORM {
   async addUserAccount (userData: UserData): Promise<string> {
+    await ConnectionHelper.reconnect()
     let transaction
     try {
       transaction = await ConnectionHelper.client.transaction()

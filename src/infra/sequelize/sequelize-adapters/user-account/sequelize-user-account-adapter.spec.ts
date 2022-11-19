@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { Users } from '../../models/users'
 import { SequelizeUserAccountAdapter } from './sequelize-user-account-adapter'
@@ -25,6 +26,13 @@ describe('SequelizeUserAccount Adapter', () => {
   })
 
   test('Should return a message on success', async () => {
+    const sut = new SequelizeUserAccountAdapter()
+    const userAccount = await sut.addUserAccount(userData)
+    expect(userAccount).toBe('Account succesfully created')
+  })
+
+  test('Should reconnect if connection is lost', async () => {
+    ConnectionHelper.client = null as unknown as Sequelize
     const sut = new SequelizeUserAccountAdapter()
     const userAccount = await sut.addUserAccount(userData)
     expect(userAccount).toBe('Account succesfully created')
