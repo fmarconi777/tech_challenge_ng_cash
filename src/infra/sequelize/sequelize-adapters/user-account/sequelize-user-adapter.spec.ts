@@ -1,10 +1,19 @@
 import { SequelizeUserAdapter } from './sequelize-user-adapter'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { SequelizeUserAccountAdapter } from './sequelize-user-account-adapter'
+import { Users } from '../../models/users'
 
 describe('SequelizeUser Adapter', () => {
   beforeAll(async () => {
     await ConnectionHelper.connect('test')
+  })
+
+  beforeEach(async () => {
+    await Users.destroy({
+      where: {},
+      truncate: true,
+      cascade: true
+    })
   })
 
   afterAll(async () => {
