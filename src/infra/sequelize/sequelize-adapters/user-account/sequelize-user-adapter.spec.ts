@@ -1,13 +1,13 @@
 import { SequelizeUserAdapter } from './sequelize-user-adapter'
-import connection from '../../models/index'
+import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 
 describe('SequelizeUser Adapter', () => {
   beforeAll(async () => {
-    await connection.sequelize.authenticate()
+    await ConnectionHelper.connect('test')
   })
 
   afterAll(async () => {
-    await connection.sequelize.close()
+    await ConnectionHelper.disconnect()
   })
 
   test('Should return null if user does not exist', async () => {
