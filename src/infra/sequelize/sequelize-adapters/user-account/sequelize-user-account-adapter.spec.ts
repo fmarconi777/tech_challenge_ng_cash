@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
+import { Accounts } from '../../models/accounts'
 import { Users } from '../../models/users'
 import { SequelizeUserAccountAdapter } from './sequelize-user-account-adapter'
 
@@ -15,6 +16,11 @@ describe('SequelizeUserAccount Adapter', () => {
 
   beforeEach(async () => {
     await Users.destroy({
+      where: {},
+      truncate: true,
+      cascade: true
+    })
+    await Accounts.destroy({
       where: {},
       truncate: true,
       cascade: true
