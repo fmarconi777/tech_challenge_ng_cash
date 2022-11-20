@@ -1,6 +1,6 @@
-import { SequelizeUserAdapter } from './sequelize-user-adapter'
+import { SequelizeUserAdapter } from '../user/sequelize-user-adapter'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
-import { SequelizeUserAccountAdapter } from './sequelize-user-account-adapter'
+import { SequelizeUserAccountAdapter } from '../user-account/sequelize-user-account-adapter'
 import { Users } from '../../models/users'
 import { Sequelize } from 'sequelize'
 import { Accounts } from '../../models/accounts'
