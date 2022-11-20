@@ -1,4 +1,4 @@
-import { Authentication } from './singup-protocols'
+import { Authentication, AuthenticationModel } from './singup-protocols'
 import { MissingParamError } from '../errors'
 import { badRequest, okResponse, serverError, unauthorized } from '../helpers/http-helper'
 import { LoginController } from './login'
@@ -10,7 +10,7 @@ const fakeUser = {
 
 const makeAuthenticationStub = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (username: string, password: string): Promise<string | null> {
+    async auth (authenticationParams: AuthenticationModel): Promise<string | null> {
       return await Promise.resolve('access_token')
     }
   }
@@ -61,7 +61,7 @@ describe('Login Controller', () => {
       body: fakeUser
     }
     await sut.handle(httpRequest)
-    expect(authSpy).toHaveBeenCalledWith(fakeUser.username, fakeUser.password)
+    expect(authSpy).toHaveBeenCalledWith(fakeUser)
   })
 
   test('Should return 500 status if Authentication returns an error', async () => {
