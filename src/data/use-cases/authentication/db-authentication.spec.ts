@@ -119,4 +119,10 @@ describe('DbAuthentication', () => {
     const accessToken = sut.auth(fakeAuthenticationParams)
     await expect(accessToken).rejects.toThrow()
   })
+
+  test('Should return an access token on success', async () => {
+    const { sut } = makeSut()
+    const accessToken = await sut.auth(fakeAuthenticationParams)
+    expect(accessToken).toBe('access_token')
+  })
 })
