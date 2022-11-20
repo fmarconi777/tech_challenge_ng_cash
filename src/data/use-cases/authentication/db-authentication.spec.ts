@@ -1,5 +1,6 @@
 import { UserModel } from '../../../domain/models/user'
 import { HashComparer } from '../../protocols/crytography/hash-comparer'
+import { TokenGenerator } from '../../protocols/crytography/token-generator'
 import { LoadUserByUsernameRepository } from '../../protocols/db/user/load-user-by-username-repository'
 import { DbAuthentication } from './db-authentication'
 
@@ -33,20 +34,32 @@ const makeHashComparerStub = (): HashComparer => {
   return new HashComparerStub()
 }
 
+const makeTokenGeneratorStub = (): TokenGenerator => {
+  class TokenGeneratorStub implements TokenGenerator {
+    async generate (id: string): Promise<string> {
+      return await Promise.resolve('access_token')
+    }
+  }
+  return new TokenGeneratorStub()
+}
+
 type SubTypes = {
   sut: DbAuthentication
   loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
   hashComparerStub: HashComparer
+  tokenGeneratorStub: TokenGenerator
 }
 
 const makeSut = (): SubTypes => {
+  const tokenGeneratorStub = makeTokenGeneratorStub()
   const hashComparerStub = makeHashComparerStub()
   const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
-  const sut = new DbAuthentication(loadUserByUsernameRepositoryStub, hashComparerStub)
+  const sut = new DbAuthentication(loadUserByUsernameRepositoryStub, hashComparerStub, tokenGeneratorStub)
   return {
     sut,
     loadUserByUsernameRepositoryStub,
-    hashComparerStub
+    hashComparerStub,
+    tokenGeneratorStub
   }
 }
 
@@ -91,5 +104,12 @@ describe('DbAuthentication', () => {
     jest.spyOn(hashComparerStub, 'compare').mockReturnValueOnce(Promise.resolve(false))
     const accessToken = await sut.auth(fakeAuthenticationParams)
     expect(accessToken).toBeNull()
+  })
+
+  test('Should call TokenGenerator with correct id', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+    await sut.auth(fakeAuthenticationParams)
+    expect(generateSpy).toHaveBeenLastCalledWith('fake_id')
   })
 })
