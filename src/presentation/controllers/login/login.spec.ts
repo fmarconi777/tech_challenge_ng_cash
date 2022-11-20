@@ -1,15 +1,33 @@
+import { Authentication } from '../../../domain/use-cases/authentication'
 import { MissingParamError } from '../errors'
 import { badRequest } from '../helpers/http-helper'
 import { LoginController } from './login'
 
+const fakeUser = {
+  username: 'fake_user',
+  password: 'fake_password'
+}
+
+const makeAuthenticationStub = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (username: string, password: string): Promise<string> {
+      return await Promise.resolve('access_token')
+    }
+  }
+  return new AuthenticationStub()
+}
+
 type SubTypes = {
   sut: LoginController
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SubTypes => {
-  const sut = new LoginController()
+  const authenticationStub = makeAuthenticationStub()
+  const sut = new LoginController(authenticationStub)
   return {
-    sut
+    sut,
+    authenticationStub
   }
 }
 
@@ -34,5 +52,15 @@ describe('Login Controller', () => {
     }
     const response = await sut.handle(httpRequest)
     expect(response).toEqual(badRequest(new MissingParamError('password')))
+  })
+
+  test('Should call Authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    const httpRequest = {
+      body: fakeUser
+    }
+    await sut.handle(httpRequest)
+    expect(authSpy).toHaveBeenCalledWith(fakeUser.username, fakeUser.password)
   })
 })
