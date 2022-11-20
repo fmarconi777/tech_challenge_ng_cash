@@ -29,4 +29,10 @@ describe('JWTAdapter', () => {
     const token = sut.encrypt('any_id')
     await expect(token).rejects.toThrow()
   })
+
+  test('should return a token on sign success', async () => {
+    const sut = makeSut()
+    const token = await sut.encrypt('any_id')
+    expect(token).toBe('any_token')
+  })
 })
