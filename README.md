@@ -21,4 +21,12 @@ DB_PASSWORD = '123456'
 DB_HOST = 'localhost'
 DB_DIALECT = 'postgres'
 
+# App port
+
+APP_PORT = '5000'
+
+# Jwt secret key
+
+SECRET_KEY = 'secret_key'
+
 lembrar de ver se é necessário manter o sequelize-typescript como produção ou se vai dar problema na pasta dist
