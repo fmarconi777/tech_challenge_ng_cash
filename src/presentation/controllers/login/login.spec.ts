@@ -1,6 +1,6 @@
 import { Authentication } from '../../../domain/use-cases/authentication'
 import { MissingParamError } from '../errors'
-import { badRequest } from '../helpers/http-helper'
+import { badRequest, serverError } from '../helpers/http-helper'
 import { LoginController } from './login'
 
 const fakeUser = {
@@ -62,5 +62,15 @@ describe('Login Controller', () => {
     }
     await sut.handle(httpRequest)
     expect(authSpy).toHaveBeenCalledWith(fakeUser.username, fakeUser.password)
+  })
+
+  test('Should return 500 status if Authentication returns an error', async () => {
+    const { sut, authenticationStub } = makeSut()
+    jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => { throw new Error() })
+    const httpRequest = {
+      body: fakeUser
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError())
   })
 })
