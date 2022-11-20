@@ -1,7 +1,7 @@
 import { Authentication } from '../../../domain/use-cases/authentication'
 import { Controller, HttpRequest, HttpResponse } from '../../protocols'
 import { MissingParamError } from '../errors'
-import { badRequest, serverError } from '../helpers/http-helper'
+import { badRequest, serverError, unauthorized } from '../helpers/http-helper'
 
 export class LoginController implements Controller {
   constructor (private readonly authentication: Authentication) {}
@@ -15,7 +15,10 @@ export class LoginController implements Controller {
         }
       }
       const { username, password } = httpRequest.body
-      await this.authentication.auth(username, password)
+      const accessToken = await this.authentication.auth(username, password)
+      if (!accessToken) {
+        return unauthorized()
+      }
       return {
         status: 200,
         body: ''
