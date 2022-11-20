@@ -1,7 +1,7 @@
 import { DbAddUserAccount } from '../../data/use-cases/add-user-account/db-add-user-accout'
 import { BcryptAdapter } from '../../infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import { UserAccountRepository } from '../../infra/db/user-account/user-account-repository'
-import { UserRepository } from '../../infra/db/user-account/user-repository'
+import { UserRepository } from '../../infra/db/user/user-repository'
 import { SequelizeUserAccountAdapter } from '../../infra/sequelize/sequelize-adapters/user-account/sequelize-user-account-adapter'
 import { SequelizeUserAdapter } from '../../infra/sequelize/sequelize-adapters/user-account/sequelize-user-adapter'
 import { SignUpController } from '../../presentation/controllers/singup/singup'

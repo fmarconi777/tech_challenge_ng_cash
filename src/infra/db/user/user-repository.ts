@@ -1,6 +1,6 @@
 import { CheckUserByUsernameRepository } from '../../../data/use-cases/add-user-account/db-add-user-account-protocols'
 import { UserModel } from '../../../domain/models/user'
-import { CheckUserByUserNameORM } from './user-account-protocols'
+import { CheckUserByUserNameORM } from './user-protocols'
 
 export class UserRepository implements CheckUserByUsernameRepository {
   constructor (
