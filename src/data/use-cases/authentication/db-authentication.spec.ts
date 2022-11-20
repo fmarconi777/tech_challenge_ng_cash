@@ -1,4 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
+import { HashComparer } from '../../protocols/crytography/hash-comparer'
 import { LoadUserByUsernameRepository } from '../../protocols/db/user/load-user-by-username-repository'
 import { DbAuthentication } from './db-authentication'
 
@@ -23,17 +24,29 @@ const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository =>
   return new LoadUserByUsernameRepositoryStub()
 }
 
+const makeHashComparerStub = (): HashComparer => {
+  class HashComparerStub implements HashComparer {
+    async compare (password: string, hash: string): Promise<boolean> {
+      return await Promise.resolve(true)
+    }
+  }
+  return new HashComparerStub()
+}
+
 type SubTypes = {
   sut: DbAuthentication
   loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
+  hashComparerStub: HashComparer
 }
 
 const makeSut = (): SubTypes => {
+  const hashComparerStub = makeHashComparerStub()
   const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
-  const sut = new DbAuthentication(loadUserByUsernameRepositoryStub)
+  const sut = new DbAuthentication(loadUserByUsernameRepositoryStub, hashComparerStub)
   return {
     sut,
-    loadUserByUsernameRepositoryStub
+    loadUserByUsernameRepositoryStub,
+    hashComparerStub
   }
 }
 
@@ -57,5 +70,12 @@ describe('DbAuthentication', () => {
     jest.spyOn(loadUserByUsernameRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null))
     const accessToken = await sut.auth(fakeAuthenticationParams)
     expect(accessToken).toBeNull()
+  })
+
+  test('Should call HashComparer with correct values', async () => {
+    const { sut, hashComparerStub } = makeSut()
+    const compareSpy = jest.spyOn(hashComparerStub, 'compare')
+    await sut.auth(fakeAuthenticationParams)
+    expect(compareSpy).toHaveBeenLastCalledWith(fakeAuthenticationParams.password, 'fake_password')
   })
 })
