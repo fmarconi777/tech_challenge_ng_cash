@@ -1,5 +1,4 @@
-import { Authentication } from '../../../domain/use-cases/authentication'
-import { Controller, HttpRequest, HttpResponse } from '../../protocols'
+import { Controller, HttpRequest, HttpResponse, Authentication } from './singup-protocols'
 import { MissingParamError } from '../errors'
 import { badRequest, serverError, unauthorized } from '../helpers/http-helper'
 

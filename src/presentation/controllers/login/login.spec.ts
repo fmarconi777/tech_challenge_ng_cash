@@ -1,4 +1,4 @@
-import { Authentication } from '../../../domain/use-cases/authentication'
+import { Authentication } from './singup-protocols'
 import { MissingParamError } from '../errors'
 import { badRequest, serverError, unauthorized } from '../helpers/http-helper'
 import { LoginController } from './login'
