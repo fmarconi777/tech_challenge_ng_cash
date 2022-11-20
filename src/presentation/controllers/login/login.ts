@@ -1,6 +1,6 @@
 import { Controller, HttpRequest, HttpResponse, Authentication } from './singup-protocols'
 import { MissingParamError } from '../errors'
-import { badRequest, serverError, unauthorized } from '../helpers/http-helper'
+import { badRequest, okResponse, serverError, unauthorized } from '../helpers/http-helper'
 
 export class LoginController implements Controller {
   constructor (private readonly authentication: Authentication) {}
@@ -18,10 +18,7 @@ export class LoginController implements Controller {
       if (!accessToken) {
         return unauthorized()
       }
-      return {
-        status: 200,
-        body: ''
-      }
+      return okResponse(accessToken)
     } catch (error: any) {
       return serverError()
     }
