@@ -6,7 +6,6 @@ export class JwtAdapter implements Encrypter {
   private readonly secreteKey = process.env.SECRET_KEY
 
   async encrypt (id: string): Promise<string> {
-    jwt.sign({ id }, (this.secreteKey as string), { expiresIn: '1d' })
-    return ''
+    return jwt.sign({ id }, (this.secreteKey as string), { expiresIn: '1d' })
   }
 }
