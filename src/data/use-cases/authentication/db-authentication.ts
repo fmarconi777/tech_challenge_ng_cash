@@ -1,11 +1,11 @@
 import { Authentication, AuthenticationModel } from '../../../domain/use-cases/authentication'
-import { HashComparer, TokenGenerator, LoadUserByUsernameRepository } from './db-authentication-protocols'
+import { HashComparer, Encrypter, LoadUserByUsernameRepository } from './db-authentication-protocols'
 
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadUserByUsernameRepository: LoadUserByUsernameRepository,
     private readonly hashComparer: HashComparer,
-    private readonly tokenGenerator: TokenGenerator
+    private readonly encrypter: Encrypter
   ) {}
 
   async auth (authenticationParams: AuthenticationModel): Promise<string | null> {
@@ -13,7 +13,7 @@ export class DbAuthentication implements Authentication {
     if (user) {
       const match = await this.hashComparer.compare(authenticationParams.password, user.password)
       if (match) {
-        return await this.tokenGenerator.generate(user.id)
+        return await this.encrypter.encrypt(user.id)
       }
     }
     return null
