@@ -1,8 +1,8 @@
 import { Router } from 'express'
+import { adaptRoute } from '../adapters/express-routes-adapter'
+import { makeSignupControler } from '../factories/signup'
 
 export default (router: Router): Router => {
-  router.post('/signup', (req, res) => {
-    res.json({ ok: 'ok' })
-  })
+  router.post('/signup', adaptRoute(makeSignupControler())) // eslint-disable-line
   return router
 }

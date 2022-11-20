@@ -30,8 +30,8 @@ describe('Signup Routes', () => {
     await request(app)
       .post('/signup')
       .send({
-        username: 'any_name',
-        password: 'any_password'
+        username: 'anyName',
+        password: 'anyPassword1'
       })
       .expect(200)
   })
