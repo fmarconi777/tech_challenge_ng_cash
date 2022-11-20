@@ -16,7 +16,7 @@ const fakeUser = {
 
 const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository => {
   class LoadUserByUsernameRepositoryStub implements LoadUserByUsernameRepository {
-    async load (username: string): Promise<UserModel> {
+    async load (username: string): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
@@ -50,5 +50,12 @@ describe('DbAuthentication', () => {
     jest.spyOn(loadUserByUsernameRepositoryStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
     const accessToken = sut.auth(fakeAuthenticationParams)
     await expect(accessToken).rejects.toThrow()
+  })
+
+  test('Should return null if LoadUserByUsernameRepository returns null', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null))
+    const accessToken = await sut.auth(fakeAuthenticationParams)
+    expect(accessToken).toBeNull()
   })
 })
