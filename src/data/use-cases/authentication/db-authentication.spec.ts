@@ -44,4 +44,11 @@ describe('DbAuthentication', () => {
     await sut.auth(fakeAuthenticationParams)
     expect(loadSpy).toHaveBeenLastCalledWith(fakeAuthenticationParams.username)
   })
+
+  test('Should throw if LoadUserByUsernameRepository throws', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    const accessToken = sut.auth(fakeAuthenticationParams)
+    await expect(accessToken).rejects.toThrow()
+  })
 })
