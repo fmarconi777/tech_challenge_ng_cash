@@ -1,5 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
-import { HashComparer, Encrypter, LoadUserByUsernameRepository } from './db-authentication-protocols'
+import { HashComparer, Encrypter, CheckUserByUsernameRepository } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
 
 const fakeAuthenticationParams = {
@@ -14,13 +14,13 @@ const fakeUser = {
   accountId: 'fake_accountId'
 }
 
-const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository => {
-  class LoadUserByUsernameRepositoryStub implements LoadUserByUsernameRepository {
-    async load (username: string): Promise<UserModel | null> {
+const makeCheckUserByUsernameRepositoryStub = (): CheckUserByUsernameRepository => {
+  class CheckUserByUsernameRepositoryStub implements CheckUserByUsernameRepository {
+    async checkByUsername (username: string): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
-  return new LoadUserByUsernameRepositoryStub()
+  return new CheckUserByUsernameRepositoryStub()
 }
 
 const makeHashComparerStub = (): HashComparer => {
@@ -43,7 +43,7 @@ const makeEncrypterStub = (): Encrypter => {
 
 type SubTypes = {
   sut: DbAuthentication
-  loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
+  checkUserByUsernameRepositoryStub: CheckUserByUsernameRepository
   hashComparerStub: HashComparer
   encrypterStub: Encrypter
 }
@@ -51,34 +51,34 @@ type SubTypes = {
 const makeSut = (): SubTypes => {
   const encrypterStub = makeEncrypterStub()
   const hashComparerStub = makeHashComparerStub()
-  const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
-  const sut = new DbAuthentication(loadUserByUsernameRepositoryStub, hashComparerStub, encrypterStub)
+  const checkUserByUsernameRepositoryStub = makeCheckUserByUsernameRepositoryStub()
+  const sut = new DbAuthentication(checkUserByUsernameRepositoryStub, hashComparerStub, encrypterStub)
   return {
     sut,
-    loadUserByUsernameRepositoryStub,
+    checkUserByUsernameRepositoryStub,
     hashComparerStub,
     encrypterStub
   }
 }
 
 describe('DbAuthentication', () => {
-  test('Should call LoadUserByUsernameRepository with correct username', async () => {
-    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
-    const loadSpy = jest.spyOn(loadUserByUsernameRepositoryStub, 'load')
+  test('Should call CheckUserByUsernameRepository with correct username', async () => {
+    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
+    const checkByUsernameSpy = jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername')
     await sut.auth(fakeAuthenticationParams)
-    expect(loadSpy).toHaveBeenLastCalledWith(fakeAuthenticationParams.username)
+    expect(checkByUsernameSpy).toHaveBeenLastCalledWith(fakeAuthenticationParams.username)
   })
 
-  test('Should throw if LoadUserByUsernameRepository throws', async () => {
-    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
-    jest.spyOn(loadUserByUsernameRepositoryStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+  test('Should throw if CheckUserByUsernameRepository throws', async () => {
+    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
     const accessToken = sut.auth(fakeAuthenticationParams)
     await expect(accessToken).rejects.toThrow()
   })
 
-  test('Should return null if LoadUserByUsernameRepository returns null', async () => {
-    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
-    jest.spyOn(loadUserByUsernameRepositoryStub, 'load').mockReturnValueOnce(Promise.resolve(null))
+  test('Should return null if CheckUserByUsernameRepository returns null', async () => {
+    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.resolve(null))
     const accessToken = await sut.auth(fakeAuthenticationParams)
     expect(accessToken).toBeNull()
   })
