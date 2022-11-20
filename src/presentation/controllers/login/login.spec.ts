@@ -1,6 +1,6 @@
 import { Authentication } from './singup-protocols'
 import { MissingParamError } from '../errors'
-import { badRequest, serverError, unauthorized } from '../helpers/http-helper'
+import { badRequest, okResponse, serverError, unauthorized } from '../helpers/http-helper'
 import { LoginController } from './login'
 
 const fakeUser = {
@@ -85,5 +85,14 @@ describe('Login Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(unauthorized())
+  })
+
+  test('Should return 200 status if valid credentials are provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: fakeUser
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(okResponse('access_token'))
   })
 })
