@@ -13,6 +13,8 @@ export class SequelizeUserAdapter implements CheckUserByUserNameORM, CheckUserBy
   }
 
   async checkById (id: number): Promise<UserModel | null> {
-    return null
+    await ConnectionHelper.reconnect()
+    const user = await Users.findByPk(id, { raw: true })
+    return parseUser(user)
   }
 }
