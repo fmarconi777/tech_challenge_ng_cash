@@ -87,5 +87,12 @@ describe('User Repository', () => {
       await sut.checkById(1)
       expect(checkByUsernameSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Should throw if CheckUserByIdORM throws', async () => {
+      const { sut, checkUserByIdORMStub } = makeSut()
+      jest.spyOn(checkUserByIdORMStub, 'checkById').mockReturnValueOnce(Promise.reject(new Error()))
+      const user = sut.checkById(1)
+      await expect(user).rejects.toThrow()
+    })
   })
 })
