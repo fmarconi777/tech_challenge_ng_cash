@@ -1,18 +1,12 @@
 import { UserModel } from '../../../domain/models/user'
 import { CheckUserByUserNameORM, CheckUserByIdORM } from './user-protocols'
 import { UserRepository } from '../user/user-repository'
-import { AccountModel } from '../../../domain/models/account'
 
 const fakeUser = {
   id: 'any_id',
   username: 'any_user',
   password: 'any_password',
   accountId: 'any_account'
-}
-
-const fakeAccount = {
-  id: '1',
-  balance: '100.00'
 }
 
 const makeCheckUserByUserNameORMStub = (): CheckUserByUserNameORM => {
@@ -26,8 +20,8 @@ const makeCheckUserByUserNameORMStub = (): CheckUserByUserNameORM => {
 
 const makeCheckUserByIdORMStub = (): CheckUserByIdORM => {
   class CheckUserByIdORMStub implements CheckUserByIdORM {
-    async checkById (id: number): Promise<AccountModel | null> {
-      return await Promise.resolve(fakeAccount)
+    async checkById (id: number): Promise<UserModel | null> {
+      return await Promise.resolve(fakeUser)
     }
   }
   return new CheckUserByIdORMStub()
@@ -93,6 +87,13 @@ describe('User Repository', () => {
       jest.spyOn(checkUserByIdORMStub, 'checkById').mockReturnValueOnce(Promise.reject(new Error()))
       const user = sut.checkById(1)
       await expect(user).rejects.toThrow()
+    })
+
+    test('Should return null if CheckUserByIdORM returns null', async () => {
+      const { sut, checkUserByIdORMStub } = makeSut()
+      jest.spyOn(checkUserByIdORMStub, 'checkById').mockReturnValueOnce(Promise.resolve(null))
+      const user = await sut.checkById(1)
+      expect(user).toBeNull()
     })
   })
 })
