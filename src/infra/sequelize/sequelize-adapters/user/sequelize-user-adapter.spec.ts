@@ -79,5 +79,19 @@ describe('SequelizeUser Adapter', () => {
       expect(user?.username).toBe('valid_username')
       expect(user?.password).toBe('hashed_password')
     })
+
+    test('Should reconnect if connection is lost', async () => {
+      ConnectionHelper.client = null as unknown as Sequelize
+      const sut = new SequelizeUserAdapter()
+      const sequelizeUserAccount = new SequelizeUserAccountAdapter()
+      await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
+      const lastUser = ((await Users.findAll())[0])
+      const user = await sut.checkById(lastUser.id)
+      expect(user).toBeTruthy()
+      expect(user?.id).toBeTruthy()
+      expect(user?.accountId).toBeTruthy()
+      expect(user?.username).toBe('valid_username')
+      expect(user?.password).toBe('hashed_password')
+    })
   })
 })
