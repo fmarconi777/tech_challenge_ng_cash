@@ -1,5 +1,5 @@
-import { AccountModel } from '../../../domain/models/account'
+import { UserModel } from '../../../domain/models/user'
 
 export interface CheckUserByIdORM {
-  checkById: (id: number) => Promise<AccountModel | null>
+  checkById: (id: number) => Promise<UserModel | null>
 }

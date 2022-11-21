@@ -14,7 +14,6 @@ export class UserRepository implements CheckUserByUsernameRepository, CheckUserB
   }
 
   async checkById (id: number): Promise<UserModel | null> {
-    await this.checkUserByIdORM.checkById(id)
-    return null
+    return await this.checkUserByIdORM.checkById(id)
   }
 }
