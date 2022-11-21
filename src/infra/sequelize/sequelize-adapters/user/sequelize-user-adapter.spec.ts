@@ -66,5 +66,18 @@ describe('SequelizeUser Adapter', () => {
       const user = await sut.checkById(1)
       expect(user).toBeNull()
     })
+
+    test('Should return an user on success', async () => {
+      const sut = new SequelizeUserAdapter()
+      const sequelizeUserAccount = new SequelizeUserAccountAdapter()
+      await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
+      const lastUser = ((await Users.findAll())[0])
+      const user = await sut.checkById(lastUser.id)
+      expect(user).toBeTruthy()
+      expect(user?.id).toBeTruthy()
+      expect(user?.accountId).toBeTruthy()
+      expect(user?.username).toBe('valid_username')
+      expect(user?.password).toBe('hashed_password')
+    })
   })
 })
