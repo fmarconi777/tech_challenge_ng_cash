@@ -81,4 +81,10 @@ describe('DbLoadBalance', () => {
     const balance = sut.load(userId)
     await expect(balance).rejects.toThrow()
   })
+
+  test('Should return a balance on success', async () => {
+    const { sut } = makeSut()
+    const balance = await sut.load(userId)
+    expect(balance).toEqual({ balance: '100.00' })
+  })
 })
