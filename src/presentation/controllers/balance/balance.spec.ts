@@ -1,17 +1,11 @@
-import { AccountModel } from '../../../domain/models/account'
-import { LoadBalance } from '../../../domain/use-cases/load-balance/load-balance'
-import { serverError } from '../helpers/http-helper'
+import { BalanceModel, LoadBalance } from '../../../domain/use-cases/load-balance/load-balance'
+import { okResponse, serverError } from '../helpers/http-helper'
 import { BalanceController } from './balance'
-
-const fakeAccount = {
-  id: 'any_id',
-  balance: 'any_balance'
-}
 
 const makeLoadBalanceStub = (): LoadBalance => {
   class LoadBalanceStub implements LoadBalance {
-    async load (id: number): Promise<AccountModel> {
-      return await Promise.resolve(fakeAccount)
+    async load (id: number): Promise<BalanceModel> {
+      return await Promise.resolve({ balance: 'any_balance' })
     }
   }
   return new LoadBalanceStub()
@@ -46,5 +40,12 @@ describe('Balance Controller', () => {
     const httpRequest = { userId: '1' }
     const balance = await sut.handle(httpRequest)
     expect(balance).toEqual(serverError())
+  })
+
+  test('Should return a balance on success', async () => {
+    const { sut } = makeSut()
+    const httpRequest = { userId: '1' }
+    const balance = await sut.handle(httpRequest)
+    expect(balance).toEqual(okResponse({ balance: 'any_balance' }))
   })
 })
