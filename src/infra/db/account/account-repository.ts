@@ -6,7 +6,6 @@ export class AccountRepository implements LoadAccountByIdRepository {
   constructor (private readonly loadAccountByIdORM: LoadAccountByIdORM) {}
 
   async loadById (id: number): Promise<AccountModel | null> {
-    await this.loadAccountByIdORM.loadById(id)
-    return null
+    return await this.loadAccountByIdORM.loadById(id)
   }
 }
