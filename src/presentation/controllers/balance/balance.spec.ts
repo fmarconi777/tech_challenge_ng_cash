@@ -1,5 +1,6 @@
 import { AccountModel } from '../../../domain/models/account'
 import { LoadBalance } from '../../../domain/use-cases/load-balance/load-balance'
+import { serverError } from '../helpers/http-helper'
 import { BalanceController } from './balance'
 
 const fakeAccount = {
@@ -37,5 +38,13 @@ describe('Balance Controller', () => {
     const httpRequest = { userId: '1' }
     await sut.handle(httpRequest)
     expect(loadSpy).toHaveBeenCalledWith(1)
+  })
+
+  test('Should throw if LoadBalance throws', async () => {
+    const { sut, loadBalanceStub } = makeSut()
+    jest.spyOn(loadBalanceStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpRequest = { userId: '1' }
+    const balance = await sut.handle(httpRequest)
+    expect(balance).toEqual(serverError())
   })
 })
