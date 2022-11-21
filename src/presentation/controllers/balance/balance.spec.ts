@@ -34,7 +34,7 @@ describe('Balance Controller', () => {
     expect(loadSpy).toHaveBeenCalledWith(1)
   })
 
-  test('Should throw if LoadBalance throws', async () => {
+  test('Should return 500 status if LoadBalance throws', async () => {
     const { sut, loadBalanceStub } = makeSut()
     jest.spyOn(loadBalanceStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
     const httpRequest = { userId: '1' }

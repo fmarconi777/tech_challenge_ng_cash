@@ -34,4 +34,11 @@ describe('DbLoadBalance', () => {
     await sut.load(userId)
     expect(checkByUsernameSpy).toHaveBeenCalledWith(userId)
   })
+
+  test('Should throw if CheckUserByIdRepository throws', async () => {
+    const { sut, checkUserByIdRepositoryStub } = makeSut()
+    jest.spyOn(checkUserByIdRepositoryStub, 'checkById').mockReturnValueOnce(Promise.reject(new Error()))
+    const balance = sut.load(userId)
+    await expect(balance).rejects.toThrow()
+  })
 })
