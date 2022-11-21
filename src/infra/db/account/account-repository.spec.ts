@@ -44,4 +44,11 @@ describe('Account Repository', () => {
     const user = sut.loadById(1)
     await expect(user).rejects.toThrow()
   })
+
+  test('Should return null if LoadAccountByIdORM returns null', async () => {
+    const { sut, loadAccountByIdORMStub } = makeSut()
+    jest.spyOn(loadAccountByIdORMStub, 'loadById').mockReturnValueOnce(Promise.resolve(null))
+    const user = await sut.loadById(1)
+    expect(user).toBeNull()
+  })
 })
