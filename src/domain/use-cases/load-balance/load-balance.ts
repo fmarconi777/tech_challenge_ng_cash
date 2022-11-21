@@ -1,5 +1,7 @@
-import { AccountModel } from '../../models/account'
+export type BalanceModel = {
+  balance: string
+}
 
 export interface LoadBalance {
-  load: (id: number) => Promise<AccountModel>
+  load: (id: number) => Promise<BalanceModel>
 }
