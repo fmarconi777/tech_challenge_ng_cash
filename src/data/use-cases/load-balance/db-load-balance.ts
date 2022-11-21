@@ -9,7 +9,7 @@ export class DbLoadBalance implements LoadBalance {
 
   async load (id: number): Promise<BalanceModel> {
     const user: any = await this.checkUserByIdRepository.checkById(id)
-    const account: any = await this.loadAccountByIdRepository.checkById(+user.accountId)
+    const account: any = await this.loadAccountByIdRepository.loadById(+user.accountId)
     return { balance: account.balance }
   }
 }

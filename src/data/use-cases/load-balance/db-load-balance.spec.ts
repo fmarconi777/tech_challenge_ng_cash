@@ -28,7 +28,7 @@ const makeCheckUserByIdRepositoryStub = (): CheckUserByIdRepository => {
 
 const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
   class LoadAccountByIdRepositorySutb implements LoadAccountByIdRepository {
-    async checkById (id: number): Promise<AccountModel | null> {
+    async loadById (id: number): Promise<AccountModel | null> {
       return await Promise.resolve(fakeAccount)
     }
   }
@@ -69,14 +69,14 @@ describe('DbLoadBalance', () => {
 
   test('Should call LoadAccountByIdRepository with correct value', async () => {
     const { sut, loadAccountByIdRepositoryStub } = makeSut()
-    const checkByUsernameSpy = jest.spyOn(loadAccountByIdRepositoryStub, 'checkById')
+    const loadByUsernameSpy = jest.spyOn(loadAccountByIdRepositoryStub, 'loadById')
     await sut.load(userId)
-    expect(checkByUsernameSpy).toHaveBeenCalledWith(userId)
+    expect(loadByUsernameSpy).toHaveBeenCalledWith(userId)
   })
 
   test('Should throw if LoadAccountByIdRepository throws', async () => {
     const { sut, loadAccountByIdRepositoryStub } = makeSut()
-    jest.spyOn(loadAccountByIdRepositoryStub, 'checkById').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(loadAccountByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
     const balance = sut.load(userId)
     await expect(balance).rejects.toThrow()
   })
