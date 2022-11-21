@@ -1,4 +1,4 @@
-import { BalanceModel, LoadBalance } from '../../../domain/use-cases/load-balance/load-balance'
+import { BalanceModel, LoadBalance } from './balance-protocols'
 import { okResponse, serverError } from '../helpers/http-helper'
 import { BalanceController } from './balance'
 

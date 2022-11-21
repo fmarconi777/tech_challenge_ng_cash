@@ -1,5 +1,4 @@
-import { LoadBalance } from '../../../domain/use-cases/load-balance/load-balance'
-import { Controller, HttpRequest, HttpResponse } from '../../protocols'
+import { LoadBalance, Controller, HttpRequest, HttpResponse } from './balance-protocols'
 import { okResponse, serverError } from '../helpers/http-helper'
 
 export class BalanceController implements Controller {
