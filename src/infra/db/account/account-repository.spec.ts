@@ -51,4 +51,10 @@ describe('Account Repository', () => {
     const user = await sut.loadById(1)
     expect(user).toBeNull()
   })
+
+  test('Should return an account on success', async () => {
+    const { sut } = makeSut()
+    const user = await sut.loadById(1)
+    expect(user).toEqual(fakeAccount)
+  })
 })
