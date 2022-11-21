@@ -1,4 +1,4 @@
-import { UserData } from '../../../../domain/use-cases/add-user-account'
+import { UserData } from '../../../../domain/use-cases/add-user-account/add-user-account'
 import { AddUserAccountORM } from '../sequelize-adapters-protocols'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { Accounts } from '../../models/accounts'
