@@ -37,4 +37,11 @@ describe('Account Repository', () => {
     await sut.loadById(1)
     expect(loadByUserIdSpy).toHaveBeenCalledWith(1)
   })
+
+  test('Should throw if LoadAccountByIdORM throws', async () => {
+    const { sut, loadAccountByIdORMStub } = makeSut()
+    jest.spyOn(loadAccountByIdORMStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+    const user = sut.loadById(1)
+    await expect(user).rejects.toThrow()
+  })
 })
