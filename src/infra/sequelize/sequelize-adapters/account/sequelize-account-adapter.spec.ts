@@ -1,3 +1,4 @@
+import { Sequelize } from 'sequelize'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { Accounts } from '../../models/accounts'
 import { Users } from '../../models/users'
@@ -33,6 +34,18 @@ describe('SequelizeAccount Adapter', () => {
   })
 
   test('Should return an account on success', async () => {
+    const sut = new SequelizeAccountAdapter()
+    const sequelizeUserAccount = new SequelizeUserAccountAdapter()
+    await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
+    const lastAccount = ((await Accounts.findAll())[0])
+    const account = await sut.loadById(lastAccount.id)
+    expect(account).toBeTruthy()
+    expect(account?.id).toBeTruthy()
+    expect(account?.balance).toEqual('100.00')
+  })
+
+  test('Should reconnect if connection is lost', async () => {
+    ConnectionHelper.client = null as unknown as Sequelize
     const sut = new SequelizeAccountAdapter()
     const sequelizeUserAccount = new SequelizeUserAccountAdapter()
     await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
