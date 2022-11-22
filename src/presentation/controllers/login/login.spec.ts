@@ -1,4 +1,4 @@
-import { Authentication, AuthenticationModel } from './singup-protocols'
+import { Authentication, AuthenticationModel } from './login-protocols'
 import { MissingParamError } from '../../errors'
 import { badRequest, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'

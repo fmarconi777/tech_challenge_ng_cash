@@ -1,4 +1,4 @@
-import { Controller, HttpRequest, HttpResponse, Authentication } from './singup-protocols'
+import { Controller, HttpRequest, HttpResponse, Authentication } from './login-protocols'
 import { MissingParamError } from '../../errors'
 import { badRequest, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
 
