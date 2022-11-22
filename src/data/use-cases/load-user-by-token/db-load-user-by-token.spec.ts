@@ -87,4 +87,10 @@ describe('DbLoadUserByToken', () => {
     const user = await sut.load('any_token')
     expect(user).toBeNull()
   })
+
+  test('Should return an user on success', async () => {
+    const { sut } = makeSut()
+    const user = await sut.load('any_token')
+    expect(user).toEqual(fakeUser)
+  })
 })
