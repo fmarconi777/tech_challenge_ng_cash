@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import 'dotenv/config'
 import { JwtAdapter } from './jwt-adapter'
 
@@ -9,7 +9,7 @@ jest.mock('jsonwebtoken', () => ({
     return 'any_token'
   },
 
-  verify (): any {
+  verify (): JwtPayload {
     return { id: 'any_id' }
   }
 }))
@@ -53,8 +53,14 @@ describe('JWTAdapter', () => {
     test('should throw if verify throws', async () => {
       const sut = makeSut()
       jest.spyOn(jwt, 'verify').mockImplementationOnce(() => { throw new Error() }) // eslint-disable-line
-      const token = sut.decrypt('any_id')
-      await expect(token).rejects.toThrow()
+      const payload = sut.decrypt('any_token')
+      await expect(payload).rejects.toThrow()
+    })
+
+    test('should return an payload on verify success', async () => {
+      const sut = makeSut()
+      const payload = await sut.decrypt('any_token')
+      expect(payload).toEqual({ id: 'any_id' })
     })
   })
 })
