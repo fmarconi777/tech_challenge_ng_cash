@@ -1,5 +1,5 @@
 import { UserModel } from '../../domain/models/user'
-import { LoadAccountByToken } from '../../domain/use-cases/load-account-by-token/load-account-by-token'
+import { LoadUserByToken } from '../../domain/use-cases/load-user-by-token/load-user-by-token'
 import { AccessDeniedError } from '../errors'
 import { forbidden } from '../helpers/http-helper'
 import { HttpRequest } from '../protocols'
@@ -16,41 +16,48 @@ const fakeUser = (): UserModel => ({
   accountId: 'any_accountId'
 })
 
-const makeLoadAccountByTokenStub = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByTokenStub {
-    async load (accessToken: string, role?: string): Promise<UserModel> {
+const makeLoadUserByTokenStub = (): LoadUserByToken => {
+  class LoadUserByTokenStub implements LoadUserByTokenStub {
+    async load (accessToken: string, role?: string): Promise<UserModel | null> {
       return await new Promise(resolve => resolve(fakeUser()))
     }
   }
-  return new LoadAccountByTokenStub()
+  return new LoadUserByTokenStub()
 }
 
 type SubTypes = {
   sut: AuthMiddleware
-  loadAccountByTokenStub: LoadAccountByToken
+  loadUserByTokenStub: LoadUserByToken
 }
 
 const makeSut = (role?: string): SubTypes => {
-  const loadAccountByTokenStub = makeLoadAccountByTokenStub()
-  const sut = new AuthMiddleware(loadAccountByTokenStub, role)
+  const loadUserByTokenStub = makeLoadUserByTokenStub()
+  const sut = new AuthMiddleware(loadUserByTokenStub, role)
   return {
     sut,
-    loadAccountByTokenStub
+    loadUserByTokenStub
   }
 }
 
 describe('Auth Middleware', () => {
   test('Should return 403 if there is no token o header', async () => {
     const { sut } = makeSut()
-    const respostaHttp = await sut.handle({})
-    expect(respostaHttp).toEqual(forbidden(new AccessDeniedError()))
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 
-  test('Should call LoadAccountByToken with correct Token', async () => {
+  test('Should call LoadUserByToken with correct Token', async () => {
     const role = 'any_role'
-    const { sut, loadAccountByTokenStub } = makeSut(role)
-    const loadSpy = jest.spyOn(loadAccountByTokenStub, 'load')
+    const { sut, loadUserByTokenStub } = makeSut(role)
+    const loadSpy = jest.spyOn(loadUserByTokenStub, 'load')
     await sut.handle(fakeRequest())
     expect(loadSpy).toHaveBeenCalledWith('any_token', role)
+  })
+
+  test('Should return 403 if LoadUserByToken returns null', async () => {
+    const { sut, loadUserByTokenStub } = makeSut()
+    jest.spyOn(loadUserByTokenStub, 'load').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const httpResponse = await sut.handle(fakeRequest())
+    expect(httpResponse).toEqual(forbidden(new AccessDeniedError()))
   })
 })
