@@ -1,7 +1,7 @@
 import { UserModel } from '../../domain/models/user'
 import { LoadUserByToken } from '../../domain/use-cases/load-user-by-token/load-user-by-token'
 import { AccessDeniedError } from '../errors'
-import { forbidden } from '../helpers/http-helper'
+import { forbidden, serverError } from '../helpers/http-helper'
 import { HttpRequest } from '../protocols'
 import { AuthMiddleware } from './auth-middleware'
 
@@ -52,6 +52,14 @@ describe('Auth Middleware', () => {
     const loadSpy = jest.spyOn(loadUserByTokenStub, 'load')
     await sut.handle(fakeRequest())
     expect(loadSpy).toHaveBeenCalledWith('any_token', role)
+  })
+
+  test('Should return 500 if LoadUserByToken throws', async () => {
+    const role = 'any_role'
+    const { sut, loadUserByTokenStub } = makeSut(role)
+    jest.spyOn(loadUserByTokenStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpResponse = await sut.handle(fakeRequest())
+    expect(httpResponse).toEqual(serverError())
   })
 
   test('Should return 403 if LoadUserByToken returns null', async () => {
