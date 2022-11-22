@@ -13,7 +13,10 @@ export class DbLoadUserByToken implements LoadUserByToken {
   async load (accessToken: string): Promise<UserModel | null> {
     const payload: any = await this.decrypter.decrypt(accessToken)
     if (payload) {
-      await this.loadUserByIdRepository.loadById(payload.id)
+      const user = await this.loadUserByIdRepository.loadById(payload.id)
+      if (user) {
+        return user
+      }
     }
     return null
   }
