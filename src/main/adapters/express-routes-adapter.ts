@@ -6,7 +6,8 @@ export const adaptRoute = (controller: Controller) => {
     const httpRequest: HttpRequest = {
       body: req.body,
       param: req.params.parametro,
-      method: req.method
+      method: req.method,
+      userId: req.userId
     }
     const httpResponse = await controller.handle(httpRequest)
     if (httpResponse.status === 200) {
