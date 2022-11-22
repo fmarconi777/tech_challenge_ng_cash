@@ -1,8 +1,6 @@
-import { UserModel } from '../../domain/models/user'
-import { LoadUserByToken } from '../../domain/use-cases/load-user-by-token/load-user-by-token'
+import { LoadUserByToken, HttpRequest, UserModel } from './auth-middleware-protocols'
 import { AccessDeniedError } from '../errors'
 import { forbidden, okResponse, serverError } from '../helpers/http-helper'
-import { HttpRequest } from '../protocols'
 import { AuthMiddleware } from './auth-middleware'
 
 const fakeRequest = (): HttpRequest => ({
