@@ -28,14 +28,21 @@ describe('DbLoadUserByToken', () => {
   test('Should call Decrypter with correct value', async () => {
     const { sut, decrypterStub } = makeSut()
     const decryptSpy = jest.spyOn(decrypterStub, 'decrypt')
-    await sut.load('any_token')
+    await sut.load('any_token', 'any_role')
     expect(decryptSpy).toHaveBeenCalledWith('any_token')
   })
 
   test('Should throw if Decrypter throws', async () => {
     const { sut, decrypterStub } = makeSut()
     jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.reject(new Error()))
-    const user = sut.load('any_token')
+    const user = sut.load('any_token', 'any_role')
     await expect(user).rejects.toThrow()
+  })
+
+  test('Should return null if Decrypter returns null', async () => {
+    const { sut, decrypterStub } = makeSut()
+    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.resolve(''))
+    const user = await sut.load('any_token', 'any_role')
+    expect(user).toBeNull()
   })
 })
