@@ -27,10 +27,10 @@ describe('SequelizeUser Adapter', () => {
     await ConnectionHelper.disconnect()
   })
 
-  describe('checkByUsername', () => {
+  describe('loadByUsername', () => {
     test('Should return null if user does not exist', async () => {
       const sut = new SequelizeUserAdapter()
-      const user = await sut.checkByUsername('invalid_username')
+      const user = await sut.loadByUsername('invalid_username')
       expect(user).toBeNull()
     })
 
@@ -38,7 +38,7 @@ describe('SequelizeUser Adapter', () => {
       const sut = new SequelizeUserAdapter()
       const sequelizeUserAccount = new SequelizeUserAccountAdapter()
       await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
-      const user = await sut.checkByUsername('valid_username')
+      const user = await sut.loadByUsername('valid_username')
       expect(user).toBeTruthy()
       expect(user?.id).toBeTruthy()
       expect(user?.accountId).toBeTruthy()
@@ -51,7 +51,7 @@ describe('SequelizeUser Adapter', () => {
       const sut = new SequelizeUserAdapter()
       const sequelizeUserAccount = new SequelizeUserAccountAdapter()
       await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
-      const user = await sut.checkByUsername('valid_username')
+      const user = await sut.loadByUsername('valid_username')
       expect(user).toBeTruthy()
       expect(user?.id).toBeTruthy()
       expect(user?.accountId).toBeTruthy()
@@ -60,10 +60,10 @@ describe('SequelizeUser Adapter', () => {
     })
   })
 
-  describe('checkById', () => {
+  describe('loadById', () => {
     test('Should return null if user does not exist', async () => {
       const sut = new SequelizeUserAdapter()
-      const user = await sut.checkById(1)
+      const user = await sut.loadById(1)
       expect(user).toBeNull()
     })
 
@@ -72,7 +72,7 @@ describe('SequelizeUser Adapter', () => {
       const sequelizeUserAccount = new SequelizeUserAccountAdapter()
       await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
       const lastUser = ((await Users.findAll())[0])
-      const user = await sut.checkById(lastUser.id)
+      const user = await sut.loadById(lastUser.id)
       expect(user).toBeTruthy()
       expect(user?.id).toBeTruthy()
       expect(user?.accountId).toBeTruthy()
@@ -86,7 +86,7 @@ describe('SequelizeUser Adapter', () => {
       const sequelizeUserAccount = new SequelizeUserAccountAdapter()
       await sequelizeUserAccount.addUserAccount({ username: 'valid_username', password: 'hashed_password' })
       const lastUser = ((await Users.findAll())[0])
-      const user = await sut.checkById(lastUser.id)
+      const user = await sut.loadById(lastUser.id)
       expect(user).toBeTruthy()
       expect(user?.id).toBeTruthy()
       expect(user?.accountId).toBeTruthy()

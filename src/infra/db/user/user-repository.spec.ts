@@ -1,5 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
-import { CheckUserByUserNameORM, CheckUserByIdORM } from './user-protocols'
+import { LoadUserByUserNameORM, LoadUserByIdORM } from './user-protocols'
 import { UserRepository } from '../user/user-repository'
 
 const fakeUser = {
@@ -9,96 +9,96 @@ const fakeUser = {
   accountId: 'any_account'
 }
 
-const makeCheckUserByUserNameORMStub = (): CheckUserByUserNameORM => {
-  class CheckUserByUserNameORMStub implements CheckUserByUserNameORM {
-    async checkByUsername (username: string): Promise<UserModel | null> {
+const makeLoadUserByUserNameORMStub = (): LoadUserByUserNameORM => {
+  class LoadUserByUserNameORMStub implements LoadUserByUserNameORM {
+    async loadByUsername (username: string): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
-  return new CheckUserByUserNameORMStub()
+  return new LoadUserByUserNameORMStub()
 }
 
-const makeCheckUserByIdORMStub = (): CheckUserByIdORM => {
-  class CheckUserByIdORMStub implements CheckUserByIdORM {
-    async checkById (id: number): Promise<UserModel | null> {
+const makeLoadUserByIdORMStub = (): LoadUserByIdORM => {
+  class LoadUserByIdORMStub implements LoadUserByIdORM {
+    async loadById (id: number): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
-  return new CheckUserByIdORMStub()
+  return new LoadUserByIdORMStub()
 }
 
 type SubTypes = {
   sut: UserRepository
-  checkUserByUserNameORMStub: CheckUserByUserNameORM
-  checkUserByIdORMStub: CheckUserByIdORM
+  loadUserByUserNameORMStub: LoadUserByUserNameORM
+  loadUserByIdORMStub: LoadUserByIdORM
 }
 
 const makeSut = (): SubTypes => {
-  const checkUserByIdORMStub = makeCheckUserByIdORMStub()
-  const checkUserByUserNameORMStub = makeCheckUserByUserNameORMStub()
-  const sut = new UserRepository(checkUserByUserNameORMStub, checkUserByIdORMStub)
+  const loadUserByIdORMStub = makeLoadUserByIdORMStub()
+  const loadUserByUserNameORMStub = makeLoadUserByUserNameORMStub()
+  const sut = new UserRepository(loadUserByUserNameORMStub, loadUserByIdORMStub)
   return {
     sut,
-    checkUserByUserNameORMStub,
-    checkUserByIdORMStub
+    loadUserByUserNameORMStub,
+    loadUserByIdORMStub
   }
 }
 
 describe('User Repository', () => {
-  describe('checkByUsername', () => {
-    test('Should call CheckUserByUserNameORM with correct value', async () => {
-      const { sut, checkUserByUserNameORMStub } = makeSut()
-      const checkByUsernameSpy = jest.spyOn(checkUserByUserNameORMStub, 'checkByUsername')
-      await sut.checkByUsername('username')
-      expect(checkByUsernameSpy).toHaveBeenCalledWith('username')
+  describe('LoadByUsername', () => {
+    test('Should call LoadUserByUserNameORM with correct value', async () => {
+      const { sut, loadUserByUserNameORMStub } = makeSut()
+      const loadByUsernameSpy = jest.spyOn(loadUserByUserNameORMStub, 'loadByUsername')
+      await sut.loadByUsername('username')
+      expect(loadByUsernameSpy).toHaveBeenCalledWith('username')
     })
 
-    test('Should throw if CheckUserByUserNameORM throws', async () => {
-      const { sut, checkUserByUserNameORMStub } = makeSut()
-      jest.spyOn(checkUserByUserNameORMStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
-      const user = sut.checkByUsername('username')
+    test('Should throw if LoadUserByUserNameORM throws', async () => {
+      const { sut, loadUserByUserNameORMStub } = makeSut()
+      jest.spyOn(loadUserByUserNameORMStub, 'loadByUsername').mockReturnValueOnce(Promise.reject(new Error()))
+      const user = sut.loadByUsername('username')
       await expect(user).rejects.toThrow()
     })
 
-    test('Should return null if CheckUserByUserNameORM returns null', async () => {
-      const { sut, checkUserByUserNameORMStub } = makeSut()
-      jest.spyOn(checkUserByUserNameORMStub, 'checkByUsername').mockReturnValueOnce(Promise.resolve(null))
-      const user = await sut.checkByUsername('username')
+    test('Should return null if LoadUserByUserNameORM returns null', async () => {
+      const { sut, loadUserByUserNameORMStub } = makeSut()
+      jest.spyOn(loadUserByUserNameORMStub, 'loadByUsername').mockReturnValueOnce(Promise.resolve(null))
+      const user = await sut.loadByUsername('username')
       expect(user).toBeNull()
     })
 
     test('Should return an user on success', async () => {
       const { sut } = makeSut()
-      const user = await sut.checkByUsername('username')
+      const user = await sut.loadByUsername('username')
       expect(user).toEqual(fakeUser)
     })
   })
 
-  describe('checkById', () => {
-    test('Should call CheckUserByIdORM with correct value', async () => {
-      const { sut, checkUserByIdORMStub } = makeSut()
-      const checkByUsernameSpy = jest.spyOn(checkUserByIdORMStub, 'checkById')
-      await sut.checkById(1)
-      expect(checkByUsernameSpy).toHaveBeenCalledWith(1)
+  describe('LoadById', () => {
+    test('Should call LoadUserByIdORM with correct value', async () => {
+      const { sut, loadUserByIdORMStub } = makeSut()
+      const loadByIdSpy = jest.spyOn(loadUserByIdORMStub, 'loadById')
+      await sut.loadById(1)
+      expect(loadByIdSpy).toHaveBeenCalledWith(1)
     })
 
-    test('Should throw if CheckUserByIdORM throws', async () => {
-      const { sut, checkUserByIdORMStub } = makeSut()
-      jest.spyOn(checkUserByIdORMStub, 'checkById').mockReturnValueOnce(Promise.reject(new Error()))
-      const user = sut.checkById(1)
+    test('Should throw if LoadUserByIdORM throws', async () => {
+      const { sut, loadUserByIdORMStub } = makeSut()
+      jest.spyOn(loadUserByIdORMStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+      const user = sut.loadById(1)
       await expect(user).rejects.toThrow()
     })
 
-    test('Should return null if CheckUserByIdORM returns null', async () => {
-      const { sut, checkUserByIdORMStub } = makeSut()
-      jest.spyOn(checkUserByIdORMStub, 'checkById').mockReturnValueOnce(Promise.resolve(null))
-      const user = await sut.checkById(1)
+    test('Should return null if LoadUserByIdORM returns null', async () => {
+      const { sut, loadUserByIdORMStub } = makeSut()
+      jest.spyOn(loadUserByIdORMStub, 'loadById').mockReturnValueOnce(Promise.resolve(null))
+      const user = await sut.loadById(1)
       expect(user).toBeNull()
     })
 
     test('Should return an user on success', async () => {
       const { sut } = makeSut()
-      const user = await sut.checkById(1)
+      const user = await sut.loadById(1)
       expect(user).toEqual(fakeUser)
     })
   })

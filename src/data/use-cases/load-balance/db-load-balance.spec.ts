@@ -1,6 +1,6 @@
 import { AccountModel } from '../../../domain/models/account'
 import { UserModel } from '../../../domain/models/user'
-import { LoadAccountByIdRepository, CheckUserByIdRepository } from './db-load-balance-protocols'
+import { LoadAccountByIdRepository, LoadUserByIdRepository } from './db-load-balance-protocols'
 import { DbLoadBalance } from './db-load-balance'
 
 const userId = 1
@@ -17,52 +17,52 @@ const fakeAccount = {
   balance: '100.00'
 }
 
-const makeCheckUserByIdRepositoryStub = (): CheckUserByIdRepository => {
-  class CheckUserByIdRepositorySutb implements CheckUserByIdRepository {
-    async checkById (id: number): Promise<UserModel | null> {
+const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
+  class LoadUserByIdRepositoryStub implements LoadUserByIdRepository {
+    async loadById (id: number): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
-  return new CheckUserByIdRepositorySutb()
+  return new LoadUserByIdRepositoryStub()
 }
 
 const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
-  class LoadAccountByIdRepositorySutb implements LoadAccountByIdRepository {
+  class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
     async loadById (id: number): Promise<AccountModel | null> {
       return await Promise.resolve(fakeAccount)
     }
   }
-  return new LoadAccountByIdRepositorySutb()
+  return new LoadAccountByIdRepositoryStub()
 }
 
 type SubTypes = {
   sut: DbLoadBalance
-  checkUserByIdRepositoryStub: CheckUserByIdRepository
+  loadUserByIdRepositoryStub: LoadUserByIdRepository
   loadAccountByIdRepositoryStub: LoadAccountByIdRepository
 }
 
 const makeSut = (): SubTypes => {
   const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepositoryStub()
-  const checkUserByIdRepositoryStub = makeCheckUserByIdRepositoryStub()
-  const sut = new DbLoadBalance(checkUserByIdRepositoryStub, loadAccountByIdRepositoryStub)
+  const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
+  const sut = new DbLoadBalance(loadUserByIdRepositoryStub, loadAccountByIdRepositoryStub)
   return {
     sut,
-    checkUserByIdRepositoryStub,
+    loadUserByIdRepositoryStub,
     loadAccountByIdRepositoryStub
   }
 }
 
 describe('DbLoadBalance', () => {
-  test('Should call CheckUserByIdRepository with correct value', async () => {
-    const { sut, checkUserByIdRepositoryStub } = makeSut()
-    const checkByUsernameSpy = jest.spyOn(checkUserByIdRepositoryStub, 'checkById')
+  test('Should call LoadUserByIdRepository with correct value', async () => {
+    const { sut, loadUserByIdRepositoryStub } = makeSut()
+    const LoadByUsernameSpy = jest.spyOn(loadUserByIdRepositoryStub, 'loadById')
     await sut.load(userId)
-    expect(checkByUsernameSpy).toHaveBeenCalledWith(userId)
+    expect(LoadByUsernameSpy).toHaveBeenCalledWith(userId)
   })
 
-  test('Should throw if CheckUserByIdRepository throws', async () => {
-    const { sut, checkUserByIdRepositoryStub } = makeSut()
-    jest.spyOn(checkUserByIdRepositoryStub, 'checkById').mockReturnValueOnce(Promise.reject(new Error()))
+  test('Should throw if LoadUserByIdRepository throws', async () => {
+    const { sut, loadUserByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
     const balance = sut.load(userId)
     await expect(balance).rejects.toThrow()
   })

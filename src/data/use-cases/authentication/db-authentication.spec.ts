@@ -1,5 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
-import { HashComparer, Encrypter, CheckUserByUsernameRepository } from './db-authentication-protocols'
+import { HashComparer, Encrypter, LoadUserByUsernameRepository } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
 
 const fakeAuthenticationParams = {
@@ -14,13 +14,13 @@ const fakeUser = {
   accountId: 'fake_accountId'
 }
 
-const makeCheckUserByUsernameRepositoryStub = (): CheckUserByUsernameRepository => {
-  class CheckUserByUsernameRepositoryStub implements CheckUserByUsernameRepository {
-    async checkByUsername (username: string): Promise<UserModel | null> {
+const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository => {
+  class LoadUserByUsernameRepositoryStub implements LoadUserByUsernameRepository {
+    async loadByUsername (username: string): Promise<UserModel | null> {
       return await Promise.resolve(fakeUser)
     }
   }
-  return new CheckUserByUsernameRepositoryStub()
+  return new LoadUserByUsernameRepositoryStub()
 }
 
 const makeHashComparerStub = (): HashComparer => {
@@ -43,7 +43,7 @@ const makeEncrypterStub = (): Encrypter => {
 
 type SubTypes = {
   sut: DbAuthentication
-  checkUserByUsernameRepositoryStub: CheckUserByUsernameRepository
+  loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
   hashComparerStub: HashComparer
   encrypterStub: Encrypter
 }
@@ -51,34 +51,34 @@ type SubTypes = {
 const makeSut = (): SubTypes => {
   const encrypterStub = makeEncrypterStub()
   const hashComparerStub = makeHashComparerStub()
-  const checkUserByUsernameRepositoryStub = makeCheckUserByUsernameRepositoryStub()
-  const sut = new DbAuthentication(checkUserByUsernameRepositoryStub, hashComparerStub, encrypterStub)
+  const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
+  const sut = new DbAuthentication(loadUserByUsernameRepositoryStub, hashComparerStub, encrypterStub)
   return {
     sut,
-    checkUserByUsernameRepositoryStub,
+    loadUserByUsernameRepositoryStub,
     hashComparerStub,
     encrypterStub
   }
 }
 
 describe('DbAuthentication', () => {
-  test('Should call CheckUserByUsernameRepository with correct username', async () => {
-    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    const checkByUsernameSpy = jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername')
+  test('Should call LoadUserByUsernameRepository with correct username', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    const loadByUsernameSpy = jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername')
     await sut.auth(fakeAuthenticationParams)
-    expect(checkByUsernameSpy).toHaveBeenLastCalledWith(fakeAuthenticationParams.username)
+    expect(loadByUsernameSpy).toHaveBeenLastCalledWith(fakeAuthenticationParams.username)
   })
 
-  test('Should throw if CheckUserByUsernameRepository throws', async () => {
-    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
+  test('Should throw if LoadUserByUsernameRepository throws', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.reject(new Error()))
     const accessToken = sut.auth(fakeAuthenticationParams)
     await expect(accessToken).rejects.toThrow()
   })
 
-  test('Should return null if CheckUserByUsernameRepository returns null', async () => {
-    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.resolve(null))
+  test('Should return null if LoadUserByUsernameRepository returns null', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.resolve(null))
     const accessToken = await sut.auth(fakeAuthenticationParams)
     expect(accessToken).toBeNull()
   })

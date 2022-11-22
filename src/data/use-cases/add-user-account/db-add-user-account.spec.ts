@@ -1,5 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
-import { Hasher, UserData, AddUserAccountRepository, CheckUserByUsernameRepository } from './db-add-user-account-protocols'
+import { Hasher, UserData, AddUserAccountRepository, LoadUserByUsernameRepository } from './db-add-user-account-protocols'
 import { DbAddUserAccount } from './db-add-user-accout'
 
 const userData = {
@@ -32,53 +32,53 @@ const makeAddUserAccountRepositoryStub = (): AddUserAccountRepository => {
   return new AddUserAccountRepositoryStub()
 }
 
-const makeCheckUserByUsernameRepositoryStub = (): CheckUserByUsernameRepository => {
-  class CheckUserByUsernameRepositoryStub implements CheckUserByUsernameRepository {
-    async checkByUsername (username: string): Promise<UserModel | null> {
+const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository => {
+  class LoadUserByUsernameRepositoryStub implements LoadUserByUsernameRepository {
+    async loadByUsername (username: string): Promise<UserModel | null> {
       return await Promise.resolve(null)
     }
   }
-  return new CheckUserByUsernameRepositoryStub()
+  return new LoadUserByUsernameRepositoryStub()
 }
 
 type SubTypes = {
   sut: DbAddUserAccount
   hasherStub: Hasher
   addUserAccountRepositoryStub: AddUserAccountRepository
-  checkUserByUsernameRepositoryStub: CheckUserByUsernameRepository
+  loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
 }
 
 const makeSut = (): SubTypes => {
-  const checkUserByUsernameRepositoryStub = makeCheckUserByUsernameRepositoryStub()
+  const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
   const addUserAccountRepositoryStub = makeAddUserAccountRepositoryStub()
   const hasherStub = makeHasherStub()
-  const sut = new DbAddUserAccount(hasherStub, addUserAccountRepositoryStub, checkUserByUsernameRepositoryStub)
+  const sut = new DbAddUserAccount(hasherStub, addUserAccountRepositoryStub, loadUserByUsernameRepositoryStub)
   return {
     sut,
     hasherStub,
     addUserAccountRepositoryStub,
-    checkUserByUsernameRepositoryStub
+    loadUserByUsernameRepositoryStub
   }
 }
 
 describe('DbAddUserAccount', () => {
-  test('Should call CheckUserByUsernameRepository with correct value', async () => {
-    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    const checkByUsernameSpy = jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername')
+  test('Should call LoadUserByUsernameRepository with correct value', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    const loadByUsernameSpy = jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername')
     await sut.addUserAccount(userData)
-    expect(checkByUsernameSpy).toHaveBeenCalledWith('valid_username')
+    expect(loadByUsernameSpy).toHaveBeenCalledWith('valid_username')
   })
 
-  test('Should throw if CheckUserByUsernameRepository throws', async () => {
-    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.reject(new Error()))
+  test('Should throw if LoadUserByUsernameRepository throws', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.reject(new Error()))
     const userAccount = sut.addUserAccount(userData)
     await expect(userAccount).rejects.toThrow()
   })
 
-  test('Should return null if CheckUserByUsernameRepository returns an user', async () => {
-    const { sut, checkUserByUsernameRepositoryStub } = makeSut()
-    jest.spyOn(checkUserByUsernameRepositoryStub, 'checkByUsername').mockReturnValueOnce(Promise.resolve(fakeUser))
+  test('Should return null if LoadUserByUsernameRepository returns an user', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.resolve(fakeUser))
     const userAccount = await sut.addUserAccount(userData)
     expect(userAccount).toBeNull()
   })
