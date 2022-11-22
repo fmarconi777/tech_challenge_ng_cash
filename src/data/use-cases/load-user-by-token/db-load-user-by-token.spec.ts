@@ -31,4 +31,11 @@ describe('DbLoadUserByToken', () => {
     await sut.load('any_token')
     expect(decryptSpy).toHaveBeenCalledWith('any_token')
   })
+
+  test('Should throw if Decrypter throws', async () => {
+    const { sut, decrypterStub } = makeSut()
+    jest.spyOn(decrypterStub, 'decrypt').mockReturnValueOnce(Promise.reject(new Error()))
+    const user = sut.load('any_token')
+    await expect(user).rejects.toThrow()
+  })
 })
