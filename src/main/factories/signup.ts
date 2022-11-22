@@ -10,12 +10,12 @@ import { PasswordValidatorAdapter } from '../../util/validators/password-validat
 import { UserValidatorAdapter } from '../../util/validators/user-validator-adapter'
 
 export const makeSignupControler = (): Controller => {
-  const checkUserByUserNameORM = new SequelizeUserAdapter()
-  const checkUserByUsernameRepository = new UserRepository(checkUserByUserNameORM)
+  const userORM = new SequelizeUserAdapter()
+  const userRepository = new UserRepository(userORM, userORM)
   const addUserAccountORM = new SequelizeUserAccountAdapter()
   const addUserAccountRepository = new UserAccountRepository(addUserAccountORM)
   const hasher = new BcryptAdapter()
-  const addUserAccount = new DbAddUserAccount(hasher, addUserAccountRepository, checkUserByUsernameRepository)
+  const addUserAccount = new DbAddUserAccount(hasher, addUserAccountRepository, userRepository)
   const passwordValidator = new PasswordValidatorAdapter()
   const userValidator = new UserValidatorAdapter()
   return new SignUpController(userValidator, passwordValidator, addUserAccount)

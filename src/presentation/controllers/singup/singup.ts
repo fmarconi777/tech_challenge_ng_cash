@@ -1,7 +1,7 @@
 import { Controller, HttpRequest, HttpResponse, Validator, AddUserAccount } from './singup-protocols'
-import { InvalidParamError, MissingParamError } from '../errors'
-import { badRequest, forbidden, okResponse, serverError } from '../helpers/http-helper'
-import { UsernameInUseError } from '../errors/username-in-use-error'
+import { InvalidParamError, MissingParamError } from '../../errors'
+import { badRequest, forbidden, okResponse, serverError } from '../../helpers/http-helper'
+import { UsernameInUseError } from '../../errors/username-in-use-error'
 
 export class SignUpController implements Controller {
   constructor (

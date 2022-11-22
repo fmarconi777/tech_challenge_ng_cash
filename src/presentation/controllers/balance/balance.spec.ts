@@ -1,5 +1,5 @@
 import { BalanceModel, LoadBalance } from './balance-protocols'
-import { okResponse, serverError } from '../helpers/http-helper'
+import { okResponse, serverError } from '../../helpers/http-helper'
 import { BalanceController } from './balance'
 
 const makeLoadBalanceStub = (): LoadBalance => {

@@ -1,5 +1,5 @@
 import { LoadBalance, Controller, HttpRequest, HttpResponse } from './balance-protocols'
-import { okResponse, serverError } from '../helpers/http-helper'
+import { okResponse, serverError } from '../../helpers/http-helper'
 
 export class BalanceController implements Controller {
   constructor (private readonly loadBalance: LoadBalance) {}

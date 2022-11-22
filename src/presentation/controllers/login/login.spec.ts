@@ -1,6 +1,6 @@
 import { Authentication, AuthenticationModel } from './singup-protocols'
-import { MissingParamError } from '../errors'
-import { badRequest, okResponse, serverError, unauthorized } from '../helpers/http-helper'
+import { MissingParamError } from '../../errors'
+import { badRequest, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'
 
 const fakeUser = {
