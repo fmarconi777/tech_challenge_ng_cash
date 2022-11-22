@@ -15,7 +15,7 @@ export class AuthMiddleware implements Middleware {
       if (accessToken && accessToken !== 'undefined') {
         const user = await this.loadUserByToken.load(httpRequest.header, this.role)
         if (user) {
-          return okResponse('')
+          return okResponse({ userId: user.id })
         }
       }
       return forbidden(new AccessDeniedError())
