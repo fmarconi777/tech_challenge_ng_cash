@@ -4,15 +4,14 @@ import { HttpRequest, HttpResponse, Middleware, LoadUserByToken } from './auth-m
 
 export class AuthMiddleware implements Middleware {
   constructor (
-    private readonly loadUserByToken: LoadUserByToken,
-    private readonly role?: string
+    private readonly loadUserByToken: LoadUserByToken
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const accessToken = httpRequest.header
       if (accessToken && accessToken !== 'undefined') {
-        const user = await this.loadUserByToken.load(httpRequest.header, this.role)
+        const user = await this.loadUserByToken.load(httpRequest.header)
         if (user) {
           return okResponse({ userId: user.id })
         }

@@ -28,9 +28,9 @@ type SubTypes = {
   loadUserByTokenStub: LoadUserByToken
 }
 
-const makeSut = (role?: string): SubTypes => {
+const makeSut = (): SubTypes => {
   const loadUserByTokenStub = makeLoadUserByTokenStub()
-  const sut = new AuthMiddleware(loadUserByTokenStub, role)
+  const sut = new AuthMiddleware(loadUserByTokenStub)
   return {
     sut,
     loadUserByTokenStub
@@ -45,16 +45,14 @@ describe('Auth Middleware', () => {
   })
 
   test('Should call LoadUserByToken with correct Token', async () => {
-    const role = 'any_role'
-    const { sut, loadUserByTokenStub } = makeSut(role)
+    const { sut, loadUserByTokenStub } = makeSut()
     const loadSpy = jest.spyOn(loadUserByTokenStub, 'load')
     await sut.handle(fakeRequest())
-    expect(loadSpy).toHaveBeenCalledWith('any_token', role)
+    expect(loadSpy).toHaveBeenCalledWith('any_token')
   })
 
   test('Should return 500 if LoadUserByToken throws', async () => {
-    const role = 'any_role'
-    const { sut, loadUserByTokenStub } = makeSut(role)
+    const { sut, loadUserByTokenStub } = makeSut()
     jest.spyOn(loadUserByTokenStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
     const httpResponse = await sut.handle(fakeRequest())
     expect(httpResponse).toEqual(serverError())
