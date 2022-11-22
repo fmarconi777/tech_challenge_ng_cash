@@ -1,6 +1,5 @@
 import { UserModel } from '../../../domain/models/user'
-import { Decrypter } from '../../protocols/crytography/decrypter'
-import { LoadUserByIdRepository } from '../../protocols/db/user/load-user-by-id-repository'
+import { Decrypter, LoadUserByIdRepository } from './db-load-user-by-token-protocols'
 import { DbLoadUserByToken } from './db-load-user-by-token'
 
 const fakeUser = {
