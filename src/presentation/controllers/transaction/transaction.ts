@@ -35,7 +35,7 @@ export class TransactionController implements Controller {
       if (!record.recorded) {
         return badRequest(new TransactionError(record.message))
       }
-      return okResponse('')
+      return okResponse(record.message)
     } catch (error: any) {
       return serverError()
     }
