@@ -38,4 +38,11 @@ describe('DbRecordTransaction', () => {
     await sut.record(transactionData)
     expect(loadByUsernameSpy).toHaveBeenCalledWith('some_username')
   })
+
+  test('Should throw if LoadUserByUsernameRepository throws', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.reject(new Error()))
+    const userAccount = sut.record(transactionData)
+    await expect(userAccount).rejects.toThrow()
+  })
 })
