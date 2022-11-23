@@ -7,10 +7,16 @@ export class DbRecordTransaction implements RecordTransaction {
   ) {}
 
   async record (transactionData: TransactionData): Promise<Record> {
-    await this.loadUserByUsernameRepository.loadByUsername(transactionData.cashInUsername)
+    const user = await this.loadUserByUsernameRepository.loadByUsername(transactionData.cashInUsername)
+    if (user) {
+      return {
+        recorded: true,
+        message: ''
+      }
+    }
     return {
       recorded: false,
-      message: ''
+      message: 'Invalid cashInUsername'
     }
   }
 }
