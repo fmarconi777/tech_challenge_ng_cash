@@ -8,5 +8,5 @@ export type HttpRequest = {
   param?: any
   method?: any
   header?: any
-  userId?: any
+  user?: any
 }

@@ -13,7 +13,12 @@ export class AuthMiddleware implements Middleware {
       if (accessToken && accessToken !== 'undefined') {
         const user = await this.loadUserByToken.load(httpRequest.header)
         if (user) {
-          return okResponse({ userId: user.id })
+          return okResponse({
+            user: {
+              id: user.id,
+              username: user.username
+            }
+          })
         }
       }
       return forbidden(new AccessDeniedError())
