@@ -1,10 +1,11 @@
 import { RecordTransaction } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, okResponse } from '../../helpers/http-helper'
-import { Controller, HttpRequest, HttpResponse } from '../../protocols'
+import { Controller, HttpRequest, HttpResponse, Validator } from '../../protocols'
 
 export class TransactionController implements Controller {
   constructor (
+    private readonly currencyValidator: Validator,
     private readonly recordTransaction: RecordTransaction
   ) {}
 
@@ -20,6 +21,7 @@ export class TransactionController implements Controller {
     if (username === cashInUsername) {
       return badRequest(new InvalidParamError('cashInUsername'))
     }
+    this.currencyValidator.isValid(credit)
     const transactionData = {
       cashOutUsername: username,
       cashInUsername,
