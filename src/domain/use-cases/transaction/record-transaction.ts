@@ -1,7 +1,7 @@
 export type TransactionData = {
-  cashOutUsername: string
-  cashInUsername: string
-  credit: string
+  debitedUsername: string
+  creditedUsername: string
+  value: string
 }
 
 export type Record = {

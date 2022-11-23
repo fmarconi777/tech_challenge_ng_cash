@@ -12,24 +12,24 @@ export class TransactionController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const requiredFields = ['cashInUsername', 'credit']
+      const requiredFields = ['creditedUsername', 'value']
       for (const field of requiredFields) {
         if (!httpRequest.body[field]) {
           return badRequest(new MissingParamError(field))
         }
       }
       const { username } = httpRequest.user
-      const { cashInUsername, credit } = httpRequest.body
-      if (username === cashInUsername) {
-        return badRequest(new InvalidParamError('cashInUsername'))
+      const { creditedUsername, value } = httpRequest.body
+      if (username === creditedUsername) {
+        return badRequest(new InvalidParamError('creditedUsername'))
       }
-      if (!this.currencyValidator.isValid(credit)) {
-        return badRequest(new InvalidParamError('credit'))
+      if (!this.currencyValidator.isValid(value)) {
+        return badRequest(new InvalidParamError('value'))
       }
       const transactionData = {
-        cashOutUsername: username,
-        cashInUsername,
-        credit
+        debitedUsername: username,
+        creditedUsername,
+        value
       }
       const record = await this.recordTransaction.record(transactionData)
       if (!record.recorded) {

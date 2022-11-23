@@ -7,8 +7,8 @@ import { TransactionController } from './transaction'
 
 const request = {
   body: {
-    cashInUsername: 'some_username',
-    credit: '100.00'
+    creditedUsername: 'some_username',
+    value: '100.00'
   },
   user: {
     id: '1',
@@ -55,11 +55,11 @@ const makeSut = (): Subtypes => {
 }
 
 describe('Transaction Controller', () => {
-  test('Should return 400 status if cashInUsername is not provided', async () => {
+  test('Should return 400 status if creditedUsername is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        credit: '100.00'
+        value: '100.00'
       },
       user: {
         id: '1',
@@ -67,14 +67,14 @@ describe('Transaction Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('cashInUsername')))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('creditedUsername')))
   })
 
-  test('Should return 400 status if credit is not provided', async () => {
+  test('Should return 400 status if value is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        cashInUsername: 'some_username'
+        creditedUsername: 'some_username'
       },
       user: {
         id: '1',
@@ -82,15 +82,15 @@ describe('Transaction Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('credit')))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('value')))
   })
 
-  test('Should return 400 status if username and cashInUsername are equal', async () => {
+  test('Should return 400 status if username and creditedUsername are equal', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        cashInUsername: 'any_username',
-        credit: '100.00'
+        creditedUsername: 'any_username',
+        value: '100.00'
       },
       user: {
         id: '1',
@@ -98,7 +98,7 @@ describe('Transaction Controller', () => {
       }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('cashInUsername')))
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('creditedUsername')))
   })
 
   test('Should call CurrencyValidator with correct value', async () => {
@@ -119,7 +119,7 @@ describe('Transaction Controller', () => {
     const { sut, currencyValidatorStub } = makeSut()
     jest.spyOn(currencyValidatorStub, 'isValid').mockReturnValueOnce(false)
     const httpResponse = await sut.handle(request)
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('credit')))
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('value')))
   })
 
   test('Should call RecordTransaction with correct values', async () => {
@@ -127,9 +127,9 @@ describe('Transaction Controller', () => {
     const recordSpy = jest.spyOn(recordTransactionStub, 'record')
     await sut.handle(request)
     expect(recordSpy).toHaveBeenCalledWith({
-      cashOutUsername: 'any_username',
-      cashInUsername: 'some_username',
-      credit: '100.00'
+      debitedUsername: 'any_username',
+      creditedUsername: 'some_username',
+      value: '100.00'
     })
   })
 
