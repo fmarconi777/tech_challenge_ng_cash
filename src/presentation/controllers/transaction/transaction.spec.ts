@@ -17,7 +17,9 @@ describe('Transaction Controller', () => {
   test('Should return 400 status if cashInUsername is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
-      body: {},
+      body: {
+        credit: '100.00'
+      },
       user: {
         id: '1',
         username: 'any_username'
@@ -27,11 +29,27 @@ describe('Transaction Controller', () => {
     expect(httpResponse).toEqual(badRequest(new MissingParamError('cashInUsername')))
   })
 
+  test('Should return 400 status if credit is not provided', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        cashInUsername: 'some_username'
+      },
+      user: {
+        id: '1',
+        username: 'any_username'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('credit')))
+  })
+
   test('Should return 400 status if username and cashInUsername are equal', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
-        cashInUsername: 'any_username'
+        cashInUsername: 'any_username',
+        credit: '100.00'
       },
       user: {
         id: '1',
