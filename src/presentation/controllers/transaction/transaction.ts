@@ -22,7 +22,9 @@ export class TransactionController implements Controller {
       if (username === cashInUsername) {
         return badRequest(new InvalidParamError('cashInUsername'))
       }
-      this.currencyValidator.isValid(credit)
+      if (!this.currencyValidator.isValid(credit)) {
+        return badRequest(new InvalidParamError('credit'))
+      }
       const transactionData = {
         cashOutUsername: username,
         cashInUsername,
