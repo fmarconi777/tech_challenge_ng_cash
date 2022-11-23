@@ -1,7 +1,7 @@
 import { Record, RecordTransaction, TransactionData } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { TransactionError } from '../../errors/transaction-error'
-import { badRequest, serverError } from '../../helpers/http-helper'
+import { badRequest, okResponse, serverError } from '../../helpers/http-helper'
 import { Validator } from '../../protocols'
 import { TransactionController } from './transaction'
 
@@ -148,5 +148,11 @@ describe('Transaction Controller', () => {
     }))
     const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(badRequest(new TransactionError('any_message')))
+  })
+
+  test('Should return a message on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(okResponse('Transaction succesfully recorded'))
   })
 })
