@@ -1,6 +1,6 @@
 import { RecordTransaction, TransactionData } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
-import { badRequest } from '../../helpers/http-helper'
+import { badRequest, serverError } from '../../helpers/http-helper'
 import { Validator } from '../../protocols'
 import { TransactionController } from './transaction'
 
@@ -102,6 +102,14 @@ describe('Transaction Controller', () => {
     const isValidSpy = jest.spyOn(currencyValidatorStub, 'isValid')
     await sut.handle(request)
     expect(isValidSpy).toHaveBeenCalledWith('100.00')
+  })
+
+  test('Should return 500 status if CurrencyValidator throws', async () => {
+    const { sut, currencyValidatorStub } = makeSut()
+    jest.spyOn(currencyValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    const httpRequest = { user: { id: '1', username: 'any_username' } }
+    const balance = await sut.handle(httpRequest)
+    expect(balance).toEqual(serverError())
   })
 
   test('Should call RecordTransaction with correct values', async () => {
