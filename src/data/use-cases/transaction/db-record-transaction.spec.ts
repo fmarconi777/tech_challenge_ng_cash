@@ -1,4 +1,6 @@
+import { AccountModel } from '../../../domain/models/account'
 import { UserModel } from '../../../domain/models/user'
+import { LoadAccountByIdRepository } from '../../protocols/db/account/load-account-by-id-repository'
 import { LoadUserByUsernameRepository } from '../../protocols/db/user/load-user-by-username-repository'
 import { DbRecordTransaction } from './db-record-transaction'
 
@@ -8,26 +10,50 @@ const transactionData = {
   credit: '100.00'
 }
 
+const fakeUser = {
+  id: '1',
+  username: 'any_username',
+  password: 'any_password',
+  accountId: '1'
+}
+
+const fakeAccount = {
+  id: '1',
+  balance: '100.00'
+}
+
 const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository => {
   class LoadUserByUsernameRepositoryStub implements LoadUserByUsernameRepository {
     async loadByUsername (username: string): Promise<UserModel | null> {
-      return await Promise.resolve(null)
+      return await Promise.resolve(fakeUser)
     }
   }
   return new LoadUserByUsernameRepositoryStub()
 }
 
+const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
+  class LoadAccountByIdRepositoryStub implements LoadAccountByIdRepository {
+    async loadById (id: number): Promise<AccountModel | null> {
+      return await Promise.resolve(fakeAccount)
+    }
+  }
+  return new LoadAccountByIdRepositoryStub()
+}
+
 type SubTypes = {
   sut: DbRecordTransaction
   loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
+  loadAccountByIdRepositoryStub: LoadAccountByIdRepository
 }
 
 const makeSut = (): SubTypes => {
+  const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepositoryStub()
   const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
-  const sut = new DbRecordTransaction(loadUserByUsernameRepositoryStub)
+  const sut = new DbRecordTransaction(loadUserByUsernameRepositoryStub, loadAccountByIdRepositoryStub)
   return {
     sut,
-    loadUserByUsernameRepositoryStub
+    loadUserByUsernameRepositoryStub,
+    loadAccountByIdRepositoryStub
   }
 }
 
@@ -54,5 +80,12 @@ describe('DbRecordTransaction', () => {
       recorded: false,
       message: 'Invalid cashInUsername'
     })
+  })
+
+  test('Should call LoadAccountByIdRepository with correct value', async () => {
+    const { sut, loadAccountByIdRepositoryStub } = makeSut()
+    const loadByUsernameSpy = jest.spyOn(loadAccountByIdRepositoryStub, 'loadById')
+    await sut.record(transactionData)
+    expect(loadByUsernameSpy).toHaveBeenCalledWith(1)
   })
 })
