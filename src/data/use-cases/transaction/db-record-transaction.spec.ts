@@ -45,4 +45,14 @@ describe('DbRecordTransaction', () => {
     const userAccount = sut.record(transactionData)
     await expect(userAccount).rejects.toThrow()
   })
+
+  test('Should return a Record if LoadUserByUsernameRepository returns null', async () => {
+    const { sut, loadUserByUsernameRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.resolve(null))
+    const userAccount = await sut.record(transactionData)
+    expect(userAccount).toEqual({
+      recorded: false,
+      message: 'Invalid cashInUsername'
+    })
+  })
 })
