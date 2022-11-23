@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev src/main/server.ts",
+    "start": "ts-node-dev --files src/main/server.ts",
     "test": "jest --passWithNoTests --silent --noStackTrace --no-cache --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
