@@ -131,4 +131,13 @@ describe('DbRecordTransaction', () => {
     const record = sut.record(transactionData)
     await expect(record).rejects.toThrow()
   })
+
+  test('Should return a Record on success', async () => {
+    const { sut } = makeSut()
+    const record = await sut.record(transactionData)
+    expect(record).toEqual({
+      recorded: true,
+      message: 'Transaction succesfully recorded'
+    })
+  })
 })
