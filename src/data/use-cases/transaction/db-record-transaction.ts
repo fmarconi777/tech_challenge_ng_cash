@@ -9,13 +9,21 @@ export class DbRecordTransaction implements RecordTransaction {
   ) {}
 
   async record (transactionData: TransactionData): Promise<Record> {
-    const cashInUser = await this.loadUserByUsernameRepository.loadByUsername(transactionData.cashInUsername)
+    const { cashInUsername, cashOutUsername, credit } = transactionData
+    const cashInUser = await this.loadUserByUsernameRepository.loadByUsername(cashInUsername)
     if (cashInUser) {
-      const cashOutUser: any = await this.loadUserByUsernameRepository.loadByUsername(transactionData.cashOutUsername)
-      await this.loadAccountByIdRepository.loadById(+cashOutUser.accountId)
+      const cashOutUser: any = await this.loadUserByUsernameRepository.loadByUsername(cashOutUsername)
+      const cashOutAccount: any = await this.loadAccountByIdRepository.loadById(+cashOutUser.accountId)
+      const resultBalance = Number.parseFloat(cashOutAccount?.balance) - Number.parseFloat(credit)
+      if (resultBalance >= 0) {
+        return {
+          recorded: true,
+          message: ''
+        }
+      }
       return {
-        recorded: true,
-        message: ''
+        recorded: false,
+        message: 'Insufficient balance'
       }
     }
     return {
