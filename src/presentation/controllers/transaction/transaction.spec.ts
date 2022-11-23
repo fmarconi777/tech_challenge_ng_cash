@@ -1,6 +1,7 @@
 import { RecordTransaction, TransactionData } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest } from '../../helpers/http-helper'
+import { Validator } from '../../protocols'
 import { TransactionController } from './transaction'
 
 const request = {
@@ -23,17 +24,29 @@ const makeRecordTransactionStub = (): RecordTransaction => {
   return new RecordTransactionStub()
 }
 
+const makesCurrencyValidatorStub = (): Validator => {
+  class CurrencyValidatorStub implements Validator {
+    isValid (param: string): boolean {
+      return true
+    }
+  }
+  return new CurrencyValidatorStub()
+}
+
 type Subtypes = {
   sut: TransactionController
   recordTransactionStub: RecordTransaction
+  currencyValidatorStub: Validator
 }
 
 const makeSut = (): Subtypes => {
+  const currencyValidatorStub = makesCurrencyValidatorStub()
   const recordTransactionStub = makeRecordTransactionStub()
-  const sut = new TransactionController(recordTransactionStub)
+  const sut = new TransactionController(currencyValidatorStub, recordTransactionStub)
   return {
     sut,
-    recordTransactionStub
+    recordTransactionStub,
+    currencyValidatorStub
   }
 }
 
@@ -82,6 +95,13 @@ describe('Transaction Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('cashInUsername')))
+  })
+
+  test('Should call CurrencyValidator with correct value', async () => {
+    const { sut, currencyValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(currencyValidatorStub, 'isValid')
+    await sut.handle(request)
+    expect(isValidSpy).toHaveBeenCalledWith('100.00')
   })
 
   test('Should call RecordTransaction with correct values', async () => {
