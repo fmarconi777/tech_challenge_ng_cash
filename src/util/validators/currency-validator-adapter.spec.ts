@@ -20,4 +20,11 @@ describe('CurrencyValidator Adapter', () => {
     const isValid = sut.isValid('100.00')
     expect(isValid).toBeTruthy()
   })
+
+  test('Should call validator with correct values', () => {
+    const sut = new CurrencyValidatorAdapter()
+    const isAlphanumericSpy = jest.spyOn(validator, 'isCurrency')
+    sut.isValid('100.00')
+    expect(isAlphanumericSpy).toHaveBeenCalledWith('100.00', { allow_negatives: false, thousands_separator: '', require_decimal: true })
+  })
 })
