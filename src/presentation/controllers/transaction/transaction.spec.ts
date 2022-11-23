@@ -108,8 +108,15 @@ describe('Transaction Controller', () => {
     const { sut, currencyValidatorStub } = makeSut()
     jest.spyOn(currencyValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
     const httpRequest = { user: { id: '1', username: 'any_username' } }
-    const balance = await sut.handle(httpRequest)
-    expect(balance).toEqual(serverError())
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(serverError())
+  })
+
+  test('Should 400 status if CurrencyValidator returns false', async () => {
+    const { sut, currencyValidatorStub } = makeSut()
+    jest.spyOn(currencyValidatorStub, 'isValid').mockReturnValueOnce(false)
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('credit')))
   })
 
   test('Should call RecordTransaction with correct values', async () => {
