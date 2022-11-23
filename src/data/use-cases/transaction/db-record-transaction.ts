@@ -27,7 +27,11 @@ export class DbRecordTransaction implements RecordTransaction {
           creditBalance,
           value: +value
         }
-        await this.recordTransactionRepository.record(recordData)
+        const record = await this.recordTransactionRepository.record(recordData)
+        return {
+          recorded: true,
+          message: record
+        }
       }
       return {
         recorded: false,
