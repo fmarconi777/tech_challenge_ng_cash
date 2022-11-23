@@ -68,15 +68,15 @@ describe('DbRecordTransaction', () => {
   test('Should throw if LoadUserByUsernameRepository throws', async () => {
     const { sut, loadUserByUsernameRepositoryStub } = makeSut()
     jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.reject(new Error()))
-    const userAccount = sut.record(transactionData)
-    await expect(userAccount).rejects.toThrow()
+    const record = sut.record(transactionData)
+    await expect(record).rejects.toThrow()
   })
 
   test('Should return a Record if LoadUserByUsernameRepository returns null', async () => {
     const { sut, loadUserByUsernameRepositoryStub } = makeSut()
     jest.spyOn(loadUserByUsernameRepositoryStub, 'loadByUsername').mockReturnValueOnce(Promise.resolve(null))
-    const userAccount = await sut.record(transactionData)
-    expect(userAccount).toEqual({
+    const record = await sut.record(transactionData)
+    expect(record).toEqual({
       recorded: false,
       message: 'Invalid cashInUsername'
     })
@@ -87,5 +87,15 @@ describe('DbRecordTransaction', () => {
     const loadByUsernameSpy = jest.spyOn(loadAccountByIdRepositoryStub, 'loadById')
     await sut.record(transactionData)
     expect(loadByUsernameSpy).toHaveBeenCalledWith(1)
+  })
+
+  test('Should return a Record if cashOutAccount have insufficient balance', async () => {
+    const { sut, loadAccountByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadAccountByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.resolve({ id: '1', balance: '0.00' }))
+    const record = await sut.record(transactionData)
+    expect(record).toEqual({
+      recorded: false,
+      message: 'Insufficient balance'
+    })
   })
 })
