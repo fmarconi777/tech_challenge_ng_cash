@@ -107,8 +107,7 @@ describe('Transaction Controller', () => {
   test('Should return 500 status if CurrencyValidator throws', async () => {
     const { sut, currencyValidatorStub } = makeSut()
     jest.spyOn(currencyValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
-    const httpRequest = { user: { id: '1', username: 'any_username' } }
-    const httpResponse = await sut.handle(httpRequest)
+    const httpResponse = await sut.handle(request)
     expect(httpResponse).toEqual(serverError())
   })
 
@@ -128,5 +127,12 @@ describe('Transaction Controller', () => {
       cashInUsername: 'some_username',
       credit: '100.00'
     })
+  })
+
+  test('Should return 500 status if RecordTransaction throws', async () => {
+    const { sut, recordTransactionStub } = makeSut()
+    jest.spyOn(recordTransactionStub, 'record').mockReturnValueOnce(Promise.reject(new Error()))
+    const httpResponse = await sut.handle(request)
+    expect(httpResponse).toEqual(serverError())
   })
 })
