@@ -1,4 +1,4 @@
-import { DbAddUserAccount } from '../../data/use-cases/add-user-account/db-add-user-accout'
+import { DbAddUserAccount } from '../../data/use-cases/signup/add-user-account/db-add-user-accout'
 import { BcryptAdapter } from '../../infra/cryptography/bcrypt-adapter/bcrypt-adapter'
 import { UserAccountRepository } from '../../infra/db/user-account/user-account-repository'
 import { UserRepository } from '../../infra/db/user/user-repository'

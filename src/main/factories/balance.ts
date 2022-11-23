@@ -1,4 +1,4 @@
-import { DbLoadBalance } from '../../data/use-cases/load-balance/db-load-balance'
+import { DbLoadBalance } from '../../data/use-cases/balance/load-balance/db-load-balance'
 import { AccountRepository } from '../../infra/db/account/account-repository'
 import { UserRepository } from '../../infra/db/user/user-repository'
 import { SequelizeAccountAdapter } from '../../infra/sequelize/sequelize-adapters/account/sequelize-account-adapter'

@@ -1,5 +1,5 @@
-import { LoadUserByUsernameRepository } from '../../../data/use-cases/add-user-account/db-add-user-account-protocols'
-import { LoadUserByIdRepository } from '../../../data/use-cases/load-balance/db-load-balance-protocols'
+import { LoadUserByUsernameRepository } from '../../../data/use-cases/signup/add-user-account/db-add-user-account-protocols'
+import { LoadUserByIdRepository } from '../../../data/use-cases/balance/load-balance/db-load-balance-protocols'
 import { UserModel } from '../../../domain/models/user'
 import { LoadUserByUserNameORM, LoadUserByIdORM } from './user-protocols'
 

@@ -1,4 +1,4 @@
-import { Authentication, AuthenticationModel } from '../../../domain/use-cases/authentication/authentication'
+import { Authentication, AuthenticationModel } from '../../../../domain/use-cases/login/authentication/authentication'
 import { HashComparer, Encrypter, LoadUserByUsernameRepository } from './db-authentication-protocols'
 
 export class DbAuthentication implements Authentication {

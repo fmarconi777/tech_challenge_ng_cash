@@ -1,4 +1,4 @@
-import { LoadAccountByIdRepository } from '../../../data/use-cases/load-balance/db-load-balance-protocols'
+import { LoadAccountByIdRepository } from '../../../data/use-cases/balance/load-balance/db-load-balance-protocols'
 import { AccountModel } from '../../../domain/models/account'
 import { LoadAccountByIdORM } from '../../protocols/account/load-account-by-id-orm'
 

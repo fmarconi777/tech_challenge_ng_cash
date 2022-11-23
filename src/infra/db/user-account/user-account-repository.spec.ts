@@ -1,4 +1,4 @@
-import { UserData } from '../../../domain/use-cases/add-user-account/add-user-account'
+import { UserData } from '../../../domain/use-cases/signup/add-user-account/add-user-account'
 import { AddUserAccountORM } from './user-account-protocols'
 import { UserAccountRepository } from './user-account-repository'
 

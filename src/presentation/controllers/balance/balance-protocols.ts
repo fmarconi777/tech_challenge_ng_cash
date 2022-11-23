@@ -1,2 +1,2 @@
 export * from '../../protocols'
-export * from '../../../domain/use-cases/load-balance/load-balance'
+export * from '../../../domain/use-cases/balance/load-balance/load-balance'

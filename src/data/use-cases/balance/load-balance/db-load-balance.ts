@@ -1,4 +1,4 @@
-import { BalanceModel, LoadBalance } from '../../../domain/use-cases/load-balance/load-balance'
+import { BalanceModel, LoadBalance } from '../../../../domain/use-cases/balance/load-balance/load-balance'
 import { LoadAccountByIdRepository, LoadUserByIdRepository } from './db-load-balance-protocols'
 
 export class DbLoadBalance implements LoadBalance {
