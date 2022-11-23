@@ -1,4 +1,4 @@
-import { MissingParamError } from '../../errors'
+import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest } from '../../helpers/http-helper'
 import { TransactionController } from './transaction'
 
@@ -14,12 +14,31 @@ const makeSut = (): Subtypes => {
 }
 
 describe('Transaction Controller', () => {
-  test('Should return 400 status if username is not provided', async () => {
+  test('Should return 400 status if cashInUsername is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
-      body: {}
+      body: {},
+      user: {
+        id: '1',
+        username: 'any_username'
+      }
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('username')))
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('cashInUsername')))
+  })
+
+  test('Should return 400 status if username and cashInUsername are equal', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        cashInUsername: 'any_username'
+      },
+      user: {
+        id: '1',
+        username: 'any_username'
+      }
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(badRequest(new InvalidParamError('cashInUsername')))
   })
 })
