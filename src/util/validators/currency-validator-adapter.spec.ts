@@ -14,4 +14,10 @@ describe('CurrencyValidator Adapter', () => {
     const isValid = sut.isValid('1.000.00')
     expect(isValid).toBeFalsy()
   })
+
+  test('Should return true if validator returns true', () => {
+    const sut = new CurrencyValidatorAdapter()
+    const isValid = sut.isValid('100.00')
+    expect(isValid).toBeTruthy()
+  })
 })
