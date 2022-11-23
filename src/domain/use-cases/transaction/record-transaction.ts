@@ -4,6 +4,11 @@ export type TransactionData = {
   credit: number
 }
 
+export type Record = {
+  recorded: boolean
+  message: string
+}
+
 export interface RecordTransaction {
-  record: (transactionData: TransactionData) => Promise<string>
+  record: (transactionData: TransactionData) => Promise<Record>
 }

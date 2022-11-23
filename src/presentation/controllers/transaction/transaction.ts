@@ -1,5 +1,6 @@
 import { RecordTransaction } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
+import { TransactionError } from '../../errors/transaction-error'
 import { badRequest, okResponse, serverError } from '../../helpers/http-helper'
 import { Controller, HttpRequest, HttpResponse, Validator } from '../../protocols'
 
@@ -30,7 +31,10 @@ export class TransactionController implements Controller {
         cashInUsername,
         credit
       }
-      await this.recordTransaction.record(transactionData)
+      const record = await this.recordTransaction.record(transactionData)
+      if (!record.recorded) {
+        return badRequest(new TransactionError(record.message))
+      }
       return okResponse('')
     } catch (error: any) {
       return serverError()
