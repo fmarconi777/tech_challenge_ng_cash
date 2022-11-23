@@ -124,4 +124,11 @@ describe('DbRecordTransaction', () => {
       value: 100.00
     })
   })
+
+  test('Should throw if RecordTransactionRepository throws', async () => {
+    const { sut, recordTransactionRepositoryStub } = makeSut()
+    jest.spyOn(recordTransactionRepositoryStub, 'record').mockReturnValueOnce(Promise.reject(new Error()))
+    const record = sut.record(transactionData)
+    await expect(record).rejects.toThrow()
+  })
 })
