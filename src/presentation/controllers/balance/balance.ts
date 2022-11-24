@@ -9,7 +9,6 @@ export class BalanceController implements Controller {
       const id = +httpRequest.user.id
       return okResponse(await this.loadBalance.load(id))
     } catch (error: any) {
-      console.error(error)
       return serverError()
     }
   }

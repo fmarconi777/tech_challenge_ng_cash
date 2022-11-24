@@ -1,6 +1,7 @@
 import connection from './index'
 import { CreationOptional, DataTypes, DecimalDataType, InferAttributes, InferCreationAttributes, Model } from 'sequelize'
 import { Users } from './users'
+import { Transactions } from './transactions'
 
 const sequelize = connection.sequelize
 
@@ -29,7 +30,7 @@ Accounts.init(
   {
     sequelize,
     modelName: 'Accounts',
-    tableName: ''
+    tableName: 'Accounts'
   })
 
 Accounts.hasOne(Users, {
@@ -41,4 +42,26 @@ Accounts.hasOne(Users, {
 Users.belongsTo(Accounts, {
   foreignKey: 'accountId',
   as: 'account'
+})
+
+Accounts.hasMany(Transactions, {
+  sourceKey: 'id',
+  foreignKey: 'debitedAccountId',
+  as: 'debitTransaction'
+})
+
+Transactions.belongsTo(Accounts, {
+  foreignKey: 'debitedAccountId',
+  as: 'debitAccount'
+})
+
+Accounts.hasMany(Transactions, {
+  sourceKey: 'id',
+  foreignKey: 'creditedAccountId',
+  as: 'creditTransaction'
+})
+
+Transactions.belongsTo(Accounts, {
+  foreignKey: 'creditedAccountId',
+  as: 'creditAccount'
 })
