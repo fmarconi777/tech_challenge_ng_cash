@@ -25,7 +25,6 @@ export class SequelizeTransactionAdapter implements RecordTransactionORM {
 
       return 'Transaction succesfully recorded'
     } catch (error) {
-      console.error(error)
       if (transaction) {
         await transaction.rollback()
       }

@@ -79,4 +79,17 @@ describe('Sequelize Tansaction Adapter', () => {
     const record = await sut.record(recordData)
     expect(record).toBe('Transaction succesfully recorded')
   })
+
+  test('Should throw if ORM throws', async () => {
+    const sut = new SequelizeTransactionAdapter()
+    const recordData = {
+      debitedAccountId: 1,
+      debitedBalance: 0.00,
+      creditedAccountId: 1,
+      creditedBalance: 200.00,
+      value: null as unknown as number
+    }
+    const record = sut.record(recordData)
+    await expect(record).rejects.toThrow()
+  })
 })
