@@ -1,6 +1,6 @@
 import { SignUpController } from './singup'
 import { MissingParamError, InvalidParamError, UsernameInUseError } from '../../errors'
-import { badRequest, forbidden, okResponse, serverError } from '../../helpers/http-helper'
+import { badRequest, forbidden, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
 import { Validator, AddUserAccount, UserData } from './singup-protocols'
 
 const makeUserValidatorStub = (): Validator => {
@@ -51,12 +51,26 @@ const makeSut = (): SubTypes => {
 }
 
 describe('Singup Controller', () => {
+  test('Should return 405 status if not allowed method is called', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        username: 'any_name',
+        password: 'any_password'
+      },
+      method: ''
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(methodNotAllowed())
+  })
+
   test('Should return 400 status if username is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('username')))
@@ -67,7 +81,8 @@ describe('Singup Controller', () => {
     const httpRequest = {
       body: {
         username: 'any_name'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
@@ -80,7 +95,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_name')
@@ -93,7 +109,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
@@ -106,7 +123,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'invalid_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('username')))
@@ -119,7 +137,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     await sut.handle(httpRequest)
     expect(isValidSpy).toHaveBeenCalledWith('any_password')
@@ -132,7 +151,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
@@ -145,7 +165,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'invalid_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('password')))
@@ -158,7 +179,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     await sut.handle(httpRequest)
     expect(addSpy).toHaveBeenCalledWith(httpRequest.body)
@@ -171,7 +193,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
@@ -184,7 +207,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(forbidden(new UsernameInUseError()))
@@ -196,7 +220,8 @@ describe('Singup Controller', () => {
       body: {
         username: 'any_name',
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(okResponse('Account succesfully created'))
