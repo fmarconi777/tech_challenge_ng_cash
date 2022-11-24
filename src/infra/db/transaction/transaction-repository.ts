@@ -5,7 +5,6 @@ export class TransactionRepository implements RecordTransactionRepository {
   constructor (private readonly recordTransactionORM: RecordTransactionORM) {}
 
   async record (recordData: RecordData): Promise<string> {
-    await this.recordTransactionORM.record(recordData)
-    return ''
+    return await this.recordTransactionORM.record(recordData)
   }
 }
