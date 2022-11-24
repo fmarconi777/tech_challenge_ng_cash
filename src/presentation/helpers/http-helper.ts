@@ -1,5 +1,6 @@
 import { HttpResponse } from '../protocols/http'
 import { UnauthorizedError, ServerError } from '../errors'
+import { InvalidMethodError } from '../errors/invalid-method-error'
 
 export const okResponse = (data: any): HttpResponse => {
   return {
@@ -19,6 +20,13 @@ export const unauthorized = (): HttpResponse => {
   return {
     status: 401,
     body: new UnauthorizedError()
+  }
+}
+
+export const methodNotAllowed = (): HttpResponse => {
+  return {
+    status: 405,
+    body: new InvalidMethodError()
   }
 }
 
