@@ -1,7 +1,7 @@
 import { Record, RecordTransaction, TransactionData } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { TransactionError } from '../../errors/transaction-error'
-import { badRequest, okResponse, serverError } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
 import { Validator } from '../../protocols'
 import { TransactionController } from './transaction'
 
@@ -13,7 +13,8 @@ const request = {
   user: {
     id: '1',
     username: 'any_username'
-  }
+  },
+  method: 'POST'
 }
 
 const makeRecordTransactionStub = (): RecordTransaction => {
@@ -55,6 +56,23 @@ const makeSut = (): Subtypes => {
 }
 
 describe('Transaction Controller', () => {
+  test('Should return 405 status if not allowed method is called', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        creditedUsername: 'some_username',
+        value: '100.00'
+      },
+      user: {
+        id: '1',
+        username: 'any_username'
+      },
+      method: ''
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(methodNotAllowed())
+  })
+
   test('Should return 400 status if creditedUsername is not provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
@@ -64,7 +82,8 @@ describe('Transaction Controller', () => {
       user: {
         id: '1',
         username: 'any_username'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('creditedUsername')))
@@ -79,7 +98,8 @@ describe('Transaction Controller', () => {
       user: {
         id: '1',
         username: 'any_username'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new MissingParamError('value')))
@@ -95,7 +115,8 @@ describe('Transaction Controller', () => {
       user: {
         id: '1',
         username: 'any_username'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('creditedUsername')))
