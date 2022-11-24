@@ -46,4 +46,10 @@ describe('Transaction Repository', () => {
     const record = sut.record(recordData)
     await expect(record).rejects.toThrow()
   })
+
+  test('Should return a message on success', async () => {
+    const { sut } = makeSut()
+    const userAccount = await sut.record(recordData)
+    expect(userAccount).toEqual('Transaction succesfully recorded')
+  })
 })
