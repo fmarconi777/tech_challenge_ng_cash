@@ -4,6 +4,7 @@ import { Transactions } from '../../infra/sequelize/models/transactions'
 import { Users } from '../../infra/sequelize/models/users'
 import request from 'supertest'
 import app from '../config/app'
+import { makeLoginController } from '../factories/login'
 
 describe('Transaction Routes', () => {
   beforeAll(async () => {
@@ -40,5 +41,31 @@ describe('Transaction Routes', () => {
         value: '100.00'
       })
       .expect(403)
+  })
+
+  test('Should return 200 on post transaction with valid accessToken', async () => {
+    await request(app).post('/signup').send({
+      username: 'anyName',
+      password: 'anyPassword1'
+    })
+    await request(app).post('/signup').send({
+      username: 'anyName2',
+      password: 'anyPassword1'
+    })
+    const login = makeLoginController()
+    const httpResponse = await login.handle({
+      body: {
+        username: 'anyName',
+        password: 'anyPassword1'
+      }
+    })
+    await request(app)
+      .post('/transaction')
+      .set('authorization', `Bearer ${((httpResponse).body as string)}`)
+      .send({
+        creditedUsername: 'anyName2',
+        value: '100.00'
+      })
+      .expect(200)
   })
 })
