@@ -1,6 +1,6 @@
 import { Authentication, AuthenticationModel } from './login-protocols'
 import { MissingParamError } from '../../errors'
-import { badRequest, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'
 
 const fakeUser = {
@@ -32,12 +32,23 @@ const makeSut = (): SubTypes => {
 }
 
 describe('Login Controller', () => {
+  test('Should return 405 status if not allowed method is called', async () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: fakeUser,
+      method: ''
+    }
+    const httpResponse = await sut.handle(httpRequest)
+    expect(httpResponse).toEqual(methodNotAllowed())
+  })
+
   test('Should return 400 status if no username is provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
       body: {
         password: 'any_password'
-      }
+      },
+      method: 'POST'
     }
     const response = await sut.handle(httpRequest)
     expect(response).toEqual(badRequest(new MissingParamError('username')))
@@ -48,7 +59,8 @@ describe('Login Controller', () => {
     const httpRequest = {
       body: {
         username: 'any_username'
-      }
+      },
+      method: 'POST'
     }
     const response = await sut.handle(httpRequest)
     expect(response).toEqual(badRequest(new MissingParamError('password')))
@@ -58,7 +70,8 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut()
     const authSpy = jest.spyOn(authenticationStub, 'auth')
     const httpRequest = {
-      body: fakeUser
+      body: fakeUser,
+      method: 'POST'
     }
     await sut.handle(httpRequest)
     expect(authSpy).toHaveBeenCalledWith(fakeUser)
@@ -68,7 +81,8 @@ describe('Login Controller', () => {
     const { sut, authenticationStub } = makeSut()
     jest.spyOn(authenticationStub, 'auth').mockImplementationOnce(() => { throw new Error() })
     const httpRequest = {
-      body: fakeUser
+      body: fakeUser,
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(serverError())
@@ -81,7 +95,8 @@ describe('Login Controller', () => {
       body: {
         username: 'invalid_user',
         password: 'invalid_password'
-      }
+      },
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(unauthorized())
@@ -90,7 +105,8 @@ describe('Login Controller', () => {
   test('Should return 200 status if valid credentials are provided', async () => {
     const { sut } = makeSut()
     const httpRequest = {
-      body: fakeUser
+      body: fakeUser,
+      method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(okResponse('access_token'))

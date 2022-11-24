@@ -43,7 +43,8 @@ describe('Balance Routes', () => {
       body: {
         username: 'anyName',
         password: 'anyPassword1'
-      }
+      },
+      method: 'POST'
     })
     await request(app)
       .get('/balance')
