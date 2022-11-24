@@ -1,8 +1,8 @@
 export type RecordData = {
   debitedAccountId: number
-  debitBalance: number
+  debitedBalance: number
   creditedAccountId: number
-  creditBalance: number
+  creditedBalance: number
   value: number
 }
 

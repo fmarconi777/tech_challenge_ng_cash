@@ -16,15 +16,15 @@ export class DbRecordTransaction implements RecordTransaction {
     if (creditedUser) {
       const debitedUser: any = await this.loadUserByUsernameRepository.loadByUsername(debitedUsername)
       const debitedAccount: any = await this.loadAccountByIdRepository.loadById(+debitedUser.accountId)
-      const debitBalance = Number.parseFloat(debitedAccount?.balance) - Number.parseFloat(value)
-      if (debitBalance >= 0) {
+      const debitedBalance = Number.parseFloat(debitedAccount?.balance) - Number.parseFloat(value)
+      if (debitedBalance >= 0) {
         const creditedAccount: any = await this.loadAccountByIdRepository.loadById(+creditedUser.accountId)
-        const creditBalance = Number.parseFloat(creditedAccount.balance) + Number.parseFloat(value)
+        const creditedBalance = Number.parseFloat(creditedAccount.balance) + Number.parseFloat(value)
         const recordData = {
           debitedAccountId: +debitedUser.accountId,
-          debitBalance,
+          debitedBalance,
           creditedAccountId: +creditedUser.accountId,
-          creditBalance,
+          creditedBalance,
           value: +value
         }
         const record = await this.recordTransactionRepository.record(recordData)

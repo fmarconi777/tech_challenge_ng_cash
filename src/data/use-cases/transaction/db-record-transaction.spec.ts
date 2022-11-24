@@ -118,9 +118,9 @@ describe('DbRecordTransaction', () => {
     await sut.record(transactionData)
     expect(recordSpy).toHaveBeenCalledWith({
       debitedAccountId: 1,
-      debitBalance: 0.00,
+      debitedBalance: 0.00,
       creditedAccountId: 1,
-      creditBalance: 200.00,
+      creditedBalance: 200.00,
       value: 100.00
     })
   })
