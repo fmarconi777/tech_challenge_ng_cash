@@ -39,4 +39,11 @@ describe('Transaction Repository', () => {
     await sut.record(recordData)
     expect(recordSpy).toHaveBeenCalledWith(recordData)
   })
+
+  test('Should throw if recordTransactionORMStub throws', async () => {
+    const { sut, recordTransactionORMStub } = makeSut()
+    jest.spyOn(recordTransactionORMStub, 'record').mockReturnValueOnce(Promise.reject(new Error()))
+    const record = sut.record(recordData)
+    await expect(record).rejects.toThrow()
+  })
 })
