@@ -9,7 +9,7 @@ import { Controller } from '../../presentation/protocols'
 import { PasswordValidatorAdapter } from '../../util/validators/password-validator-adapter'
 import { UserValidatorAdapter } from '../../util/validators/user-validator-adapter'
 
-export const makeSignupControler = (): Controller => {
+export const makeSignupController = (): Controller => {
   const userORM = new SequelizeUserAdapter()
   const userRepository = new UserRepository(userORM, userORM)
   const addUserAccountORM = new SequelizeUserAccountAdapter()
