@@ -22,7 +22,13 @@ const makeRecordTransactionORMStub = (): RecordTransactionORM => {
 const makeLoadTransactionsByIdORMStub = (): LoadTransactionsByIdORM => {
   class LoadTransactionsByIdORMStub implements LoadTransactionsByIdORM {
     async loadById (id: number): Promise<RecordsData[]> {
-      return await Promise.resolve([])
+      return await Promise.resolve([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }])
     }
   }
   return new LoadTransactionsByIdORMStub()
@@ -81,6 +87,18 @@ describe('Transaction Repository', () => {
       jest.spyOn(loadTransactionsByIdORMStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
       const record = sut.loadById(1)
       await expect(record).rejects.toThrow()
+    })
+
+    test('Should return an array of records on success', async () => {
+      const { sut } = makeSut()
+      const userAccount = await sut.loadById(1)
+      expect(userAccount).toEqual([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }])
     })
   })
 })
