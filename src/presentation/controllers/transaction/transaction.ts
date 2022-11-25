@@ -45,8 +45,12 @@ export class TransactionController implements Controller {
           return serverError()
         }
       case 'GET':
-        await this.loadTransactions.load(+id)
-        return okResponse('')
+        try {
+          await this.loadTransactions.load(+id)
+          return okResponse('')
+        } catch (error: any) {
+          return serverError()
+        }
       default:
         return methodNotAllowed()
     }
