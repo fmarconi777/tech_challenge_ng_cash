@@ -46,8 +46,7 @@ export class TransactionController implements Controller {
         }
       case 'GET':
         try {
-          await this.loadTransactions.load(+id)
-          return okResponse('')
+          return okResponse(await this.loadTransactions.load(+id))
         } catch (error: any) {
           return serverError()
         }
