@@ -1,5 +1,5 @@
 import { UserModel } from '../../../../domain/models/user'
-import { LoadTransactionsByIdRepository, RecordsData, LoadUserByIdRepository } from './db-load-trasactions-protocols'
+import { LoadTransactionsByAccountIdRepository, RecordsData, LoadUserByIdRepository } from './db-load-trasactions-protocols'
 import { DbLoadTransactions } from './db-load-transactions'
 
 const fakeUser = {
@@ -18,9 +18,9 @@ const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
   return new LoadUserByIdRepositoryStub()
 }
 
-const makeLoadTransactionsByIdRepositoryStub = (): LoadTransactionsByIdRepository => {
-  class LoadTransactionsByIdRepositoryStub implements LoadTransactionsByIdRepository {
-    async loadById (id: number): Promise<RecordsData[]> {
+const makeLoadTransactionsByAccountIdRepository = (): LoadTransactionsByAccountIdRepository => {
+  class LoadTransactionsByAccountIdRepository implements LoadTransactionsByAccountIdRepository {
+    async loadByAccountId (id: number): Promise<RecordsData[]> {
       return await Promise.resolve([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
@@ -30,23 +30,23 @@ const makeLoadTransactionsByIdRepositoryStub = (): LoadTransactionsByIdRepositor
       }])
     }
   }
-  return new LoadTransactionsByIdRepositoryStub()
+  return new LoadTransactionsByAccountIdRepository()
 }
 
 type SubTypes = {
   sut: DbLoadTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
-  loadTransactionsByIdRepositoryStub: LoadTransactionsByIdRepository
+  loadTransactionsByAccountIdRepository: LoadTransactionsByAccountIdRepository
 }
 
 const makeSut = (): SubTypes => {
-  const loadTransactionsByIdRepositoryStub = makeLoadTransactionsByIdRepositoryStub()
+  const loadTransactionsByAccountIdRepository = makeLoadTransactionsByAccountIdRepository()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
-  const sut = new DbLoadTransactions(loadUserByIdRepositoryStub, loadTransactionsByIdRepositoryStub)
+  const sut = new DbLoadTransactions(loadUserByIdRepositoryStub, loadTransactionsByAccountIdRepository)
   return {
     sut,
     loadUserByIdRepositoryStub,
-    loadTransactionsByIdRepositoryStub
+    loadTransactionsByAccountIdRepository
   }
 }
 
@@ -65,16 +65,16 @@ describe('DbLoadTransactions', () => {
     await expect(user).rejects.toThrow()
   })
 
-  test('Should call LoadTransactionsByIdRepository with correct value', async () => {
-    const { sut, loadTransactionsByIdRepositoryStub } = makeSut()
-    const loadByIdSpy = jest.spyOn(loadTransactionsByIdRepositoryStub, 'loadById')
+  test('Should call LoadTransactionsByAccountIdRepository with correct value', async () => {
+    const { sut, loadTransactionsByAccountIdRepository } = makeSut()
+    const loadByAccountIddSpy = jest.spyOn(loadTransactionsByAccountIdRepository, 'loadByAccountId')
     await sut.load(1)
-    expect(loadByIdSpy).toHaveBeenCalledWith(1)
+    expect(loadByAccountIddSpy).toHaveBeenCalledWith(1)
   })
 
-  test('Should throw if LoadTransactionsByIdRepository throws', async () => {
-    const { sut, loadTransactionsByIdRepositoryStub } = makeSut()
-    jest.spyOn(loadTransactionsByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+  test('Should throw if LoadTransactionsByAccountIdRepository throws', async () => {
+    const { sut, loadTransactionsByAccountIdRepository } = makeSut()
+    jest.spyOn(loadTransactionsByAccountIdRepository, 'loadByAccountId').mockReturnValueOnce(Promise.reject(new Error()))
     const user = sut.load(1)
     await expect(user).rejects.toThrow()
   })

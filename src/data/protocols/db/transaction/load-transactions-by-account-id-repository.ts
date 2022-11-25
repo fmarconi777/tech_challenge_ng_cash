@@ -2,6 +2,6 @@ import { RecordsData } from '../../../../domain/use-cases/transaction/load-trans
 
 export { RecordsData }
 
-export interface LoadTransactionsByIdRepository {
-  loadById: (id: number) => Promise<RecordsData[]>
+export interface LoadTransactionsByAccountIdRepository {
+  loadByAccountId: (id: number) => Promise<RecordsData[]>
 }

@@ -1,4 +1,4 @@
-import { LoadTransactionsByIdORM, RecordsData } from '../../protocols/transaction/load-transactions-orm'
+import { LoadTransactionsByAccountIdORM, RecordsData } from '../../protocols/transaction/load-transactions-by-account-id-orm'
 import { RecordData, RecordTransactionORM } from '../../protocols/transaction/record-transaction-orm'
 import { TransactionRepository } from './transaction-repository'
 
@@ -19,9 +19,9 @@ const makeRecordTransactionORMStub = (): RecordTransactionORM => {
   return new RecordTransactionORMStub()
 }
 
-const makeLoadTransactionsByIdORMStub = (): LoadTransactionsByIdORM => {
-  class LoadTransactionsByIdORMStub implements LoadTransactionsByIdORM {
-    async loadById (id: number): Promise<RecordsData[]> {
+const makeLoadTransactionsByAccountIdORMStub = (): LoadTransactionsByAccountIdORM => {
+  class LoadTransactionsByAccountIdORMStub implements LoadTransactionsByAccountIdORM {
+    async loadByAccountId (id: number): Promise<RecordsData[]> {
       return await Promise.resolve([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
@@ -31,23 +31,23 @@ const makeLoadTransactionsByIdORMStub = (): LoadTransactionsByIdORM => {
       }])
     }
   }
-  return new LoadTransactionsByIdORMStub()
+  return new LoadTransactionsByAccountIdORMStub()
 }
 
 type SubTypes = {
   sut: TransactionRepository
   recordTransactionORMStub: RecordTransactionORM
-  loadTransactionsByIdORMStub: LoadTransactionsByIdORM
+  loadTransactionsByAccountIdORMStub: LoadTransactionsByAccountIdORM
 }
 
 const makeSut = (): SubTypes => {
-  const loadTransactionsByIdORMStub = makeLoadTransactionsByIdORMStub()
+  const loadTransactionsByAccountIdORMStub = makeLoadTransactionsByAccountIdORMStub()
   const recordTransactionORMStub = makeRecordTransactionORMStub()
-  const sut = new TransactionRepository(recordTransactionORMStub, loadTransactionsByIdORMStub)
+  const sut = new TransactionRepository(recordTransactionORMStub, loadTransactionsByAccountIdORMStub)
   return {
     sut,
     recordTransactionORMStub,
-    loadTransactionsByIdORMStub
+    loadTransactionsByAccountIdORMStub
   }
 }
 
@@ -74,24 +74,24 @@ describe('Transaction Repository', () => {
     })
   })
 
-  describe('LoadById method', () => {
-    test('Should call LoadTransactionsByIdORM with correct values', async () => {
-      const { sut, loadTransactionsByIdORMStub } = makeSut()
-      const loadByIdSpy = jest.spyOn(loadTransactionsByIdORMStub, 'loadById')
-      await sut.loadById(1)
-      expect(loadByIdSpy).toHaveBeenCalledWith(1)
+  describe('LoadByAccountId method', () => {
+    test('Should call LoadTransactionsByAccountIdORM with correct values', async () => {
+      const { sut, loadTransactionsByAccountIdORMStub } = makeSut()
+      const loadByAccountIdSpy = jest.spyOn(loadTransactionsByAccountIdORMStub, 'loadByAccountId')
+      await sut.loadByAccountId(1)
+      expect(loadByAccountIdSpy).toHaveBeenCalledWith(1)
     })
 
-    test('Should throw if LoadTransactionsByIdORM throws', async () => {
-      const { sut, loadTransactionsByIdORMStub } = makeSut()
-      jest.spyOn(loadTransactionsByIdORMStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
-      const record = sut.loadById(1)
+    test('Should throw if LoadTransactionsByAccountIdORM throws', async () => {
+      const { sut, loadTransactionsByAccountIdORMStub } = makeSut()
+      jest.spyOn(loadTransactionsByAccountIdORMStub, 'loadByAccountId').mockReturnValueOnce(Promise.reject(new Error()))
+      const record = sut.loadByAccountId(1)
       await expect(record).rejects.toThrow()
     })
 
     test('Should return an array of records on success', async () => {
       const { sut } = makeSut()
-      const userAccount = await sut.loadById(1)
+      const userAccount = await sut.loadByAccountId(1)
       expect(userAccount).toEqual([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
