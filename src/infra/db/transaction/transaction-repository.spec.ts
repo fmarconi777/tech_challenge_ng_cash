@@ -75,5 +75,12 @@ describe('Transaction Repository', () => {
       await sut.loadById(1)
       expect(loadByIdSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Should throw if LoadTransactionsByIdORM throws', async () => {
+      const { sut, loadTransactionsByIdORMStub } = makeSut()
+      jest.spyOn(loadTransactionsByIdORMStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+      const record = sut.loadById(1)
+      await expect(record).rejects.toThrow()
+    })
   })
 })
