@@ -10,7 +10,6 @@ export class DbLoadTransactions implements LoadTransactions {
 
   async load (id: number): Promise<RecordsData[]> {
     const user: any = await this.loadUserByIdRepository.loadById(id)
-    await this.loadTransactionsByIdRepositoryStub.loadById(+user.accountId)
-    return []
+    return await this.loadTransactionsByIdRepositoryStub.loadById(+user.accountId)
   }
 }
