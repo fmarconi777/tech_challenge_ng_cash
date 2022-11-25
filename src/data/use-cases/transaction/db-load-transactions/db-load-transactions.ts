@@ -1,6 +1,5 @@
 import { LoadTransactions, RecordsData } from '../../../../domain/use-cases/transaction/load-transactions'
-import { LoadTransactionsByIdRepository } from '../../../protocols/db/transaction/load-transactions-by-id-repository'
-import { LoadUserByIdRepository } from '../../../protocols/db/user/load-user-by-id-repository'
+import { LoadTransactionsByIdRepository, LoadUserByIdRepository } from './db-load-trasactions-protocols'
 
 export class DbLoadTransactions implements LoadTransactions {
   constructor (

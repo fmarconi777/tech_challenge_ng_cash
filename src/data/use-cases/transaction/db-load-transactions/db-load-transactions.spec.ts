@@ -1,6 +1,5 @@
 import { UserModel } from '../../../../domain/models/user'
-import { LoadTransactionsByIdRepository, RecordsData } from '../../../protocols/db/transaction/load-transactions-by-id-repository'
-import { LoadUserByIdRepository } from '../../../protocols/db/user/load-user-by-id-repository'
+import { LoadTransactionsByIdRepository, RecordsData, LoadUserByIdRepository } from './db-load-trasactions-protocols'
 import { DbLoadTransactions } from './db-load-transactions'
 
 const fakeUser = {
