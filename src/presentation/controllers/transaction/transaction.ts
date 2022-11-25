@@ -1,3 +1,4 @@
+import { LoadTransactions } from '../../../domain/use-cases/transaction/load-transactions'
 import { RecordTransaction } from '../../../domain/use-cases/transaction/record-transaction'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { TransactionError } from '../../errors/transaction-error'
@@ -7,11 +8,13 @@ import { Controller, HttpRequest, HttpResponse, Validator } from '../../protocol
 export class TransactionController implements Controller {
   constructor (
     private readonly currencyValidator: Validator,
-    private readonly recordTransaction: RecordTransaction
+    private readonly recordTransaction: RecordTransaction,
+    private readonly loadTransactions: LoadTransactions
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     const method = httpRequest.method
+    const { id, username } = httpRequest.user
     switch (method) {
       case 'POST':
         try {
@@ -21,7 +24,6 @@ export class TransactionController implements Controller {
               return badRequest(new MissingParamError(field))
             }
           }
-          const { username } = httpRequest.user
           const { creditedUsername, value } = httpRequest.body
           if (username === creditedUsername) {
             return badRequest(new InvalidParamError('creditedUsername'))
@@ -42,6 +44,9 @@ export class TransactionController implements Controller {
         } catch (error: any) {
           return serverError()
         }
+      case 'GET':
+        await this.loadTransactions.load(+id)
+        return okResponse('')
       default:
         return methodNotAllowed()
     }
