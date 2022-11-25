@@ -1,0 +1,17 @@
+import { RecordsData } from '../../../protocols/transaction/load-transactions-by-account-id-orm'
+
+export const parseRecords = (records: any): RecordsData[] => {
+  const recordsData = []
+  if (records) {
+    for (const record of records) {
+      recordsData.push({
+        id: String(record.id),
+        debitedUsername: record.debitedusername,
+        creditedUsername: record.creditedusername,
+        value: record.value,
+        createdAt: record.createdAt
+      })
+    }
+  }
+  return recordsData
+}

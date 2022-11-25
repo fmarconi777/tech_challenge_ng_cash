@@ -1,10 +1,12 @@
-import { DecimalDataType } from 'sequelize'
+import { DecimalDataType, QueryTypes } from 'sequelize'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
+import { LoadTransactionsByAccountIdORM, RecordsData } from '../../../protocols/transaction/load-transactions-by-account-id-orm'
 import { RecordData, RecordTransactionORM } from '../../../protocols/transaction/record-transaction-orm'
 import { Accounts } from '../../models/accounts'
 import { Transactions } from '../../models/transactions'
+import { parseRecords } from '../sequelize-parsers/parse-records'
 
-export class SequelizeTransactionAdapter implements RecordTransactionORM {
+export class SequelizeTransactionAdapter implements RecordTransactionORM, LoadTransactionsByAccountIdORM {
   async record (recordData: RecordData): Promise<string> {
     await ConnectionHelper.reconnect()
     let transaction
@@ -30,5 +32,29 @@ export class SequelizeTransactionAdapter implements RecordTransactionORM {
       }
       throw error
     }
+  }
+
+  async loadByAccountId (id: number): Promise<RecordsData[]> {
+    await ConnectionHelper.reconnect()
+    const records = await Transactions.sequelize?.query(
+      'SELECT T.ID, ' +
+          'U.USERNAME as debitedUsername, ' +
+          'T.USERNAME as creditedUsername, ' +
+          'T."value", ' +
+          'T."createdAt" ' +
+      'FROM ' +
+          '(SELECT T.ID, ' +
+                  'T."debitedAccountId", ' +
+                  'U.USERNAME, ' +
+                  'T."value", ' +
+                  'T."createdAt" ' +
+              'FROM PUBLIC."Transactions" T ' +
+              'INNER JOIN PUBLIC."Users" U ON T."creditedAccountId" = U."accountId" ' +
+              'WHERE T."debitedAccountId" = :id ' +
+                  'OR T."creditedAccountId" = :id) T ' +
+      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"',
+      { replacements: { id }, type: QueryTypes.SELECT, raw: true }
+    ) as any
+    return parseRecords(records)
   }
 }
