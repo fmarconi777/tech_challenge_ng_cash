@@ -72,4 +72,11 @@ describe('DbLoadTransactions', () => {
     await sut.load(1)
     expect(loadByIdSpy).toHaveBeenCalledWith(1)
   })
+
+  test('Should throw if LoadTransactionsByIdRepository throws', async () => {
+    const { sut, loadTransactionsByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadTransactionsByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+    const user = sut.load(1)
+    await expect(user).rejects.toThrow()
+  })
 })
