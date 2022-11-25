@@ -14,7 +14,6 @@ export class TransactionRepository implements RecordTransactionRepository, LoadT
   }
 
   async loadById (id: number): Promise<RecordsData[]> {
-    await this.loadTransactionsByIdORM.loadById(id)
-    return []
+    return await this.loadTransactionsByIdORM.loadById(id)
   }
 }
