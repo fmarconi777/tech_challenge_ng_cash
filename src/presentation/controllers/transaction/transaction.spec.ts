@@ -206,5 +206,13 @@ describe('Transaction Controller', () => {
       await sut.handle(httpRequest)
       expect(loadSpy).toHaveBeenCalledWith(1)
     })
+
+    test('Should return 500 status if LoadTransactions throws', async () => {
+      const { sut, loadTransactionsStub } = makeSut()
+      jest.spyOn(loadTransactionsStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET' }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError())
+    })
   })
 })
