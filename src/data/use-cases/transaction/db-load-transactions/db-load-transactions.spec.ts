@@ -79,4 +79,16 @@ describe('DbLoadTransactions', () => {
     const user = sut.load(1)
     await expect(user).rejects.toThrow()
   })
+
+  test('Should return an array of records on success', async () => {
+    const { sut } = makeSut()
+    const records = await sut.load(1)
+    expect(records).toEqual([{
+      id: 'any_id',
+      debitedUsername: 'any_debitedUsername',
+      creditedUsername: 'any_creditedUsername',
+      value: 'any_value',
+      createdAt: 'any_createdAt'
+    }])
+  })
 })
