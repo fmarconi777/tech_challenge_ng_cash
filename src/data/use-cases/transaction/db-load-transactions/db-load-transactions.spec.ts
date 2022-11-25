@@ -1,4 +1,5 @@
 import { UserModel } from '../../../../domain/models/user'
+import { LoadTransactionsByIdRepository, RecordsData } from '../../../protocols/db/transaction/load-transactions-by-id-repository'
 import { LoadUserByIdRepository } from '../../../protocols/db/user/load-user-by-id-repository'
 import { DbLoadTransactions } from './db-load-transactions'
 
@@ -18,17 +19,35 @@ const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
   return new LoadUserByIdRepositoryStub()
 }
 
+const makeLoadTransactionsByIdRepositoryStub = (): LoadTransactionsByIdRepository => {
+  class LoadTransactionsByIdRepositoryStub implements LoadTransactionsByIdRepository {
+    async loadById (id: number): Promise<RecordsData[]> {
+      return await Promise.resolve([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }])
+    }
+  }
+  return new LoadTransactionsByIdRepositoryStub()
+}
+
 type SubTypes = {
   sut: DbLoadTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
+  loadTransactionsByIdRepositoryStub: LoadTransactionsByIdRepository
 }
 
 const makeSut = (): SubTypes => {
+  const loadTransactionsByIdRepositoryStub = makeLoadTransactionsByIdRepositoryStub()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
-  const sut = new DbLoadTransactions(loadUserByIdRepositoryStub)
+  const sut = new DbLoadTransactions(loadUserByIdRepositoryStub, loadTransactionsByIdRepositoryStub)
   return {
     sut,
-    loadUserByIdRepositoryStub
+    loadUserByIdRepositoryStub,
+    loadTransactionsByIdRepositoryStub
   }
 }
 
@@ -45,5 +64,12 @@ describe('DbLoadTransactions', () => {
     jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
     const user = sut.load(1)
     await expect(user).rejects.toThrow()
+  })
+
+  test('Should call LoadTransactionsByIdRepository with correct value', async () => {
+    const { sut, loadTransactionsByIdRepositoryStub } = makeSut()
+    const loadByIdSpy = jest.spyOn(loadTransactionsByIdRepositoryStub, 'loadById')
+    await sut.load(1)
+    expect(loadByIdSpy).toHaveBeenCalledWith(1)
   })
 })
