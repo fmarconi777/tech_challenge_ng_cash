@@ -214,5 +214,18 @@ describe('Transaction Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError())
     })
+
+    test('Should return an array of records on success', async () => {
+      const { sut } = makeSut()
+      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET' }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(okResponse([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }]))
+    })
   })
 })
