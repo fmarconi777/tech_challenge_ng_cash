@@ -1,5 +1,5 @@
 import { AccountModel } from '../../../domain/models/account'
-import { LoadAccountByIdORM } from '../../protocols/account/load-account-by-id-orm'
+import { LoadAccountByIdORM } from './account-repository-protocols'
 import { AccountRepository } from './account-repository'
 
 const fakeAccount = {
