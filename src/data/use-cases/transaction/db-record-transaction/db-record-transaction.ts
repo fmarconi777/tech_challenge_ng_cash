@@ -1,7 +1,7 @@
-import { Record, RecordTransaction, TransactionData } from '../../../domain/use-cases/transaction/record-transaction'
-import { LoadAccountByIdRepository } from '../../protocols/db/account/load-account-by-id-repository'
-import { RecordTransactionRepository } from '../../protocols/db/transaction/record-transaction-repository'
-import { LoadUserByUsernameRepository } from '../../protocols/db/user/load-user-by-username-repository'
+import { Record, RecordTransaction, TransactionData } from '../../../../domain/use-cases/transaction/record-transaction/record-transaction'
+import { LoadAccountByIdRepository } from '../../../protocols/db/account/load-account-by-id-repository'
+import { RecordTransactionRepository } from '../../../protocols/db/transaction/record-transaction-repository'
+import { LoadUserByUsernameRepository } from '../../../protocols/db/user/load-user-by-username-repository'
 
 export class DbRecordTransaction implements RecordTransaction {
   constructor (

@@ -1,5 +1,5 @@
 import { DbLoadTransactions } from '../../data/use-cases/transaction/db-load-transactions/db-load-transactions'
-import { DbRecordTransaction } from '../../data/use-cases/transaction/db-record-transaction'
+import { DbRecordTransaction } from '../../data/use-cases/transaction/db-record-transaction/db-record-transaction'
 import { AccountRepository } from '../../infra/db/account/account-repository'
 import { TransactionRepository } from '../../infra/db/transaction/transaction-repository'
 import { UserRepository } from '../../infra/db/user/user-repository'

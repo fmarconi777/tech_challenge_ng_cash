@@ -1,4 +1,4 @@
-import { LoadTransactions, RecordsData } from '../../../../domain/use-cases/transaction/load-transactions'
+import { LoadTransactions, RecordsData } from '../../../../domain/use-cases/transaction/load-transactions/load-transactions'
 import { LoadTransactionsByAccountIdRepository, LoadUserByIdRepository } from './db-load-trasactions-protocols'
 
 export class DbLoadTransactions implements LoadTransactions {
