@@ -1,8 +1,6 @@
 import { AccountModel } from '../../../../domain/models/account'
 import { UserModel } from '../../../../domain/models/user'
-import { LoadAccountByIdRepository } from '../../../protocols/db/account/load-account-by-id-repository'
-import { RecordData, RecordTransactionRepository } from '../../../protocols/db/transaction/record-transaction-repository'
-import { LoadUserByUsernameRepository } from '../../../protocols/db/user/load-user-by-username-repository'
+import { LoadAccountByIdRepository, RecordData, RecordTransactionRepository, LoadUserByUsernameRepository } from './db-record-transaction-protocols'
 import { DbRecordTransaction } from './db-record-transaction'
 
 const transactionData = {
