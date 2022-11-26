@@ -1,2 +1,6 @@
 export * from '../../protocols/user-account/add-user-account-orm'
 export * from '../../protocols/user/load-user-by-user-name-orm'
+export * from '../../protocols/account/load-account-by-id-orm'
+export * from '../../protocols/transaction/load-transactions-by-account-id-orm'
+export * from '../../protocols/transaction/record-transaction-orm'
+export * from '../../protocols/user/load-user-by-id-orm'

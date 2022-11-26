@@ -1,5 +1,5 @@
 import { AccountModel } from '../../../../domain/models/account'
-import { LoadAccountByIdORM } from '../../../protocols/account/load-account-by-id-orm'
+import { LoadAccountByIdORM } from '../sequelize-adapters-protocols'
 import { Accounts } from '../../models/accounts'
 
 export class SequelizeAccountAdapter implements LoadAccountByIdORM {
