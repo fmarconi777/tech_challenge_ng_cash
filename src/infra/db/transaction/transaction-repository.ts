@@ -1,7 +1,6 @@
 import { LoadTransactionsByAccountIdRepository, RecordsData } from '../../../data/protocols/db/transaction/load-transactions-by-account-id-repository'
 import { RecordData, RecordTransactionRepository } from '../../../data/protocols/db/transaction/record-transaction-repository'
-import { LoadTransactionsByAccountIdORM } from '../../protocols/transaction/load-transactions-by-account-id-orm'
-import { RecordTransactionORM } from '../../protocols/transaction/record-transaction-orm'
+import { LoadTransactionsByAccountIdORM, RecordTransactionORM } from './transaction-repository-protocols'
 
 export class TransactionRepository implements RecordTransactionRepository, LoadTransactionsByAccountIdRepository {
   constructor (

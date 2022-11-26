@@ -1,5 +1,4 @@
-import { LoadTransactionsByAccountIdORM, RecordsData } from '../../protocols/transaction/load-transactions-by-account-id-orm'
-import { RecordData, RecordTransactionORM } from '../../protocols/transaction/record-transaction-orm'
+import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM } from './transaction-repository-protocols'
 import { TransactionRepository } from './transaction-repository'
 
 const recordData = {
