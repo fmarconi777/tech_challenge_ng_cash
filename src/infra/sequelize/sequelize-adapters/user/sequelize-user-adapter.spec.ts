@@ -1,9 +1,8 @@
 import { SequelizeUserAdapter } from '../user/sequelize-user-adapter'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { SequelizeUserAccountAdapter } from '../user-account/sequelize-user-account-adapter'
-import { Users } from '../../models/users'
+import { Users, Accounts } from '../../models/models'
 import { Sequelize } from 'sequelize'
-import { Accounts } from '../../models/accounts'
 
 describe('SequelizeUser Adapter', () => {
   beforeAll(async () => {

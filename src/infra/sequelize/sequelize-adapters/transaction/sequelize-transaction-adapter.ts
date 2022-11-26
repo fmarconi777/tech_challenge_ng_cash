@@ -1,8 +1,7 @@
 import { DecimalDataType, QueryTypes } from 'sequelize'
 import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM } from '../sequelize-adapters-protocols'
-import { Accounts } from '../../models/accounts'
-import { Transactions } from '../../models/transactions'
+import { Accounts, Transactions } from '../../models/models'
 import { parseRecords } from '../sequelize-parsers/parse-records'
 
 export class SequelizeTransactionAdapter implements RecordTransactionORM, LoadTransactionsByAccountIdORM {

@@ -1,4 +1,4 @@
-import { RecordsData } from '../../../protocols/transaction/load-transactions-by-account-id-orm'
+import { RecordsData } from '../sequelize-adapters-protocols'
 
 export const parseRecords = (records: any): RecordsData[] => {
   const recordsData = []
