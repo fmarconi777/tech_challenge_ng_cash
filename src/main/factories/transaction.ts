@@ -1,3 +1,4 @@
+import { DbLoadTransactions } from '../../data/use-cases/transaction/db-load-transactions/db-load-transactions'
 import { DbRecordTransaction } from '../../data/use-cases/transaction/db-record-transaction'
 import { AccountRepository } from '../../infra/db/account/account-repository'
 import { TransactionRepository } from '../../infra/db/transaction/transaction-repository'
@@ -11,12 +12,13 @@ import { CurrencyValidatorAdapter } from '../../util/validators/currency-validat
 
 export const makeTransactionController = (): Controller => {
   const transactionORM = new SequelizeTransactionAdapter()
-  const transactionRepository = new TransactionRepository(transactionORM)
+  const transactionRepository = new TransactionRepository(transactionORM, transactionORM)
   const accountORM = new SequelizeAccountAdapter()
   const accountRepository = new AccountRepository(accountORM)
   const userORM = new SequelizeUserAdapter()
   const userRepository = new UserRepository(userORM, userORM)
+  const loadTransactions = new DbLoadTransactions(userRepository, transactionRepository)
   const recordTransaction = new DbRecordTransaction(userRepository, accountRepository, transactionRepository)
   const currencyValidator = new CurrencyValidatorAdapter()
-  return new TransactionController(currencyValidator, recordTransaction)
+  return new TransactionController(currencyValidator, recordTransaction, loadTransactions)
 }
