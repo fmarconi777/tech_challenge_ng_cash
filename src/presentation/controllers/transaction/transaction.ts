@@ -1,9 +1,6 @@
-import { LoadTransactions } from '../../../domain/use-cases/transaction/load-transactions'
-import { RecordTransaction } from '../../../domain/use-cases/transaction/record-transaction'
-import { InvalidParamError, MissingParamError } from '../../errors'
-import { TransactionError } from '../../errors/transaction-error'
+import { LoadTransactions, RecordTransaction, Controller, HttpRequest, HttpResponse, Validator } from './transaction-protocols'
+import { InvalidParamError, MissingParamError, TransactionError } from '../../errors'
 import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
-import { Controller, HttpRequest, HttpResponse, Validator } from '../../protocols'
 
 export class TransactionController implements Controller {
   constructor (

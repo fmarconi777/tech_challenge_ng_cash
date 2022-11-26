@@ -1,9 +1,6 @@
-import { LoadTransactions, RecordsData } from '../../../domain/use-cases/transaction/load-transactions'
-import { Record, RecordTransaction, TransactionData } from '../../../domain/use-cases/transaction/record-transaction'
-import { InvalidParamError, MissingParamError } from '../../errors'
-import { TransactionError } from '../../errors/transaction-error'
+import { LoadTransactions, RecordsData, Record, RecordTransaction, TransactionData, Validator } from './transaction-protocols'
+import { InvalidParamError, MissingParamError, TransactionError } from '../../errors'
 import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
-import { Validator } from '../../protocols'
 import { TransactionController } from './transaction'
 
 const request = {
