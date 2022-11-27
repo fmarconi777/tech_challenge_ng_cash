@@ -14,7 +14,6 @@ export class DbLoadFilteredCashTransactions implements LoadFilteredCashTransacti
       accountId: +user.accountId,
       filter: filterData.filter
     }
-    await this.loadFilteredCashTransactionsRepository.loadByFilter(filterValues)
-    return []
+    return await this.loadFilteredCashTransactionsRepository.loadByFilter(filterValues)
   }
 }
