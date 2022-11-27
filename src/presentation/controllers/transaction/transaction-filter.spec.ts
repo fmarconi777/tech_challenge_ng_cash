@@ -1,6 +1,6 @@
 import { FilterData, LoadFilteredCashTransactions, RecordsData } from '../../../domain/use-cases/transaction/load-filtered-cash-transactions/load-filtered-cash-transactions'
 import { InvalidParamError } from '../../errors'
-import { badRequest, methodNotAllowed, serverError } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
 
 const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions => {
@@ -78,6 +78,19 @@ describe('Transaction Filter Controller', () => {
       const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET', param: 'cashIn' }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError())
+    })
+
+    test('Should return an array of records on success', async () => {
+      const { sut } = makeSut()
+      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET', param: 'cashIn' }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(okResponse([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }]))
     })
   })
 })
