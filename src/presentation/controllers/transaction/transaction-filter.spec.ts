@@ -1,4 +1,5 @@
-import { methodNotAllowed } from '../../helpers/http-helper'
+import { InvalidParamError } from '../../errors'
+import { badRequest, methodNotAllowed } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
 
 type Subtypes = {
@@ -24,5 +25,21 @@ describe('Transaction Filter Controller', () => {
     }
     const httpResponse = await sut.handle(httpRequest)
     expect(httpResponse).toEqual(methodNotAllowed())
+  })
+
+  describe('GET method', () => {
+    test('Should return 400 status if not allowed param is provided', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        method: 'GET',
+        param: 'invalid_param'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new InvalidParamError('expected date, cashIn or cashOut params')))
+    })
   })
 })
