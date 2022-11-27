@@ -127,9 +127,16 @@ describe('Transaction Repository', () => {
   describe('LoadByFilter method', () => {
     test('Should call LoadFilteredCashTransactionsORM with correct values', async () => {
       const { sut, loadFilteredCashTransactionsORMStub } = makeSut()
-      const loadByAccountIdSpy = jest.spyOn(loadFilteredCashTransactionsORMStub, 'loadByFilter')
+      const loadByFilterSpy = jest.spyOn(loadFilteredCashTransactionsORMStub, 'loadByFilter')
       await sut.loadByFilter(filterValues)
-      expect(loadByAccountIdSpy).toHaveBeenCalledWith(filterValues)
+      expect(loadByFilterSpy).toHaveBeenCalledWith(filterValues)
     })
+  })
+
+  test('Should throw if LoadFilteredCashTransactionsORM throws', async () => {
+    const { sut, loadFilteredCashTransactionsORMStub } = makeSut()
+    jest.spyOn(loadFilteredCashTransactionsORMStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
+    const record = sut.loadByFilter(filterValues)
+    await expect(record).rejects.toThrow()
   })
 })
