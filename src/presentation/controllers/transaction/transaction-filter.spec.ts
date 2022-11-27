@@ -1,6 +1,6 @@
 import { FilterData, LoadFilteredCashTransactions, RecordsData } from '../../../domain/use-cases/transaction/load-filtered-cash-transactions/load-filtered-cash-transactions'
 import { InvalidParamError } from '../../errors'
-import { badRequest, methodNotAllowed } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
 
 const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions => {
@@ -70,6 +70,14 @@ describe('Transaction Filter Controller', () => {
         userId: 1,
         filter: 'cashIn'
       })
+    })
+
+    test('Should return 500 status if LoadTransactions throws', async () => {
+      const { sut, loadFilteredCashTransactionsStub } = makeSut()
+      jest.spyOn(loadFilteredCashTransactionsStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET', param: 'cashIn' }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError())
     })
   })
 })
