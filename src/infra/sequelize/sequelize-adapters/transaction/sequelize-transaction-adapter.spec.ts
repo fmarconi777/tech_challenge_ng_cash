@@ -123,4 +123,38 @@ describe('Sequelize Tansaction Adapter', () => {
       expect(loadedRecords[0].createdAt).toBeTruthy()
     })
   })
+
+  describe('loadByFilter method', () => {
+    test('Should return an array of records on success', async () => {
+      const sut = new SequelizeTransactionAdapter()
+      const creatUserAccount = new SequelizeUserAccountAdapter()
+      await creatUserAccount.addUserAccount({
+        username: 'valid_username',
+        password: 'hashed_password'
+      })
+      await creatUserAccount.addUserAccount({
+        username: 'valid_username2',
+        password: 'hashed_password'
+      })
+      const users = await Users.findAll()
+      const recordData = {
+        debitedAccountId: users[0].accountId,
+        debitedBalance: 0.00,
+        creditedAccountId: users[1].accountId,
+        creditedBalance: 200.00,
+        value: 100.00
+      }
+      await sut.record(recordData)
+      const loadedRecords = await sut.loadByFilter({
+        accountId: users[0].accountId,
+        filter: 'debitedAccountId'
+      })
+      expect(loadedRecords.length).toBeGreaterThan(0)
+      expect(loadedRecords[0].id).toBeTruthy()
+      expect(loadedRecords[0].debitedUsername).toBe('valid_username')
+      expect(loadedRecords[0].creditedUsername).toBe('valid_username2')
+      expect(loadedRecords[0].value).toBe('100.00')
+      expect(loadedRecords[0].createdAt).toBeTruthy()
+    })
+  })
 })
