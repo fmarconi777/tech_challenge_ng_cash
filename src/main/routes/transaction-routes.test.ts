@@ -4,7 +4,7 @@ import { Transactions } from '../../infra/sequelize/models/transactions'
 import { Users } from '../../infra/sequelize/models/users'
 import request from 'supertest'
 import app from '../config/app'
-import { makeLoginController } from '../factories/login'
+import { makeLoginController } from '../factories/login/login'
 
 describe('Transaction Routes', () => {
   beforeAll(async () => {

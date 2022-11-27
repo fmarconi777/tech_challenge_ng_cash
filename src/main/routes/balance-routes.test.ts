@@ -3,7 +3,7 @@ import app from '../config/app'
 import { ConnectionHelper } from '../../infra/db/helpers/connection-helper'
 import { Accounts } from '../../infra/sequelize/models/accounts'
 import { Users } from '../../infra/sequelize/models/users'
-import { makeLoginController } from '../factories/login'
+import { makeLoginController } from '../factories/login/login'
 
 describe('Balance Routes', () => {
   beforeAll(async () => {
