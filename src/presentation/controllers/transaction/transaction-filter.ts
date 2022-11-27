@@ -5,7 +5,7 @@ import { HttpRequest, HttpResponse } from '../../protocols'
 
 export class TransactionFilterController implements Controller {
   constructor (
-    private readonly loadFilteredCashTransactionsStub: LoadFilteredCashTransactions
+    private readonly loadFilteredCashTransactions: LoadFilteredCashTransactions
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -17,10 +17,10 @@ export class TransactionFilterController implements Controller {
         try {
           switch (param) {
             case 'cashIn':
-              return okResponse(await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
+              return okResponse(await this.loadFilteredCashTransactions.load({ userId: +id, filter: 'creditedAccountId' })
               )
             case 'cashOut':
-              return okResponse(await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
+              return okResponse(await this.loadFilteredCashTransactions.load({ userId: +id, filter: 'debitedAccountId' })
               )
             default:
               return badRequest(new InvalidParamError('expected cashIn or cashOut params'))

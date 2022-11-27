@@ -76,7 +76,24 @@ describe('Transaction Filter Controller', () => {
       await sut.handle(httpRequest)
       expect(loadSpy).toHaveBeenCalledWith({
         userId: 1,
-        filter: 'cashIn'
+        filter: 'creditedAccountId'
+      })
+    })
+
+    test('Should call LoadFilteredCashTransactions with correct values', async () => {
+      const { sut, loadFilteredCashTransactionsStub } = makeSut()
+      const loadSpy = jest.spyOn(loadFilteredCashTransactionsStub, 'load')
+      await sut.handle({
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        method: 'GET',
+        param: 'cashOut'
+      })
+      expect(loadSpy).toHaveBeenCalledWith({
+        userId: 1,
+        filter: 'debitedAccountId'
       })
     })
 
