@@ -1,4 +1,4 @@
-import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM } from './transaction-repository-protocols'
+import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM, FilterValues, LoadFilteredCashTransactionsORM } from './transaction-repository-protocols'
 import { TransactionRepository } from './transaction-repository'
 
 const recordData = {
@@ -7,6 +7,11 @@ const recordData = {
   creditedAccountId: 2,
   creditedBalance: 200.00,
   value: 100.00
+}
+
+const filterValues = {
+  accountId: 1,
+  filter: 'creditedAccountId'
 }
 
 const makeRecordTransactionORMStub = (): RecordTransactionORM => {
@@ -33,20 +38,38 @@ const makeLoadTransactionsByAccountIdORMStub = (): LoadTransactionsByAccountIdOR
   return new LoadTransactionsByAccountIdORMStub()
 }
 
+const makeLoadFilteredCashTransactionsORMStub = (): LoadFilteredCashTransactionsORM => {
+  class LoadFilteredCashTransactionsORMStub implements LoadFilteredCashTransactionsORM {
+    async loadByFilter (filterValues: FilterValues): Promise<RecordsData[]> {
+      return await Promise.resolve([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }])
+    }
+  }
+  return new LoadFilteredCashTransactionsORMStub()
+}
+
 type SubTypes = {
   sut: TransactionRepository
   recordTransactionORMStub: RecordTransactionORM
   loadTransactionsByAccountIdORMStub: LoadTransactionsByAccountIdORM
+  loadFilteredCashTransactionsORMStub: LoadFilteredCashTransactionsORM
 }
 
 const makeSut = (): SubTypes => {
+  const loadFilteredCashTransactionsORMStub = makeLoadFilteredCashTransactionsORMStub()
   const loadTransactionsByAccountIdORMStub = makeLoadTransactionsByAccountIdORMStub()
   const recordTransactionORMStub = makeRecordTransactionORMStub()
-  const sut = new TransactionRepository(recordTransactionORMStub, loadTransactionsByAccountIdORMStub)
+  const sut = new TransactionRepository(recordTransactionORMStub, loadTransactionsByAccountIdORMStub, loadFilteredCashTransactionsORMStub)
   return {
     sut,
     recordTransactionORMStub,
-    loadTransactionsByAccountIdORMStub
+    loadTransactionsByAccountIdORMStub,
+    loadFilteredCashTransactionsORMStub
   }
 }
 
@@ -98,6 +121,15 @@ describe('Transaction Repository', () => {
         value: 'any_value',
         createdAt: 'any_createdAt'
       }])
+    })
+  })
+
+  describe('LoadByFilter method', () => {
+    test('Should call LoadFilteredCashTransactionsORM with correct values', async () => {
+      const { sut, loadFilteredCashTransactionsORMStub } = makeSut()
+      const loadByAccountIdSpy = jest.spyOn(loadFilteredCashTransactionsORMStub, 'loadByFilter')
+      await sut.loadByFilter(filterValues)
+      expect(loadByAccountIdSpy).toHaveBeenCalledWith(filterValues)
     })
   })
 })
