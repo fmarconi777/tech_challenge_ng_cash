@@ -3,8 +3,11 @@ import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM } from '../sequelize-adapters-protocols'
 import { Accounts, Transactions } from '../../models/models'
 import { parseRecords } from '../sequelize-parsers/parse-records'
+import { FilterValues, LoadFilteredCashTransactionsORM } from '../../../protocols/transaction/load-filtered-cash-transactions-ORM'
 
-export class SequelizeTransactionAdapter implements RecordTransactionORM, LoadTransactionsByAccountIdORM {
+export class SequelizeTransactionAdapter implements RecordTransactionORM,
+LoadTransactionsByAccountIdORM,
+LoadFilteredCashTransactionsORM {
   async record (recordData: RecordData): Promise<string> {
     await ConnectionHelper.reconnect()
     let transaction
@@ -50,6 +53,30 @@ export class SequelizeTransactionAdapter implements RecordTransactionORM, LoadTr
               'INNER JOIN PUBLIC."Users" U ON T."creditedAccountId" = U."accountId" ' +
               'WHERE T."debitedAccountId" = :id ' +
                   'OR T."creditedAccountId" = :id) T ' +
+      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"',
+      { replacements: { id }, type: QueryTypes.SELECT, raw: true }
+    ) as any
+    return parseRecords(records)
+  }
+
+  async loadByFilter (filterValues: FilterValues): Promise<RecordsData[]> {
+    await ConnectionHelper.reconnect()
+    const id = filterValues.accountId
+    const records = await Transactions.sequelize?.query(
+      'SELECT T.ID, ' +
+          'U.USERNAME as debitedUsername, ' +
+          'T.USERNAME as creditedUsername, ' +
+          'T."value", ' +
+          'T."createdAt" ' +
+      'FROM ' +
+          '(SELECT T.ID, ' +
+                  'T."debitedAccountId", ' +
+                  'U.USERNAME, ' +
+                  'T."value", ' +
+                  'T."createdAt" ' +
+              'FROM PUBLIC."Transactions" T ' +
+              'INNER JOIN PUBLIC."Users" U ON T."creditedAccountId" = U."accountId" ' +
+              `WHERE T."${filterValues.filter}" = :id) T ` +
       'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"',
       { replacements: { id }, type: QueryTypes.SELECT, raw: true }
     ) as any
