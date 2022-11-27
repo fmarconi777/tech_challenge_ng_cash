@@ -87,4 +87,16 @@ describe('DbLoadFilteredCashTransactions', () => {
     const records = sut.load(filterData)
     await expect(records).rejects.toThrow()
   })
+
+  test('Should return an array of records on success', async () => {
+    const { sut } = makeSut()
+    const records = await sut.load(filterData)
+    expect(records).toEqual([{
+      id: 'any_id',
+      debitedUsername: 'any_debitedUsername',
+      creditedUsername: 'any_creditedUsername',
+      value: 'any_value',
+      createdAt: 'any_createdAt'
+    }])
+  })
 })
