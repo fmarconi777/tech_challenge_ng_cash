@@ -44,4 +44,11 @@ describe('DbLoadFilteredCashTransactions', () => {
     await sut.load(filterData)
     expect(loadByIdSpy).toHaveBeenCalledWith(1)
   })
+
+  test('Should throw if LoadUserByIdRepository throws', async () => {
+    const { sut, loadUserByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+    const user = sut.load(filterData)
+    await expect(user).rejects.toThrow()
+  })
 })
