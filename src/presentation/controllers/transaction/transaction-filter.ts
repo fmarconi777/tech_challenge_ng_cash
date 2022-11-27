@@ -18,11 +18,11 @@ export class TransactionFilterController implements Controller {
         try {
           switch (param) {
             case 'cashIn':
-              await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
-              return okResponse('')
+              return okResponse(await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
+              )
             case 'cashOut':
-              await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
-              return okResponse('')
+              return okResponse(await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
+              )
             default:
               return badRequest(new InvalidParamError('expected cashIn or cashOut params'))
           }
