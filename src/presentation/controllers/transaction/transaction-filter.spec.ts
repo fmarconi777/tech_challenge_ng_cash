@@ -3,6 +3,15 @@ import { InvalidParamError } from '../../errors'
 import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
 
+const httpRequest = {
+  user: {
+    id: '1',
+    username: 'any_username'
+  },
+  method: 'GET',
+  param: 'cashIn'
+}
+
 const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions => {
   class LoadFilteredCashTransactionsStub implements LoadFilteredCashTransactions {
     async load (filterData: FilterData): Promise<RecordsData[]> {
@@ -64,7 +73,6 @@ describe('Transaction Filter Controller', () => {
     test('Should call LoadFilteredCashTransactions with correct values', async () => {
       const { sut, loadFilteredCashTransactionsStub } = makeSut()
       const loadSpy = jest.spyOn(loadFilteredCashTransactionsStub, 'load')
-      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET', param: 'cashIn' }
       await sut.handle(httpRequest)
       expect(loadSpy).toHaveBeenCalledWith({
         userId: 1,
@@ -75,14 +83,12 @@ describe('Transaction Filter Controller', () => {
     test('Should return 500 status if LoadTransactions throws', async () => {
       const { sut, loadFilteredCashTransactionsStub } = makeSut()
       jest.spyOn(loadFilteredCashTransactionsStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
-      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET', param: 'cashIn' }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError())
     })
 
     test('Should return an array of records on success', async () => {
       const { sut } = makeSut()
-      const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET', param: 'cashIn' }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(okResponse([{
         id: 'any_id',
