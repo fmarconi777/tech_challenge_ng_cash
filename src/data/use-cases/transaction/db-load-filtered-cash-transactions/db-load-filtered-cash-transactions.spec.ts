@@ -67,8 +67,8 @@ describe('DbLoadFilteredCashTransactions', () => {
   test('Should throw if LoadUserByIdRepository throws', async () => {
     const { sut, loadUserByIdRepositoryStub } = makeSut()
     jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
-    const user = sut.load(filterData)
-    await expect(user).rejects.toThrow()
+    const records = sut.load(filterData)
+    await expect(records).rejects.toThrow()
   })
 
   test('Should call LoadFilteredCashTransactionsRepository with correct values', async () => {
@@ -79,5 +79,12 @@ describe('DbLoadFilteredCashTransactions', () => {
       accountId: 1,
       filter: 'any_param'
     })
+  })
+
+  test('Should throw if LoadFilteredCashTransactionsRepository throws', async () => {
+    const { sut, loadFilteredCashTransactionsRepositoryStub } = makeSut()
+    jest.spyOn(loadFilteredCashTransactionsRepositoryStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
+    const records = sut.load(filterData)
+    await expect(records).rejects.toThrow()
   })
 })
