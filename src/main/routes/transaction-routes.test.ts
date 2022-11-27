@@ -109,5 +109,11 @@ describe('Transaction Routes', () => {
         .set('authorization', `Bearer ${((httpResponse).body as string)}`)
         .expect(200)
     })
+
+    test('Should return 403 on get transaction/param without accessToken', async () => {
+      await request(app)
+        .get('/transaction/cashOut')
+        .expect(403)
+    })
   })
 })
