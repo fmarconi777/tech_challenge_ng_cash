@@ -1,6 +1,6 @@
 import { LoadFilteredCashTransactions } from '../../../domain/use-cases/transaction/load-filtered-cash-transactions/load-filtered-cash-transactions'
 import { InvalidParamError } from '../../errors'
-import { badRequest, methodNotAllowed, okResponse } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
 import { HttpRequest, HttpResponse } from '../../protocols'
 import { Controller } from './transaction-protocols'
 
@@ -15,15 +15,19 @@ export class TransactionFilterController implements Controller {
     const { id } = httpRequest.user
     switch (method) {
       case 'GET':
-        switch (param) {
-          case 'cashIn':
-            await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
-            return okResponse('')
-          case 'cashOut':
-            await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
-            return okResponse('')
-          default:
-            return badRequest(new InvalidParamError('expected cashIn or cashOut params'))
+        try {
+          switch (param) {
+            case 'cashIn':
+              await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
+              return okResponse('')
+            case 'cashOut':
+              await this.loadFilteredCashTransactionsStub.load({ userId: +id, filter: param })
+              return okResponse('')
+            default:
+              return badRequest(new InvalidParamError('expected cashIn or cashOut params'))
+          }
+        } catch (error: any) {
+          return serverError()
         }
       default:
         return methodNotAllowed()
