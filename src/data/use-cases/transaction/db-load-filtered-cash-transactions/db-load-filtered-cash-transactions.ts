@@ -1,6 +1,5 @@
 import { FilterData, LoadFilteredCashTransactions, RecordsData } from '../../../../domain/use-cases/transaction/load-filtered-cash-transactions/load-filtered-cash-transactions'
-import { LoadFilteredCashTransactionsRepository } from '../../../protocols/db/transaction/load-filtered-cash-transactions-repository'
-import { LoadUserByIdRepository } from '../../../protocols/db/user/load-user-by-id-repository'
+import { LoadFilteredCashTransactionsRepository, LoadUserByIdRepository } from './db-load-filtered-cash-transactions-protocols'
 
 export class DbLoadFilteredCashTransactions implements LoadFilteredCashTransactions {
   constructor (
