@@ -139,4 +139,16 @@ describe('Transaction Repository', () => {
     const record = sut.loadByFilter(filterValues)
     await expect(record).rejects.toThrow()
   })
+
+  test('Should return an array of records on success', async () => {
+    const { sut } = makeSut()
+    const userAccount = await sut.loadByFilter(filterValues)
+    expect(userAccount).toEqual([{
+      id: 'any_id',
+      debitedUsername: 'any_debitedUsername',
+      creditedUsername: 'any_creditedUsername',
+      value: 'any_value',
+      createdAt: 'any_createdAt'
+    }])
+  })
 })
