@@ -1,4 +1,4 @@
-import { FilterData, LoadFilteredCashTransactions, RecordsData } from '../../../domain/use-cases/transaction/load-filtered-cash-transactions/load-filtered-cash-transactions'
+import { FilterData, LoadFilteredCashTransactions, RecordsData } from './transaction-protocols'
 import { InvalidParamError } from '../../errors'
 import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
