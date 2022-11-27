@@ -22,7 +22,6 @@ export class TransactionRepository implements
   }
 
   async loadByFilter (filterValues: FilterValues): Promise<RecordsData[]> {
-    await this.loadFilteredCashTransactionsORMStub.loadByFilter(filterValues)
-    return []
+    return await this.loadFilteredCashTransactionsORMStub.loadByFilter(filterValues)
   }
 }
