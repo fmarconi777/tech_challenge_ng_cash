@@ -30,7 +30,7 @@ export class TransactionFilterController implements Controller {
           return serverError()
         }
       case 'POST':
-        {
+        try {
           if (param !== 'date') {
             return badRequest(new InvalidParamError('expected "date" param on route'))
           }
@@ -41,6 +41,8 @@ export class TransactionFilterController implements Controller {
             }
           }
           this.dateValidator.isValid(httpRequest.body.startDate)
+        } catch (error: any) {
+          return serverError()
         }
         return ok('')
       default:
