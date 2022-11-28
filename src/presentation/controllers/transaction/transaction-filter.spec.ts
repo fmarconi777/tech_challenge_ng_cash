@@ -297,5 +297,29 @@ describe('Transaction Filter Controller', () => {
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError())
     })
+
+    test('Should return an array of records on success', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: '2022-11-28',
+          endDate: '2022-11-28'
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(ok([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }]))
+    })
   })
 })
