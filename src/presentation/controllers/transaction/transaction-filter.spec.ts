@@ -67,7 +67,7 @@ describe('Transaction Filter Controller', () => {
         param: 'invalid_param'
       }
       const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(badRequest(new InvalidParamError('expected cashIn or cashOut params')))
+      expect(httpResponse).toEqual(badRequest(new InvalidParamError('expected cashIn or cashOut params on route')))
     })
 
     test('Should call LoadFilteredCashTransactions with correct values', async () => {
@@ -114,6 +114,26 @@ describe('Transaction Filter Controller', () => {
         value: 'any_value',
         createdAt: 'any_createdAt'
       }]))
+    })
+  })
+
+  describe('POST method', () => {
+    test('Should return 400 status if not allowed param is provided', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: '',
+          endDate: ''
+        },
+        method: 'POST',
+        param: 'invalid_param'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new InvalidParamError('expected "date" param on route')))
     })
   })
 })
