@@ -33,7 +33,7 @@ export class TransactionFilterController implements Controller {
           if (param !== 'date') {
             return badRequest(new InvalidParamError('expected "date" param on route'))
           }
-          const requiredFields = ['startDate']
+          const requiredFields = ['startDate', 'endDate']
           for (const field of requiredFields) {
             if (!httpRequest.body[field]) {
               return badRequest(new MissingParamError(field))
