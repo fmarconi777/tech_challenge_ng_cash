@@ -1,11 +1,12 @@
 import { LoadFilteredCashTransactions, Controller } from './transaction-protocols'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
-import { HttpRequest, HttpResponse } from '../../protocols'
+import { HttpRequest, HttpResponse, Validator } from '../../protocols'
 
 export class TransactionFilterController implements Controller {
   constructor (
-    private readonly loadFilteredCashTransactions: LoadFilteredCashTransactions
+    private readonly loadFilteredCashTransactions: LoadFilteredCashTransactions,
+    private readonly dateValidator: Validator
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -39,6 +40,7 @@ export class TransactionFilterController implements Controller {
               return badRequest(new MissingParamError(field))
             }
           }
+          this.dateValidator.isValid(httpRequest.body.startDate)
         }
         return ok('')
       default:
