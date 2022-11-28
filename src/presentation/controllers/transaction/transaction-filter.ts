@@ -23,11 +23,16 @@ export class TransactionFilterController implements Controller {
               return ok(await this.loadFilteredCashTransactions.load({ userId: +id, filter: 'debitedAccountId' })
               )
             default:
-              return badRequest(new InvalidParamError('expected cashIn or cashOut params'))
+              return badRequest(new InvalidParamError('expected cashIn or cashOut params on route'))
           }
         } catch (error: any) {
           return serverError()
         }
+      case 'POST':
+        if (param !== 'date') {
+          return badRequest(new InvalidParamError('expected "date" param on route'))
+        }
+        return ok('')
       default:
         return methodNotAllowed()
     }
