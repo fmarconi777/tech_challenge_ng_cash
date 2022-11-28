@@ -1,4 +1,4 @@
-import { FilterData, LoadFilteredCashTransactions, RecordsData, Validator } from './transaction-protocols'
+import { FilterData, LoadFilteredCashTransactions, LoadFilteredDateTransactions, RecordsData, TimePeriod, Validator } from './transaction-protocols'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
@@ -27,6 +27,21 @@ const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions =>
   return new LoadFilteredCashTransactionsStub()
 }
 
+const makeLoadFilteredDateTransactionsStub = (): LoadFilteredDateTransactions => {
+  class LoadFilteredDateTransactionsStub implements LoadFilteredDateTransactions {
+    async load (timePeriod: TimePeriod): Promise<RecordsData[]> {
+      return [{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }]
+    }
+  }
+  return new LoadFilteredDateTransactionsStub()
+}
+
 const makeDateValidatorStub = (): Validator => {
   class DateValidatorStub implements Validator {
     isValid (param: string): boolean {
@@ -40,16 +55,19 @@ type Subtypes = {
   sut: TransactionFilterController
   loadFilteredCashTransactionsStub: LoadFilteredCashTransactions
   dateValidatorStub: Validator
+  loadFilteredDateTransactionsStub: LoadFilteredDateTransactions
 }
 
 const makeSut = (): Subtypes => {
+  const loadFilteredDateTransactionsStub = makeLoadFilteredDateTransactionsStub()
   const dateValidatorStub = makeDateValidatorStub()
   const loadFilteredCashTransactionsStub = makeLoadFilteredCashTransactionsStub()
-  const sut = new TransactionFilterController(loadFilteredCashTransactionsStub, dateValidatorStub)
+  const sut = new TransactionFilterController(loadFilteredCashTransactionsStub, dateValidatorStub, loadFilteredDateTransactionsStub)
   return {
     sut,
     loadFilteredCashTransactionsStub,
-    dateValidatorStub
+    dateValidatorStub,
+    loadFilteredDateTransactionsStub
   }
 }
 
@@ -237,6 +255,28 @@ describe('Transaction Filter Controller', () => {
       }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('startDate')))
+    })
+
+    test('Should call LoadFilteredDateTransactions with correct value', async () => {
+      const { sut, loadFilteredDateTransactionsStub } = makeSut()
+      const isValidSpy = jest.spyOn(loadFilteredDateTransactionsStub, 'load')
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: '2022-11-28',
+          endDate: '2022-11-28'
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      await sut.handle(httpRequest)
+      expect(isValidSpy).toHaveBeenCalledWith({
+        startDate: '2022-11-28',
+        endDate: '2022-11-28'
+      })
     })
   })
 })
