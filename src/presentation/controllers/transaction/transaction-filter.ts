@@ -47,11 +47,10 @@ export class TransactionFilterController implements Controller {
             }
           }
           const { startDate, endDate } = httpRequest.body
-          await this.loadFilteredDateTransactions.load({ startDate, endDate })
+          return ok(await this.loadFilteredDateTransactions.load({ startDate, endDate }))
         } catch (error: any) {
           return serverError()
         }
-        return ok('')
       default:
         return methodNotAllowed()
     }
