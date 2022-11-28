@@ -1,5 +1,5 @@
 import { LoadFilteredCashTransactions, Controller } from './transaction-protocols'
-import { InvalidParamError } from '../../errors'
+import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { HttpRequest, HttpResponse } from '../../protocols'
 
@@ -29,8 +29,16 @@ export class TransactionFilterController implements Controller {
           return serverError()
         }
       case 'POST':
-        if (param !== 'date') {
-          return badRequest(new InvalidParamError('expected "date" param on route'))
+        {
+          if (param !== 'date') {
+            return badRequest(new InvalidParamError('expected "date" param on route'))
+          }
+          const requiredFields = ['startDate']
+          for (const field of requiredFields) {
+            if (!httpRequest.body[field]) {
+              return badRequest(new MissingParamError(field))
+            }
+          }
         }
         return ok('')
       default:
