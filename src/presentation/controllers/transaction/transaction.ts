@@ -1,6 +1,6 @@
 import { LoadTransactions, RecordTransaction, Controller, HttpRequest, HttpResponse, Validator } from './transaction-protocols'
 import { InvalidParamError, MissingParamError, TransactionError } from '../../errors'
-import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
+import { badRequest, created, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 
 export class TransactionController implements Controller {
   constructor (
@@ -37,13 +37,13 @@ export class TransactionController implements Controller {
           if (!record.recorded) {
             return badRequest(new TransactionError(record.message))
           }
-          return okResponse(record.message)
+          return created(record.message)
         } catch (error: any) {
           return serverError()
         }
       case 'GET':
         try {
-          return okResponse(await this.loadTransactions.load(+id))
+          return ok(await this.loadTransactions.load(+id))
         } catch (error: any) {
           return serverError()
         }

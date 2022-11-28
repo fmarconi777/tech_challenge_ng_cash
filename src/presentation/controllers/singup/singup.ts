@@ -1,6 +1,6 @@
 import { Controller, HttpRequest, HttpResponse, Validator, AddUserAccount } from './singup-protocols'
 import { InvalidParamError, MissingParamError, UsernameInUseError } from '../../errors'
-import { badRequest, forbidden, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
+import { badRequest, created, forbidden, methodNotAllowed, serverError } from '../../helpers/http-helper'
 
 export class SignUpController implements Controller {
   constructor (
@@ -34,7 +34,7 @@ export class SignUpController implements Controller {
           if (!userAccount) {
             return forbidden(new UsernameInUseError())
           }
-          return okResponse(userAccount)
+          return created(userAccount)
         } catch (error: any) {
           return serverError()
         }

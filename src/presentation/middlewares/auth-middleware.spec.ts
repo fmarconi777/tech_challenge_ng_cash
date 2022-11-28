@@ -1,6 +1,6 @@
 import { LoadUserByToken, HttpRequest, UserModel } from './auth-middleware-protocols'
 import { AccessDeniedError } from '../errors'
-import { forbidden, okResponse, serverError } from '../helpers/http-helper'
+import { forbidden, ok, serverError } from '../helpers/http-helper'
 import { AuthMiddleware } from './auth-middleware'
 
 const fakeRequest = (): HttpRequest => ({
@@ -68,7 +68,7 @@ describe('Auth Middleware', () => {
   test('Should return 200 if LoadUserByToken returns an user', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(fakeRequest())
-    expect(httpResponse).toEqual(okResponse({
+    expect(httpResponse).toEqual(ok({
       user: {
         id: 'any_id',
         username: 'any_username'

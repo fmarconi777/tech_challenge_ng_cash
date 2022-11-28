@@ -33,6 +33,6 @@ describe('Signup Routes', () => {
         username: 'anyName',
         password: 'anyPassword1'
       })
-      .expect(200)
+      .expect(201)
   })
 })

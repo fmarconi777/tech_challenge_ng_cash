@@ -1,5 +1,5 @@
 import { AccessDeniedError } from '../errors'
-import { forbidden, okResponse, serverError } from '../helpers/http-helper'
+import { forbidden, ok, serverError } from '../helpers/http-helper'
 import { HttpRequest, HttpResponse, Middleware, LoadUserByToken } from './auth-middleware-protocols'
 
 export class AuthMiddleware implements Middleware {
@@ -13,7 +13,7 @@ export class AuthMiddleware implements Middleware {
       if (accessToken && accessToken !== 'undefined') {
         const user = await this.loadUserByToken.load(httpRequest.header)
         if (user) {
-          return okResponse({
+          return ok({
             user: {
               id: user.id,
               username: user.username

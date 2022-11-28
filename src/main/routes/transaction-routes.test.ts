@@ -68,7 +68,7 @@ describe('Transaction Routes', () => {
           creditedUsername: 'anyName2',
           value: '100.00'
         })
-        .expect(200)
+        .expect(201)
     })
   })
 

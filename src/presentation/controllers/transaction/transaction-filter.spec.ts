@@ -1,6 +1,6 @@
 import { FilterData, LoadFilteredCashTransactions, RecordsData } from './transaction-protocols'
 import { InvalidParamError } from '../../errors'
-import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
 
 const httpRequest = {
@@ -107,7 +107,7 @@ describe('Transaction Filter Controller', () => {
     test('Should return an array of records on success', async () => {
       const { sut } = makeSut()
       const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(okResponse([{
+      expect(httpResponse).toEqual(ok([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
         creditedUsername: 'any_creditedUsername',

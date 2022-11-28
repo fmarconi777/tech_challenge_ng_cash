@@ -1,6 +1,6 @@
 import { Authentication, AuthenticationModel } from './login-protocols'
 import { MissingParamError } from '../../errors'
-import { badRequest, methodNotAllowed, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, ok, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'
 
 const fakeUser = {
@@ -109,6 +109,6 @@ describe('Login Controller', () => {
       method: 'POST'
     }
     const httpResponse = await sut.handle(httpRequest)
-    expect(httpResponse).toEqual(okResponse('access_token'))
+    expect(httpResponse).toEqual(ok('access_token'))
   })
 })

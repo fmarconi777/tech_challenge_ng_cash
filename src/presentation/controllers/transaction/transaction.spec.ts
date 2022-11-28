@@ -1,6 +1,6 @@
 import { LoadTransactions, RecordsData, Record, RecordTransaction, TransactionData, Validator } from './transaction-protocols'
 import { InvalidParamError, MissingParamError, TransactionError } from '../../errors'
-import { badRequest, methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
+import { badRequest, created, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionController } from './transaction'
 
 const request = {
@@ -191,7 +191,7 @@ describe('Transaction Controller', () => {
     test('Should return a message on success', async () => {
       const { sut } = makeSut()
       const httpResponse = await sut.handle(request)
-      expect(httpResponse).toEqual(okResponse('Transaction succesfully recorded'))
+      expect(httpResponse).toEqual(created('Transaction succesfully recorded'))
     })
   })
 
@@ -216,7 +216,7 @@ describe('Transaction Controller', () => {
       const { sut } = makeSut()
       const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET' }
       const httpResponse = await sut.handle(httpRequest)
-      expect(httpResponse).toEqual(okResponse([{
+      expect(httpResponse).toEqual(ok([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
         creditedUsername: 'any_creditedUsername',

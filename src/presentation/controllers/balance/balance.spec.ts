@@ -1,5 +1,5 @@
 import { BalanceModel, LoadBalance } from './balance-protocols'
-import { methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
+import { methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { BalanceController } from './balance'
 
 const makeLoadBalanceStub = (): LoadBalance => {
@@ -53,6 +53,6 @@ describe('Balance Controller', () => {
     const { sut } = makeSut()
     const httpRequest = { user: { id: '1', username: 'any_username' }, method: 'GET' }
     const balance = await sut.handle(httpRequest)
-    expect(balance).toEqual(okResponse({ balance: 'any_balance' }))
+    expect(balance).toEqual(ok({ balance: 'any_balance' }))
   })
 })

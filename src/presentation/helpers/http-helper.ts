@@ -2,9 +2,16 @@ import { HttpResponse } from '../protocols/http'
 import { UnauthorizedError, ServerError } from '../errors'
 import { InvalidMethodError } from '../errors/invalid-method-error'
 
-export const okResponse = (data: any): HttpResponse => {
+export const ok = (data: any): HttpResponse => {
   return {
     status: 200,
+    body: data
+  }
+}
+
+export const created = (data: any): HttpResponse => {
+  return {
+    status: 201,
     body: data
   }
 }

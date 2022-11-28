@@ -1,5 +1,5 @@
 import { LoadBalance, Controller, HttpRequest, HttpResponse } from './balance-protocols'
-import { methodNotAllowed, okResponse, serverError } from '../../helpers/http-helper'
+import { methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 
 export class BalanceController implements Controller {
   constructor (private readonly loadBalance: LoadBalance) {}
@@ -10,7 +10,7 @@ export class BalanceController implements Controller {
       case 'GET':
         try {
           const id = +httpRequest.user.id
-          return okResponse(await this.loadBalance.load(id))
+          return ok(await this.loadBalance.load(id))
         } catch (error: any) {
           return serverError()
         }

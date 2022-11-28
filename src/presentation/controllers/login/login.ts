@@ -1,6 +1,6 @@
 import { Controller, HttpRequest, HttpResponse, Authentication } from './login-protocols'
 import { MissingParamError } from '../../errors'
-import { badRequest, methodNotAllowed, okResponse, serverError, unauthorized } from '../../helpers/http-helper'
+import { badRequest, methodNotAllowed, ok, serverError, unauthorized } from '../../helpers/http-helper'
 
 export class LoginController implements Controller {
   constructor (private readonly authentication: Authentication) {}
@@ -21,7 +21,7 @@ export class LoginController implements Controller {
           if (!accessToken) {
             return unauthorized()
           }
-          return okResponse(accessToken)
+          return ok(accessToken)
         } catch (error: any) {
           return serverError()
         }
