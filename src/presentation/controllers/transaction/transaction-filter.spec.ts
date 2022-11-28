@@ -1,4 +1,4 @@
-import { FilterData, LoadFilteredCashTransactions, RecordsData } from './transaction-protocols'
+import { FilterData, LoadFilteredCashTransactions, RecordsData, Validator } from './transaction-protocols'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
@@ -27,17 +27,29 @@ const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions =>
   return new LoadFilteredCashTransactionsStub()
 }
 
+const makeDateValidatorStub = (): Validator => {
+  class DateValidatorStub implements Validator {
+    isValid (param: string): boolean {
+      return true
+    }
+  }
+  return new DateValidatorStub()
+}
+
 type Subtypes = {
   sut: TransactionFilterController
   loadFilteredCashTransactionsStub: LoadFilteredCashTransactions
+  dateValidatorStub: Validator
 }
 
 const makeSut = (): Subtypes => {
+  const dateValidatorStub = makeDateValidatorStub()
   const loadFilteredCashTransactionsStub = makeLoadFilteredCashTransactionsStub()
-  const sut = new TransactionFilterController(loadFilteredCashTransactionsStub)
+  const sut = new TransactionFilterController(loadFilteredCashTransactionsStub, dateValidatorStub)
   return {
     sut,
-    loadFilteredCashTransactionsStub
+    loadFilteredCashTransactionsStub,
+    dateValidatorStub
   }
 }
 
@@ -168,6 +180,25 @@ describe('Transaction Filter Controller', () => {
       }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(badRequest(new MissingParamError('endDate')))
+    })
+
+    test('Should call DateValidator with correct value', async () => {
+      const { sut, dateValidatorStub } = makeSut()
+      const isValidSpy = jest.spyOn(dateValidatorStub, 'isValid')
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: 'invalid_date',
+          endDate: '2022-11-28'
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      await sut.handle(httpRequest)
+      expect(isValidSpy).toHaveBeenCalledWith('invalid_date')
     })
   })
 })
