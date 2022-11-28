@@ -1,4 +1,4 @@
-import { LoadFilteredCashTransactions, Controller } from './transaction-protocols'
+import { LoadFilteredCashTransactions, Controller, LoadFilteredDateTransactions } from './transaction-protocols'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { HttpRequest, HttpResponse, Validator } from '../../protocols'
@@ -6,7 +6,8 @@ import { HttpRequest, HttpResponse, Validator } from '../../protocols'
 export class TransactionFilterController implements Controller {
   constructor (
     private readonly loadFilteredCashTransactions: LoadFilteredCashTransactions,
-    private readonly dateValidator: Validator
+    private readonly dateValidator: Validator,
+    private readonly loadFilteredDateTransactions: LoadFilteredDateTransactions
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -45,6 +46,8 @@ export class TransactionFilterController implements Controller {
               return badRequest(new InvalidParamError(field))
             }
           }
+          const { startDate, endDate } = httpRequest.body
+          await this.loadFilteredDateTransactions.load({ startDate, endDate })
         } catch (error: any) {
           return serverError()
         }
