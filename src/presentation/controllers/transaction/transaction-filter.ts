@@ -40,7 +40,11 @@ export class TransactionFilterController implements Controller {
               return badRequest(new MissingParamError(field))
             }
           }
-          this.dateValidator.isValid(httpRequest.body.startDate)
+          for (const field of requiredFields) {
+            if (!this.dateValidator.isValid(httpRequest.body[field])) {
+              return badRequest(new InvalidParamError(field))
+            }
+          }
         } catch (error: any) {
           return serverError()
         }
