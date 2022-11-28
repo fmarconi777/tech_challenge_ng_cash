@@ -1,5 +1,5 @@
 import { FilterData, LoadFilteredCashTransactions, RecordsData } from './transaction-protocols'
-import { InvalidParamError } from '../../errors'
+import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
 
@@ -134,6 +134,23 @@ describe('Transaction Filter Controller', () => {
       }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('expected "date" param on route')))
+    })
+
+    test('Should return 400 status if startDate is not provided', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          endDate: ''
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('startDate')))
     })
   })
 })
