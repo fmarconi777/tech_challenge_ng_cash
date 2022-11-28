@@ -200,5 +200,24 @@ describe('Transaction Filter Controller', () => {
       await sut.handle(httpRequest)
       expect(isValidSpy).toHaveBeenCalledWith('invalid_date')
     })
+
+    test('Should return 500 status if DateValidator returns an error', async () => {
+      const { sut, dateValidatorStub } = makeSut()
+      jest.spyOn(dateValidatorStub, 'isValid').mockImplementationOnce(() => { throw new Error() })
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: '2022-11-28',
+          endDate: '2022-11-28'
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError())
+    })
   })
 })
