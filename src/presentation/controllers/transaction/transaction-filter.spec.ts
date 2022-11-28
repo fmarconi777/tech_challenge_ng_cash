@@ -144,13 +144,30 @@ describe('Transaction Filter Controller', () => {
           username: 'any_username'
         },
         body: {
-          endDate: ''
+          endDate: '2022-11-28'
         },
         method: 'POST',
         param: 'date'
       }
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(badRequest(new MissingParamError('startDate')))
+    })
+
+    test('Should return 400 status if endDate is not provided', async () => {
+      const { sut } = makeSut()
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: '2022-11-28'
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(badRequest(new MissingParamError('endDate')))
     })
   })
 })
