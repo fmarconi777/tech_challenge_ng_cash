@@ -53,7 +53,8 @@ LoadFilteredCashTransactionsORM {
               'INNER JOIN PUBLIC."Users" U ON T."creditedAccountId" = U."accountId" ' +
               'WHERE T."debitedAccountId" = :id ' +
                   'OR T."creditedAccountId" = :id) T ' +
-      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"',
+      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"' +
+      'ORDER BY "createdAt" ASC',
       { replacements: { id }, type: QueryTypes.SELECT, raw: true }
     ) as any
     return parseRecords(records)
@@ -77,7 +78,8 @@ LoadFilteredCashTransactionsORM {
               'FROM PUBLIC."Transactions" T ' +
               'INNER JOIN PUBLIC."Users" U ON T."creditedAccountId" = U."accountId" ' +
               `WHERE T."${filterValues.filter}" = :id) T ` +
-      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"',
+      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"' +
+      'ORDER BY "createdAt" ASC',
       { replacements: { id }, type: QueryTypes.SELECT, raw: true }
     ) as any
     return parseRecords(records)
