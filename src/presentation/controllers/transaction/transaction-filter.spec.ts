@@ -278,5 +278,24 @@ describe('Transaction Filter Controller', () => {
         endDate: '2022-11-28'
       })
     })
+
+    test('Should return 500 status if LoadFilteredDateTransactions returns an error', async () => {
+      const { sut, loadFilteredDateTransactionsStub } = makeSut()
+      jest.spyOn(loadFilteredDateTransactionsStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+      const httpRequest = {
+        user: {
+          id: '1',
+          username: 'any_username'
+        },
+        body: {
+          startDate: '2022-11-28',
+          endDate: '2022-11-28'
+        },
+        method: 'POST',
+        param: 'date'
+      }
+      const httpResponse = await sut.handle(httpRequest)
+      expect(httpResponse).toEqual(serverError())
+    })
   })
 })
