@@ -14,4 +14,11 @@ describe('DateValidator Adapter', () => {
     const isValid = sut.isValid('2022-10-12')
     expect(isValid).toBeTruthy()
   })
+
+  test('Should call validator with correct values', () => {
+    const sut = new DateValidatorAdapter()
+    const isDateSpy = jest.spyOn(validator, 'isDate')
+    sut.isValid('2022-10-12')
+    expect(isDateSpy).toHaveBeenCalledWith('2022-10-12', { format: 'YYYY-MM-DD', strictMode: true, delimiters: ['-'] })
+  })
 })
