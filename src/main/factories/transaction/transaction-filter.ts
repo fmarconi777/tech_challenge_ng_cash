@@ -1,5 +1,5 @@
-import { DbLoadFilteredCashTransactions } from '../../../data/use-cases/transaction/db-load-filtered-cash-transactions/db-load-filtered-cash-transactions'
-import { DbLoadFilteredDateTransactions } from '../../../data/use-cases/transaction/db-load-filtered-date-transactions/db-load-filtered-date-transactions'
+import { DbLoadFilterByCashTransactions } from '../../../data/use-cases/transaction/db-load-filter-by-cash-transactions/db-load-filter-by-cash-transactions'
+import { DbLoadFilterByDateTransactions } from '../../../data/use-cases/transaction/db-load-filter-by-date-transactions/db-load-filter-by-date-transactions'
 import { TransactionRepository } from '../../../infra/db/transaction/transaction-repository'
 import { UserRepository } from '../../../infra/db/user/user-repository'
 import { SequelizeTransactionAdapter } from '../../../infra/sequelize/sequelize-adapters/transaction/sequelize-transaction-adapter'
@@ -13,8 +13,8 @@ export const makeTransactionFilterController = (): Controller => {
   const userORM = new SequelizeUserAdapter()
   const transactionRepository = new TransactionRepository(transactionORM, transactionORM, transactionORM, transactionORM)
   const userRepository = new UserRepository(userORM, userORM)
-  const loadFilteredDateTransactions = new DbLoadFilteredDateTransactions(userRepository, transactionRepository)
+  const loadFilterByDateTransactions = new DbLoadFilterByDateTransactions(userRepository, transactionRepository)
   const dateValidator = new DateValidatorAdapter()
-  const loadFilteredCashTransactions = new DbLoadFilteredCashTransactions(userRepository, transactionRepository)
-  return new TransactionFilterController(loadFilteredCashTransactions, dateValidator, loadFilteredDateTransactions)
+  const loadFilterByCashTransactions = new DbLoadFilterByCashTransactions(userRepository, transactionRepository)
+  return new TransactionFilterController(loadFilterByCashTransactions, dateValidator, loadFilterByDateTransactions)
 }

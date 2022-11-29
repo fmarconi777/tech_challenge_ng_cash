@@ -1,6 +1,6 @@
 import { UserModel } from '../../../../domain/models/user'
-import { FilterValues, LoadFilteredCashTransactionsRepository, RecordsData, LoadUserByIdRepository } from './db-load-filtered-cash-transactions-protocols'
-import { DbLoadFilteredCashTransactions } from './db-load-filtered-cash-transactions'
+import { FilterValues, LoadFilterByCashTransactionsRepository, RecordsData, LoadUserByIdRepository } from './db-load-filter-by-cash-transactions-protocols'
+import { DbLoadFilterByCashTransactions } from './db-load-filter-by-cash-transactions'
 
 const filterData = {
   userId: 1,
@@ -23,8 +23,8 @@ const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
   return new LoadUserByIdRepositoryStub()
 }
 
-const makeLoadFilteredCashTransactionsRepositoryStub = (): LoadFilteredCashTransactionsRepository => {
-  class LoadFilteredCashTransactionsRepositoryStub implements LoadFilteredCashTransactionsRepository {
+const makeLoadFilterByCashTransactionsRepositoryStub = (): LoadFilterByCashTransactionsRepository => {
+  class LoadFilterByCashTransactionsRepositoryStub implements LoadFilterByCashTransactionsRepository {
     async loadByFilter (filterValues: FilterValues): Promise<RecordsData[]> {
       return await Promise.resolve([{
         id: 'any_id',
@@ -35,61 +35,61 @@ const makeLoadFilteredCashTransactionsRepositoryStub = (): LoadFilteredCashTrans
       }])
     }
   }
-  return new LoadFilteredCashTransactionsRepositoryStub()
+  return new LoadFilterByCashTransactionsRepositoryStub()
 }
 
 type SubTypes = {
-  sut: DbLoadFilteredCashTransactions
+  sut: DbLoadFilterByCashTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
-  loadFilteredCashTransactionsRepositoryStub: LoadFilteredCashTransactionsRepository
+  loadFilterByCashTransactionsRepositoryStub: LoadFilterByCashTransactionsRepository
 }
 
 const makeSut = (): SubTypes => {
-  const loadFilteredCashTransactionsRepositoryStub = makeLoadFilteredCashTransactionsRepositoryStub()
+  const loadFilterByCashTransactionsRepositoryStub = makeLoadFilterByCashTransactionsRepositoryStub()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
-  const sut = new DbLoadFilteredCashTransactions(loadUserByIdRepositoryStub, loadFilteredCashTransactionsRepositoryStub)
+  const sut = new DbLoadFilterByCashTransactions(loadUserByIdRepositoryStub, loadFilterByCashTransactionsRepositoryStub)
   return {
     sut,
     loadUserByIdRepositoryStub,
-    loadFilteredCashTransactionsRepositoryStub
+    loadFilterByCashTransactionsRepositoryStub
   }
 }
 
-describe('DbLoadFilteredCashTransactions', () => {
+describe('DbLoadFilterByCashTransactions', () => {
   test('Should call LoadUserByIdRepository with correct value', async () => {
     const { sut, loadUserByIdRepositoryStub } = makeSut()
     const loadByIdSpy = jest.spyOn(loadUserByIdRepositoryStub, 'loadById')
-    await sut.load(filterData)
+    await sut.loadByCash(filterData)
     expect(loadByIdSpy).toHaveBeenCalledWith(1)
   })
 
   test('Should throw if LoadUserByIdRepository throws', async () => {
     const { sut, loadUserByIdRepositoryStub } = makeSut()
     jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
-    const records = sut.load(filterData)
+    const records = sut.loadByCash(filterData)
     await expect(records).rejects.toThrow()
   })
 
-  test('Should call LoadFilteredCashTransactionsRepository with correct values', async () => {
-    const { sut, loadFilteredCashTransactionsRepositoryStub } = makeSut()
-    const loadByFilterdSpy = jest.spyOn(loadFilteredCashTransactionsRepositoryStub, 'loadByFilter')
-    await sut.load(filterData)
+  test('Should call LoadFilterByCashTransactionsRepository with correct values', async () => {
+    const { sut, loadFilterByCashTransactionsRepositoryStub } = makeSut()
+    const loadByFilterdSpy = jest.spyOn(loadFilterByCashTransactionsRepositoryStub, 'loadByFilter')
+    await sut.loadByCash(filterData)
     expect(loadByFilterdSpy).toHaveBeenCalledWith({
       accountId: 1,
       filter: 'any_param'
     })
   })
 
-  test('Should throw if LoadFilteredCashTransactionsRepository throws', async () => {
-    const { sut, loadFilteredCashTransactionsRepositoryStub } = makeSut()
-    jest.spyOn(loadFilteredCashTransactionsRepositoryStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
-    const records = sut.load(filterData)
+  test('Should throw if LoadFilterByCashTransactionsRepository throws', async () => {
+    const { sut, loadFilterByCashTransactionsRepositoryStub } = makeSut()
+    jest.spyOn(loadFilterByCashTransactionsRepositoryStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
+    const records = sut.loadByCash(filterData)
     await expect(records).rejects.toThrow()
   })
 
   test('Should return an array of records on success', async () => {
     const { sut } = makeSut()
-    const records = await sut.load(filterData)
+    const records = await sut.loadByCash(filterData)
     expect(records).toEqual([{
       id: 'any_id',
       debitedUsername: 'any_debitedUsername',

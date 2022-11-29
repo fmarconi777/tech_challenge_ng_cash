@@ -1,4 +1,4 @@
-import { FilterData, LoadFilteredCashTransactions, LoadFilteredDateTransactions, RecordsData, TimePeriod, Validator } from './transaction-protocols'
+import { FilterData, LoadFilterByCashTransactions, LoadFilterByDateTransactions, RecordsData, TimePeriod, Validator } from './transaction-protocols'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionFilterController } from './transaction-filter'
@@ -12,9 +12,9 @@ const httpRequest = {
   param: 'cashIn'
 }
 
-const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions => {
-  class LoadFilteredCashTransactionsStub implements LoadFilteredCashTransactions {
-    async load (filterData: FilterData): Promise<RecordsData[]> {
+const makeLoadFilterByCashTransactionsStub = (): LoadFilterByCashTransactions => {
+  class LoadFilterByCashTransactionsStub implements LoadFilterByCashTransactions {
+    async loadByCash (filterData: FilterData): Promise<RecordsData[]> {
       return [{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
@@ -24,12 +24,12 @@ const makeLoadFilteredCashTransactionsStub = (): LoadFilteredCashTransactions =>
       }]
     }
   }
-  return new LoadFilteredCashTransactionsStub()
+  return new LoadFilterByCashTransactionsStub()
 }
 
-const makeLoadFilteredDateTransactionsStub = (): LoadFilteredDateTransactions => {
-  class LoadFilteredDateTransactionsStub implements LoadFilteredDateTransactions {
-    async load (timePeriod: TimePeriod): Promise<RecordsData[]> {
+const makeLoadFilterByDateTransactionsStub = (): LoadFilterByDateTransactions => {
+  class LoadFilterByDateTransactionsStub implements LoadFilterByDateTransactions {
+    async loadByDate (timePeriod: TimePeriod): Promise<RecordsData[]> {
       return [{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
@@ -39,7 +39,7 @@ const makeLoadFilteredDateTransactionsStub = (): LoadFilteredDateTransactions =>
       }]
     }
   }
-  return new LoadFilteredDateTransactionsStub()
+  return new LoadFilterByDateTransactionsStub()
 }
 
 const makeDateValidatorStub = (): Validator => {
@@ -53,21 +53,21 @@ const makeDateValidatorStub = (): Validator => {
 
 type Subtypes = {
   sut: TransactionFilterController
-  loadFilteredCashTransactionsStub: LoadFilteredCashTransactions
+  loadFilterByCashTransactionsStub: LoadFilterByCashTransactions
   dateValidatorStub: Validator
-  loadFilteredDateTransactionsStub: LoadFilteredDateTransactions
+  loadFilterByDateTransactionsStub: LoadFilterByDateTransactions
 }
 
 const makeSut = (): Subtypes => {
-  const loadFilteredDateTransactionsStub = makeLoadFilteredDateTransactionsStub()
+  const loadFilterByDateTransactionsStub = makeLoadFilterByDateTransactionsStub()
   const dateValidatorStub = makeDateValidatorStub()
-  const loadFilteredCashTransactionsStub = makeLoadFilteredCashTransactionsStub()
-  const sut = new TransactionFilterController(loadFilteredCashTransactionsStub, dateValidatorStub, loadFilteredDateTransactionsStub)
+  const loadFilterByCashTransactionsStub = makeLoadFilterByCashTransactionsStub()
+  const sut = new TransactionFilterController(loadFilterByCashTransactionsStub, dateValidatorStub, loadFilterByDateTransactionsStub)
   return {
     sut,
-    loadFilteredCashTransactionsStub,
+    loadFilterByCashTransactionsStub,
     dateValidatorStub,
-    loadFilteredDateTransactionsStub
+    loadFilterByDateTransactionsStub
   }
 }
 
@@ -100,19 +100,19 @@ describe('Transaction Filter Controller', () => {
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('expected cashIn or cashOut params on route')))
     })
 
-    test('Should call LoadFilteredCashTransactions with correct values', async () => {
-      const { sut, loadFilteredCashTransactionsStub } = makeSut()
-      const loadSpy = jest.spyOn(loadFilteredCashTransactionsStub, 'load')
+    test('Should call LoadFilterByCashTransactions with correct values', async () => {
+      const { sut, loadFilterByCashTransactionsStub } = makeSut()
+      const loadByCashSpy = jest.spyOn(loadFilterByCashTransactionsStub, 'loadByCash')
       await sut.handle(httpRequest)
-      expect(loadSpy).toHaveBeenCalledWith({
+      expect(loadByCashSpy).toHaveBeenCalledWith({
         userId: 1,
         filter: 'creditedAccountId'
       })
     })
 
-    test('Should call LoadFilteredCashTransactions with correct values', async () => {
-      const { sut, loadFilteredCashTransactionsStub } = makeSut()
-      const loadSpy = jest.spyOn(loadFilteredCashTransactionsStub, 'load')
+    test('Should call LoadFilterByCashTransactions with correct values', async () => {
+      const { sut, loadFilterByCashTransactionsStub } = makeSut()
+      const loadByCashSpy = jest.spyOn(loadFilterByCashTransactionsStub, 'loadByCash')
       await sut.handle({
         user: {
           id: '1',
@@ -121,15 +121,15 @@ describe('Transaction Filter Controller', () => {
         method: 'GET',
         param: 'cashOut'
       })
-      expect(loadSpy).toHaveBeenCalledWith({
+      expect(loadByCashSpy).toHaveBeenCalledWith({
         userId: 1,
         filter: 'debitedAccountId'
       })
     })
 
     test('Should return 500 status if LoadTransactions throws', async () => {
-      const { sut, loadFilteredCashTransactionsStub } = makeSut()
-      jest.spyOn(loadFilteredCashTransactionsStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+      const { sut, loadFilterByCashTransactionsStub } = makeSut()
+      jest.spyOn(loadFilterByCashTransactionsStub, 'loadByCash').mockReturnValueOnce(Promise.reject(new Error()))
       const httpResponse = await sut.handle(httpRequest)
       expect(httpResponse).toEqual(serverError())
     })
@@ -257,9 +257,9 @@ describe('Transaction Filter Controller', () => {
       expect(httpResponse).toEqual(badRequest(new InvalidParamError('startDate')))
     })
 
-    test('Should call LoadFilteredDateTransactions with correct value', async () => {
-      const { sut, loadFilteredDateTransactionsStub } = makeSut()
-      const isValidSpy = jest.spyOn(loadFilteredDateTransactionsStub, 'load')
+    test('Should call LoadFilterByDateTransactions with correct value', async () => {
+      const { sut, loadFilterByDateTransactionsStub } = makeSut()
+      const loadByDateSpy = jest.spyOn(loadFilterByDateTransactionsStub, 'loadByDate')
       const httpRequest = {
         user: {
           id: '1',
@@ -273,16 +273,16 @@ describe('Transaction Filter Controller', () => {
         param: 'date'
       }
       await sut.handle(httpRequest)
-      expect(isValidSpy).toHaveBeenCalledWith({
+      expect(loadByDateSpy).toHaveBeenCalledWith({
         userId: 1,
         startDate: '2022-11-28',
         endDate: '2022-11-28'
       })
     })
 
-    test('Should return 500 status if LoadFilteredDateTransactions returns an error', async () => {
-      const { sut, loadFilteredDateTransactionsStub } = makeSut()
-      jest.spyOn(loadFilteredDateTransactionsStub, 'load').mockReturnValueOnce(Promise.reject(new Error()))
+    test('Should return 500 status if LoadFilterByDateTransactions returns an error', async () => {
+      const { sut, loadFilterByDateTransactionsStub } = makeSut()
+      jest.spyOn(loadFilterByDateTransactionsStub, 'loadByDate').mockReturnValueOnce(Promise.reject(new Error()))
       const httpRequest = {
         user: {
           id: '1',

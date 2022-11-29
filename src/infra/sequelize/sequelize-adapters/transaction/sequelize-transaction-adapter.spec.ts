@@ -124,7 +124,7 @@ describe('Sequelize Tansaction Adapter', () => {
     })
   })
 
-  describe('loadByFilter method', () => {
+  describe('loadByCashFilter method', () => {
     test('Should return an array of records on success', async () => {
       const sut = new SequelizeTransactionAdapter()
       const creatUserAccount = new SequelizeUserAccountAdapter()
@@ -145,7 +145,7 @@ describe('Sequelize Tansaction Adapter', () => {
         value: 100.00
       }
       await sut.record(recordData)
-      const loadedRecords = await sut.loadByFilter({
+      const loadedRecords = await sut.loadByCashFilter({
         accountId: users[0].accountId,
         filter: 'debitedAccountId'
       })

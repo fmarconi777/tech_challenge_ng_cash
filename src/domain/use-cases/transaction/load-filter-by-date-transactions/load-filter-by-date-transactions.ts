@@ -8,6 +8,6 @@ export type TimePeriod = {
   endDate: string
 }
 
-export interface LoadFilteredDateTransactions {
-  load: (timePeriod: TimePeriod) => Promise<RecordsData[]>
+export interface LoadFilterByDateTransactions {
+  loadByDate: (timePeriod: TimePeriod) => Promise<RecordsData[]>
 }

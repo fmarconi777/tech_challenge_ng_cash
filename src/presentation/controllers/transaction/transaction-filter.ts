@@ -1,13 +1,13 @@
-import { LoadFilteredCashTransactions, Controller, LoadFilteredDateTransactions } from './transaction-protocols'
+import { LoadFilterByCashTransactions, Controller, LoadFilterByDateTransactions } from './transaction-protocols'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { HttpRequest, HttpResponse, Validator } from '../../protocols'
 
 export class TransactionFilterController implements Controller {
   constructor (
-    private readonly loadFilteredCashTransactions: LoadFilteredCashTransactions,
+    private readonly loadFilterByCashTransactions: LoadFilterByCashTransactions,
     private readonly dateValidator: Validator,
-    private readonly loadFilteredDateTransactions: LoadFilteredDateTransactions
+    private readonly loadFilterByDateTransactions: LoadFilterByDateTransactions
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -19,10 +19,10 @@ export class TransactionFilterController implements Controller {
         try {
           switch (param) {
             case 'cashIn':
-              return ok(await this.loadFilteredCashTransactions.load({ userId: +id, filter: 'creditedAccountId' })
+              return ok(await this.loadFilterByCashTransactions.loadByCash({ userId: +id, filter: 'creditedAccountId' })
               )
             case 'cashOut':
-              return ok(await this.loadFilteredCashTransactions.load({ userId: +id, filter: 'debitedAccountId' })
+              return ok(await this.loadFilterByCashTransactions.loadByCash({ userId: +id, filter: 'debitedAccountId' })
               )
             default:
               return badRequest(new InvalidParamError('expected cashIn or cashOut params on route'))
@@ -47,7 +47,7 @@ export class TransactionFilterController implements Controller {
             }
           }
           const { startDate, endDate } = httpRequest.body
-          return ok(await this.loadFilteredDateTransactions.load({ userId: +id, startDate, endDate }))
+          return ok(await this.loadFilterByDateTransactions.loadByDate({ userId: +id, startDate, endDate }))
         } catch (error: any) {
           return serverError()
         }

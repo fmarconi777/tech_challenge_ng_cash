@@ -7,6 +7,6 @@ export type FilterValues = {
   filter: string
 }
 
-export interface LoadFilteredCashTransactionsRepository {
+export interface LoadFilterByCashTransactionsRepository {
   loadByFilter: (filterValues: FilterValues) => Promise<RecordsData[]>
 }

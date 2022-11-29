@@ -2,6 +2,6 @@ import { FilterValues, RecordsData } from '../../../data/protocols/db/transactio
 
 export { FilterValues, RecordsData }
 
-export interface LoadFilteredCashTransactionsORM {
-  loadByFilter: (filterValues: FilterValues) => Promise<RecordsData[]>
+export interface LoadFilterByCashTransactionsORM {
+  loadByCashFilter: (filterValues: FilterValues) => Promise<RecordsData[]>
 }

@@ -1,6 +1,5 @@
-import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM, FilterValues, LoadFilteredCashTransactionsORM } from './transaction-repository-protocols'
+import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM, FilterValues, LoadFilterByCashTransactionsORM, LoadFilterByDateTransactionsORM } from './transaction-repository-protocols'
 import { TransactionRepository } from './transaction-repository'
-import { LoadFilterByDateTransactionsORM } from '../../protocols/transaction/load-filter-by-date-transactions-orm'
 import { PeriodData } from '../../../data/protocols/db/transaction/load-filter-by-date-transactions-repository'
 
 const recordData = {
@@ -46,9 +45,9 @@ const makeLoadTransactionsByAccountIdORMStub = (): LoadTransactionsByAccountIdOR
   return new LoadTransactionsByAccountIdORMStub()
 }
 
-const makeLoadFilteredCashTransactionsORMStub = (): LoadFilteredCashTransactionsORM => {
-  class LoadFilteredCashTransactionsORMStub implements LoadFilteredCashTransactionsORM {
-    async loadByFilter (filterValues: FilterValues): Promise<RecordsData[]> {
+const makeLoadFilterByCashTransactionsORMStub = (): LoadFilterByCashTransactionsORM => {
+  class LoadFilterByCashTransactionsORMStub implements LoadFilterByCashTransactionsORM {
+    async loadByCashFilter (filterValues: FilterValues): Promise<RecordsData[]> {
       return await Promise.resolve([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
@@ -58,7 +57,7 @@ const makeLoadFilteredCashTransactionsORMStub = (): LoadFilteredCashTransactions
       }])
     }
   }
-  return new LoadFilteredCashTransactionsORMStub()
+  return new LoadFilterByCashTransactionsORMStub()
 }
 
 const makeLoadFilterByDateTransactionsORMStub = (): LoadFilterByDateTransactionsORM => {
@@ -80,21 +79,21 @@ type SubTypes = {
   sut: TransactionRepository
   recordTransactionORMStub: RecordTransactionORM
   loadTransactionsByAccountIdORMStub: LoadTransactionsByAccountIdORM
-  loadFilteredCashTransactionsORMStub: LoadFilteredCashTransactionsORM
+  loadFilterByCashTransactionsORMStub: LoadFilterByCashTransactionsORM
   loadFilterByDateTransactionsORMStub: LoadFilterByDateTransactionsORM
 }
 
 const makeSut = (): SubTypes => {
   const loadFilterByDateTransactionsORMStub = makeLoadFilterByDateTransactionsORMStub()
-  const loadFilteredCashTransactionsORMStub = makeLoadFilteredCashTransactionsORMStub()
+  const loadFilterByCashTransactionsORMStub = makeLoadFilterByCashTransactionsORMStub()
   const loadTransactionsByAccountIdORMStub = makeLoadTransactionsByAccountIdORMStub()
   const recordTransactionORMStub = makeRecordTransactionORMStub()
-  const sut = new TransactionRepository(recordTransactionORMStub, loadTransactionsByAccountIdORMStub, loadFilteredCashTransactionsORMStub, loadFilterByDateTransactionsORMStub)
+  const sut = new TransactionRepository(recordTransactionORMStub, loadTransactionsByAccountIdORMStub, loadFilterByCashTransactionsORMStub, loadFilterByDateTransactionsORMStub)
   return {
     sut,
     recordTransactionORMStub,
     loadTransactionsByAccountIdORMStub,
-    loadFilteredCashTransactionsORMStub,
+    loadFilterByCashTransactionsORMStub,
     loadFilterByDateTransactionsORMStub
   }
 }
@@ -151,16 +150,16 @@ describe('Transaction Repository', () => {
   })
 
   describe('LoadByFilter method', () => {
-    test('Should call LoadFilteredCashTransactionsORM with correct values', async () => {
-      const { sut, loadFilteredCashTransactionsORMStub } = makeSut()
-      const loadByFilterSpy = jest.spyOn(loadFilteredCashTransactionsORMStub, 'loadByFilter')
+    test('Should call LoadFilterByCashTransactionsORM with correct values', async () => {
+      const { sut, loadFilterByCashTransactionsORMStub } = makeSut()
+      const loadByCashFilterSpy = jest.spyOn(loadFilterByCashTransactionsORMStub, 'loadByCashFilter')
       await sut.loadByFilter(filterValues)
-      expect(loadByFilterSpy).toHaveBeenCalledWith(filterValues)
+      expect(loadByCashFilterSpy).toHaveBeenCalledWith(filterValues)
     })
 
-    test('Should throw if LoadFilteredCashTransactionsORM throws', async () => {
-      const { sut, loadFilteredCashTransactionsORMStub } = makeSut()
-      jest.spyOn(loadFilteredCashTransactionsORMStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
+    test('Should throw if LoadFilterByCashTransactionsORM throws', async () => {
+      const { sut, loadFilterByCashTransactionsORMStub } = makeSut()
+      jest.spyOn(loadFilterByCashTransactionsORMStub, 'loadByCashFilter').mockReturnValueOnce(Promise.reject(new Error()))
       const record = sut.loadByFilter(filterValues)
       await expect(record).rejects.toThrow()
     })

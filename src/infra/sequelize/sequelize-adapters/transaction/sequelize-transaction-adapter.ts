@@ -3,13 +3,13 @@ import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM } from '../sequelize-adapters-protocols'
 import { Accounts, Transactions } from '../../models/models'
 import { parseRecords } from '../sequelize-parsers/parse-records'
-import { FilterValues, LoadFilteredCashTransactionsORM } from '../../../protocols/transaction/load-filtered-cash-transactions-ORM'
+import { FilterValues, LoadFilterByCashTransactionsORM } from '../../../protocols/transaction/load-filter-by-cash-transactions-ORM'
 import { LoadFilterByDateTransactionsORM } from '../../../protocols/transaction/load-filter-by-date-transactions-orm'
 import { PeriodData } from '../../../../data/protocols/db/transaction/load-filter-by-date-transactions-repository'
 
 export class SequelizeTransactionAdapter implements RecordTransactionORM,
 LoadTransactionsByAccountIdORM,
-LoadFilteredCashTransactionsORM,
+LoadFilterByCashTransactionsORM,
 LoadFilterByDateTransactionsORM {
   async record (recordData: RecordData): Promise<string> {
     await ConnectionHelper.reconnect()
@@ -63,7 +63,7 @@ LoadFilterByDateTransactionsORM {
     return parseRecords(records)
   }
 
-  async loadByFilter (filterValues: FilterValues): Promise<RecordsData[]> {
+  async loadByCashFilter (filterValues: FilterValues): Promise<RecordsData[]> {
     await ConnectionHelper.reconnect()
     const id = filterValues.accountId
     const records = await Transactions.sequelize?.query(
