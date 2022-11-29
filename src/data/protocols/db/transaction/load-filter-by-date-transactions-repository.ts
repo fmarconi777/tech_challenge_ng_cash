@@ -9,5 +9,5 @@ export type PeriodData = {
 }
 
 export interface LoadFilterByDateTransactionsRepository {
-  loadByFilter: (periodData: PeriodData) => Promise<RecordsData[]>
+  loadByFilterDate: (periodData: PeriodData) => Promise<RecordsData[]>
 }

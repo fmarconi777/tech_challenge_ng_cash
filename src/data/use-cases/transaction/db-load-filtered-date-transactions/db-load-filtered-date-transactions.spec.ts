@@ -27,7 +27,7 @@ const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
 
 const makeLoadFilterByDateTransactionsRepositoryStub = (): LoadFilterByDateTransactionsRepository => {
   class LoadFilterByDateTransactionsRepositoryStub implements LoadFilterByDateTransactionsRepository {
-    async loadByFilter (periodData: PeriodData): Promise<RecordsData[]> {
+    async loadByFilterDate (periodData: PeriodData): Promise<RecordsData[]> {
       return await Promise.resolve([{
         id: 'any_id',
         debitedUsername: 'any_debitedUsername',
@@ -74,9 +74,9 @@ describe('DbLoadFilteredDateTransactions', () => {
 
   test('Should call LoadFilterByDateTransactionsRepository with correct values', async () => {
     const { sut, loadFilterByDateTransactionsRepositoryStub } = makeSut()
-    const loadByFilterdSpy = jest.spyOn(loadFilterByDateTransactionsRepositoryStub, 'loadByFilter')
+    const loadByFilterDatedSpy = jest.spyOn(loadFilterByDateTransactionsRepositoryStub, 'loadByFilterDate')
     await sut.load(timePeriod)
-    expect(loadByFilterdSpy).toHaveBeenCalledWith({
+    expect(loadByFilterDatedSpy).toHaveBeenCalledWith({
       accountId: 1,
       startDate: '2022-01-01',
       endDate: '2022-11-01'
@@ -85,7 +85,7 @@ describe('DbLoadFilteredDateTransactions', () => {
 
   test('Should throw if LoadFilterByDateTransactionsRepository throws', async () => {
     const { sut, loadFilterByDateTransactionsRepositoryStub } = makeSut()
-    jest.spyOn(loadFilterByDateTransactionsRepositoryStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
+    jest.spyOn(loadFilterByDateTransactionsRepositoryStub, 'loadByFilterDate').mockReturnValueOnce(Promise.reject(new Error()))
     const records = sut.load(timePeriod)
     await expect(records).rejects.toThrow()
   })

@@ -15,6 +15,6 @@ export class DbLoadFilteredDateTransactions implements LoadFilteredDateTransacti
       startDate: timePeriod.startDate,
       endDate: timePeriod.endDate
     }
-    return await this.loadFilterByDateTransactionsRepository.loadByFilter(periodData)
+    return await this.loadFilterByDateTransactionsRepository.loadByFilterDate(periodData)
   }
 }
