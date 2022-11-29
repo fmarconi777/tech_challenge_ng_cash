@@ -45,4 +45,11 @@ describe('DbLoadFilteredDateTransactions', () => {
     await sut.load(timePeriod)
     expect(loadByIdSpy).toHaveBeenCalledWith(1)
   })
+
+  test('Should throw if LoadUserByIdRepository throws', async () => {
+    const { sut, loadUserByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
+    const records = sut.load(timePeriod)
+    await expect(records).rejects.toThrow()
+  })
 })
