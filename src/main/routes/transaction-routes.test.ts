@@ -70,6 +70,16 @@ describe('Transaction Routes', () => {
         })
         .expect(201)
     })
+
+    test('Should return 403 on post transaction/param without accessToken', async () => {
+      await request(app)
+        .post('/transaction/date')
+        .send({
+          startDate: '2022-01-01',
+          endDate: '2023-12-31'
+        })
+        .expect(403)
+    })
   })
 
   describe('GET route', () => {
