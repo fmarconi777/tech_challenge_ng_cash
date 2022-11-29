@@ -185,5 +185,12 @@ describe('Transaction Repository', () => {
       await sut.loadByFilterDate(periodData)
       expect(loadByFilterDateSpy).toHaveBeenCalledWith(periodData)
     })
+
+    test('Should throw if LoadFilterByDateTransactionsORM throws', async () => {
+      const { sut, loadFilterByDateTransactionsORMStub } = makeSut()
+      jest.spyOn(loadFilterByDateTransactionsORMStub, 'loadByFilterDate').mockReturnValueOnce(Promise.reject(new Error()))
+      const record = sut.loadByFilterDate(periodData)
+      await expect(record).rejects.toThrow()
+    })
   })
 })
