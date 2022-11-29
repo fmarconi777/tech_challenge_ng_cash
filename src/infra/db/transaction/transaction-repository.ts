@@ -30,7 +30,6 @@ export class TransactionRepository implements
   }
 
   async loadByFilterDate (periodData: PeriodData): Promise<RecordsData[]> {
-    await this.loadFilterByDateTransactionsORM.loadByFilterDate(periodData)
-    return []
+    return await this.loadFilterByDateTransactionsORM.loadByFilterDate(periodData)
   }
 }
