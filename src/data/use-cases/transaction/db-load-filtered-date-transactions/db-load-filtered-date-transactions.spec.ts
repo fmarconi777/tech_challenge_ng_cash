@@ -1,4 +1,5 @@
 import { UserModel } from '../../../../domain/models/user'
+import { LoadFilterByDateTransactionsRepository, PeriodData, RecordsData } from '../../../protocols/db/transaction/load-filter-by-date-transactions-repository'
 import { LoadUserByIdRepository } from '../../../protocols/db/user/load-user-by-id-repository'
 import { DbLoadFilteredDateTransactions } from './db-load-filtered-date-transactions'
 
@@ -24,17 +25,35 @@ const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
   return new LoadUserByIdRepositoryStub()
 }
 
+const makeLoadFilterByDateTransactionsRepositoryStub = (): LoadFilterByDateTransactionsRepository => {
+  class LoadFilterByDateTransactionsRepositoryStub implements LoadFilterByDateTransactionsRepository {
+    async loadByFilter (periodData: PeriodData): Promise<RecordsData[]> {
+      return await Promise.resolve([{
+        id: 'any_id',
+        debitedUsername: 'any_debitedUsername',
+        creditedUsername: 'any_creditedUsername',
+        value: 'any_value',
+        createdAt: 'any_createdAt'
+      }])
+    }
+  }
+  return new LoadFilterByDateTransactionsRepositoryStub()
+}
+
 type SubTypes = {
   sut: DbLoadFilteredDateTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
+  loadFilterByDateTransactionsRepositoryStub: LoadFilterByDateTransactionsRepository
 }
 
 const makeSut = (): SubTypes => {
+  const loadFilterByDateTransactionsRepositoryStub = makeLoadFilterByDateTransactionsRepositoryStub()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
-  const sut = new DbLoadFilteredDateTransactions(loadUserByIdRepositoryStub)
+  const sut = new DbLoadFilteredDateTransactions(loadUserByIdRepositoryStub, loadFilterByDateTransactionsRepositoryStub)
   return {
     sut,
-    loadUserByIdRepositoryStub
+    loadUserByIdRepositoryStub,
+    loadFilterByDateTransactionsRepositoryStub
   }
 }
 
@@ -51,5 +70,16 @@ describe('DbLoadFilteredDateTransactions', () => {
     jest.spyOn(loadUserByIdRepositoryStub, 'loadById').mockReturnValueOnce(Promise.reject(new Error()))
     const records = sut.load(timePeriod)
     await expect(records).rejects.toThrow()
+  })
+
+  test('Should call LoadFilterByDateTransactionsRepository with correct values', async () => {
+    const { sut, loadFilterByDateTransactionsRepositoryStub } = makeSut()
+    const loadByFilterdSpy = jest.spyOn(loadFilterByDateTransactionsRepositoryStub, 'loadByFilter')
+    await sut.load(timePeriod)
+    expect(loadByFilterdSpy).toHaveBeenCalledWith({
+      accountId: 1,
+      startDate: '2022-01-01',
+      endDate: '2022-11-01'
+    })
   })
 })
