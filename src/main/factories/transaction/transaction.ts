@@ -12,7 +12,7 @@ import { CurrencyValidatorAdapter } from '../../../util/validators/currency-vali
 
 export const makeTransactionController = (): Controller => {
   const transactionORM = new SequelizeTransactionAdapter()
-  const transactionRepository = new TransactionRepository(transactionORM, transactionORM, transactionORM)
+  const transactionRepository = new TransactionRepository(transactionORM, transactionORM, transactionORM, transactionORM)
   const accountORM = new SequelizeAccountAdapter()
   const accountRepository = new AccountRepository(accountORM)
   const userORM = new SequelizeUserAdapter()

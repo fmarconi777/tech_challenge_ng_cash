@@ -10,5 +10,6 @@ export default (router: Router): Router => {
   router.post('/transaction', adaptMiddleware(auth), adaptRoute(makeTransactionController())) // eslint-disable-line
   router.get('/transaction', adaptMiddleware(auth), adaptRoute(makeTransactionController())) // eslint-disable-line
   router.get('/transaction/:param', adaptMiddleware(auth), adaptRoute(makeTransactionFilterController())) // eslint-disable-line
+  router.post('/transaction/:param', adaptMiddleware(auth), adaptRoute(makeTransactionFilterController())) // eslint-disable-line
   return router
 }
