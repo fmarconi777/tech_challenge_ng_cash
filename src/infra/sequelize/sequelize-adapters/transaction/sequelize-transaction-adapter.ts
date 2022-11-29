@@ -4,10 +4,13 @@ import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransact
 import { Accounts, Transactions } from '../../models/models'
 import { parseRecords } from '../sequelize-parsers/parse-records'
 import { FilterValues, LoadFilteredCashTransactionsORM } from '../../../protocols/transaction/load-filtered-cash-transactions-ORM'
+import { LoadFilterByDateTransactionsORM } from '../../../protocols/transaction/load-filter-by-date-transactions-orm'
+import { PeriodData } from '../../../../data/protocols/db/transaction/load-filter-by-date-transactions-repository'
 
 export class SequelizeTransactionAdapter implements RecordTransactionORM,
 LoadTransactionsByAccountIdORM,
-LoadFilteredCashTransactionsORM {
+LoadFilteredCashTransactionsORM,
+LoadFilterByDateTransactionsORM {
   async record (recordData: RecordData): Promise<string> {
     await ConnectionHelper.reconnect()
     let transaction
@@ -81,6 +84,36 @@ LoadFilteredCashTransactionsORM {
       'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId"' +
       'ORDER BY "createdAt" ASC',
       { replacements: { id }, type: QueryTypes.SELECT, raw: true }
+    ) as any
+    return parseRecords(records)
+  }
+
+  async loadByFilterDate (periodData: PeriodData): Promise<RecordsData[]> {
+    await ConnectionHelper.reconnect()
+    const id = periodData.accountId
+    const startDate = periodData.startDate
+    const endDate = periodData.endDate + ' 23:59'
+    const records = await Transactions.sequelize?.query(
+      'SELECT T.ID, ' +
+          'U.USERNAME as debitedUsername, ' +
+          'T.USERNAME as creditedUsername, ' +
+          'T."value", ' +
+          'T."createdAt" ' +
+      'FROM ' +
+          '(SELECT T.ID, ' +
+                  'T."debitedAccountId", ' +
+                  'U.USERNAME, ' +
+                  'T."value", ' +
+                  'T."createdAt" ' +
+              'FROM PUBLIC."Transactions" T ' +
+              'INNER JOIN PUBLIC."Users" U ON T."creditedAccountId" = U."accountId" ' +
+              'WHERE T."debitedAccountId" = :id ' +
+                  'OR T."creditedAccountId" = :id) T ' +
+      'INNER JOIN PUBLIC."Users" U ON T."debitedAccountId" = U."accountId" ' +
+      'WHERE T."createdAt" >= :startDate ' +
+          'AND T."createdAt" <= :endDate ' +
+      'ORDER BY "createdAt" ASC',
+      { replacements: { id, startDate, endDate }, type: QueryTypes.SELECT, raw: true }
     ) as any
     return parseRecords(records)
   }
