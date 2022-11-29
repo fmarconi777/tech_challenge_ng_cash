@@ -80,6 +80,37 @@ describe('Transaction Routes', () => {
         })
         .expect(403)
     })
+
+    test('Should return 200 on post transaction/param with valid accessToken', async () => {
+      await request(app).post('/signup').send({
+        username: 'anyName',
+        password: 'anyPassword1'
+      })
+      await request(app).post('/signup').send({
+        username: 'anyName2',
+        password: 'anyPassword1'
+      })
+      const login = makeLoginController()
+      const httpResponse = await login.handle({
+        body: {
+          username: 'anyName',
+          password: 'anyPassword1'
+        },
+        method: 'POST'
+      })
+      await request(app).post('/transaction').set('authorization', `Bearer ${((httpResponse).body as string)}`).send({
+        creditedUsername: 'anyName2',
+        value: '100.00'
+      })
+      await request(app)
+        .post('/transaction/date')
+        .set('authorization', `Bearer ${((httpResponse).body as string)}`)
+        .send({
+          startDate: '2022-01-01',
+          endDate: '2023-12-31'
+        })
+        .expect(200)
+    })
   })
 
   describe('GET route', () => {
