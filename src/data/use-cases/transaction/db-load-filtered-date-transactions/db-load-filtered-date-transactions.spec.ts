@@ -82,4 +82,11 @@ describe('DbLoadFilteredDateTransactions', () => {
       endDate: '2022-11-01'
     })
   })
+
+  test('Should throw if LoadFilterByDateTransactionsRepository throws', async () => {
+    const { sut, loadFilterByDateTransactionsRepositoryStub } = makeSut()
+    jest.spyOn(loadFilterByDateTransactionsRepositoryStub, 'loadByFilter').mockReturnValueOnce(Promise.reject(new Error()))
+    const records = sut.load(timePeriod)
+    await expect(records).rejects.toThrow()
+  })
 })
