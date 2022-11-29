@@ -274,6 +274,7 @@ describe('Transaction Filter Controller', () => {
       }
       await sut.handle(httpRequest)
       expect(isValidSpy).toHaveBeenCalledWith({
+        userId: 1,
         startDate: '2022-11-28',
         endDate: '2022-11-28'
       })

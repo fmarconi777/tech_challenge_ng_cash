@@ -3,6 +3,7 @@ import { RecordsData } from '../load-transactions/load-transactions'
 export { RecordsData }
 
 export type TimePeriod = {
+  userId: number
   startDate: string
   endDate: string
 }
