@@ -1,7 +1,7 @@
-import { Encrypter } from '../../../data/protocols/crytography/encrypter'
+import { Encrypter } from '@/data/protocols/crytography/encrypter'
+import { Decrypter } from '@/data/protocols/crytography/decrypter'
 import jwt from 'jsonwebtoken'
 import 'dotenv/config'
-import { Decrypter } from '../../../data/protocols/crytography/decrypter'
 
 export class JwtAdapter implements Encrypter, Decrypter {
   private readonly secreteKey = process.env.SECRET_KEY

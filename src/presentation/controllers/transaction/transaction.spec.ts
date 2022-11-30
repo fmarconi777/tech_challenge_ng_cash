@@ -1,7 +1,7 @@
-import { LoadTransactions, RecordsData, Record, RecordTransaction, TransactionData, Validator } from './transaction-protocols'
-import { InvalidParamError, MissingParamError, TransactionError } from '../../errors'
-import { badRequest, created, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { TransactionController } from './transaction'
+import { LoadTransactions, RecordsData, Record, RecordTransaction, TransactionData, Validator } from './transaction-protocols'
+import { InvalidParamError, MissingParamError, TransactionError } from '@/presentation/errors'
+import { badRequest, created, methodNotAllowed, ok, serverError } from '@/presentation/helpers/http-helper'
 
 const request = {
   body: {

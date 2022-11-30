@@ -1,6 +1,6 @@
-import { UserModel } from '../../../../domain/models/user'
 import { FilterValues, LoadFilterByCashTransactionsRepository, RecordsData, LoadUserByIdRepository } from './db-load-filter-by-cash-transactions-protocols'
 import { DbLoadFilterByCashTransactions } from './db-load-filter-by-cash-transactions'
+import { UserModel } from '@/domain/models/user'
 
 const filterData = {
   userId: 1,

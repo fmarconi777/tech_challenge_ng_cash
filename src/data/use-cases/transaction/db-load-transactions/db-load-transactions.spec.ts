@@ -1,4 +1,4 @@
-import { UserModel } from '../../../../domain/models/user'
+import { UserModel } from '@/domain/models/user'
 import { LoadTransactionsByAccountIdRepository, RecordsData, LoadUserByIdRepository } from './db-load-trasactions-protocols'
 import { DbLoadTransactions } from './db-load-transactions'
 

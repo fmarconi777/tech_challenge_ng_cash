@@ -1,7 +1,7 @@
 import { SequelizeUserAdapter } from '../user/sequelize-user-adapter'
-import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { SequelizeUserAccountAdapter } from '../user-account/sequelize-user-account-adapter'
-import { Users, Accounts } from '../../models/models'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { Users, Accounts } from '@/infra/sequelize/models/models'
 import { Sequelize } from 'sequelize'
 
 describe('SequelizeUser Adapter', () => {

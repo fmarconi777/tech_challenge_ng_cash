@@ -1,8 +1,13 @@
-import { LoadFilterByDateTransactionsRepository, PeriodData } from '../../../data/protocols/db/transaction/load-filter-by-date-transactions-repository'
-import { FilterValues, LoadFilterByCashTransactionsRepository } from '../../../data/protocols/db/transaction/load-filtered-cash-transactions-repository'
-import { LoadTransactionsByAccountIdRepository, RecordsData } from '../../../data/protocols/db/transaction/load-transactions-by-account-id-repository'
-import { RecordData, RecordTransactionRepository } from '../../../data/protocols/db/transaction/record-transaction-repository'
-import { LoadTransactionsByAccountIdORM, RecordTransactionORM, LoadFilterByCashTransactionsORM, LoadFilterByDateTransactionsORM } from './transaction-repository-protocols'
+import {
+  LoadTransactionsByAccountIdORM,
+  RecordTransactionORM,
+  LoadFilterByCashTransactionsORM,
+  LoadFilterByDateTransactionsORM
+} from './transaction-repository-protocols'
+import { LoadFilterByDateTransactionsRepository, PeriodData } from '@/data/protocols/db/transaction/load-filter-by-date-transactions-repository'
+import { FilterValues, LoadFilterByCashTransactionsRepository } from '@/data/protocols/db/transaction/load-filtered-cash-transactions-repository'
+import { LoadTransactionsByAccountIdRepository, RecordsData } from '@/data/protocols/db/transaction/load-transactions-by-account-id-repository'
+import { RecordData, RecordTransactionRepository } from '@/data/protocols/db/transaction/record-transaction-repository'
 
 export class TransactionRepository implements
   RecordTransactionRepository,

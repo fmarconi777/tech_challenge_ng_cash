@@ -1,6 +1,6 @@
-import { UserModel } from '../../../../domain/models/user'
 import { HashComparer, Encrypter, LoadUserByUsernameRepository } from './db-authentication-protocols'
 import { DbAuthentication } from './db-authentication'
+import { UserModel } from '@/domain/models/user'
 
 const fakeAuthenticationParams = {
   username: 'fake_user',

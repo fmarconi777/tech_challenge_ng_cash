@@ -1,6 +1,6 @@
 import { Controller, HttpRequest, HttpResponse, Authentication } from './login-protocols'
-import { MissingParamError } from '../../errors'
-import { badRequest, methodNotAllowed, ok, serverError, unauthorized } from '../../helpers/http-helper'
+import { MissingParamError } from '@/presentation/errors'
+import { badRequest, methodNotAllowed, ok, serverError, unauthorized } from '@/presentation/helpers/http-helper'
 
 export class LoginController implements Controller {
   constructor (private readonly authentication: Authentication) {}

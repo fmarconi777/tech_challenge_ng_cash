@@ -1,11 +1,11 @@
-import { DecimalDataType, QueryTypes } from 'sequelize'
-import { ConnectionHelper } from '../../../db/helpers/connection-helper'
 import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM } from '../sequelize-adapters-protocols'
-import { Accounts, Transactions } from '../../models/models'
 import { parseRecords } from '../sequelize-parsers/parse-records'
-import { FilterValues, LoadFilterByCashTransactionsORM } from '../../../protocols/transaction/load-filter-by-cash-transactions-ORM'
-import { LoadFilterByDateTransactionsORM } from '../../../protocols/transaction/load-filter-by-date-transactions-orm'
-import { PeriodData } from '../../../../data/protocols/db/transaction/load-filter-by-date-transactions-repository'
+import { Accounts, Transactions } from '@/infra/sequelize/models/models'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { FilterValues, LoadFilterByCashTransactionsORM } from '@/infra/protocols/transaction/load-filter-by-cash-transactions-ORM'
+import { LoadFilterByDateTransactionsORM } from '@/infra/protocols/transaction/load-filter-by-date-transactions-orm'
+import { PeriodData } from '@/data/protocols/db/transaction/load-filter-by-date-transactions-repository'
+import { DecimalDataType, QueryTypes } from 'sequelize'
 
 export class SequelizeTransactionAdapter implements RecordTransactionORM,
 LoadTransactionsByAccountIdORM,

@@ -1,9 +1,9 @@
-import request from 'supertest'
 import app from '../config/app'
-import { ConnectionHelper } from '../../infra/db/helpers/connection-helper'
-import { Accounts } from '../../infra/sequelize/models/accounts'
-import { Users } from '../../infra/sequelize/models/users'
 import { makeLoginController } from '../factories/login/login'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { Accounts } from '@/infra/sequelize/models/accounts'
+import { Users } from '@/infra/sequelize/models/users'
+import request from 'supertest'
 
 describe('Balance Routes', () => {
   beforeAll(async () => {

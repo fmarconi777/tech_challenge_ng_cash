@@ -1,4 +1,4 @@
-import { Validator } from '../../presentation/protocols'
+import { Validator } from '@/presentation/protocols'
 import validator from 'validator'
 
 export class PasswordValidatorAdapter implements Validator {

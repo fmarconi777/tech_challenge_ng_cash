@@ -1,7 +1,7 @@
-import { Hasher } from '../../../data/protocols/crytography/hasher'
+import { Hasher } from '@/data/protocols/crytography/hasher'
+import { HashComparer } from '@/data/protocols/crytography/hash-comparer'
 import bcrypt from 'bcrypt'
 import 'dotenv/config'
-import { HashComparer } from '../../../data/protocols/crytography/hash-comparer'
 
 export class BcryptAdapter implements Hasher, HashComparer {
   private readonly salt: number = +(process.env.SALT as string)

@@ -1,7 +1,7 @@
-import { AccountModel } from '../../../../domain/models/account'
-import { UserModel } from '../../../../domain/models/user'
 import { LoadAccountByIdRepository, RecordData, RecordTransactionRepository, LoadUserByUsernameRepository } from './db-record-transaction-protocols'
 import { DbRecordTransaction } from './db-record-transaction'
+import { AccountModel } from '@/domain/models/account'
+import { UserModel } from '@/domain/models/user'
 
 const transactionData = {
   debitedUsername: 'any_username',

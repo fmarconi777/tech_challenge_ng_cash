@@ -1,4 +1,4 @@
-import { RecordsData } from '../../../data/protocols/db/transaction/load-transactions-by-account-id-repository'
+import { RecordsData } from '@/data/protocols/db/transaction/load-transactions-by-account-id-repository'
 
 export { RecordsData }
 

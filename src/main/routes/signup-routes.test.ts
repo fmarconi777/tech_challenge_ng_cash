@@ -1,8 +1,8 @@
-import request from 'supertest'
-import { ConnectionHelper } from '../../infra/db/helpers/connection-helper'
-import { Accounts } from '../../infra/sequelize/models/accounts'
-import { Users } from '../../infra/sequelize/models/users'
 import app from '../config/app'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { Accounts } from '@/infra/sequelize/models/accounts'
+import { Users } from '@/infra/sequelize/models/users'
+import request from 'supertest'
 
 describe('Signup Routes', () => {
   beforeAll(async () => {

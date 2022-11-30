@@ -1,7 +1,7 @@
-import { ConnectionHelper } from '../../../db/helpers/connection-helper'
-import { Accounts, Users, Transactions } from '../../models/models'
 import { SequelizeTransactionAdapter } from './sequelize-transaction-adapter'
 import { SequelizeUserAccountAdapter } from '../user-account/sequelize-user-account-adapter'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { Accounts, Users, Transactions } from '@/infra/sequelize/models/models'
 import { Sequelize } from 'sequelize'
 
 describe('Sequelize Tansaction Adapter', () => {

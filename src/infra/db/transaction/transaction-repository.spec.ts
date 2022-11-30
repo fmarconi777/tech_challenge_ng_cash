@@ -1,6 +1,12 @@
-import { LoadTransactionsByAccountIdORM, RecordsData, RecordData, RecordTransactionORM, FilterValues, LoadFilterByCashTransactionsORM, LoadFilterByDateTransactionsORM } from './transaction-repository-protocols'
+import {
+  LoadTransactionsByAccountIdORM,
+  RecordsData, RecordData,
+  RecordTransactionORM, FilterValues,
+  LoadFilterByCashTransactionsORM,
+  LoadFilterByDateTransactionsORM
+} from './transaction-repository-protocols'
 import { TransactionRepository } from './transaction-repository'
-import { PeriodData } from '../../../data/protocols/db/transaction/load-filter-by-date-transactions-repository'
+import { PeriodData } from '@/data/protocols/db/transaction/load-filter-by-date-transactions-repository'
 
 const recordData = {
   debitedAccountId: 1,

@@ -1,6 +1,6 @@
-import { AccountModel } from '../../../domain/models/account'
 import { LoadAccountByIdORM } from './account-repository-protocols'
 import { AccountRepository } from './account-repository'
+import { AccountModel } from '@/domain/models/account'
 
 const fakeAccount = {
   id: '1',

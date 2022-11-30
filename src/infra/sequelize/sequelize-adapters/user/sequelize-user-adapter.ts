@@ -1,8 +1,8 @@
 import { LoadUserByUserNameORM, LoadUserByIdORM } from '../sequelize-adapters-protocols'
-import { UserModel } from '../../../../domain/models/user'
-import { Users } from '../../models/models'
 import { parseUser } from '../sequelize-parsers/parse-user'
-import { ConnectionHelper } from '../../../db/helpers/connection-helper'
+import { Users } from '@/infra/sequelize/models/models'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { UserModel } from '@/domain/models/user'
 
 export class SequelizeUserAdapter implements LoadUserByUserNameORM, LoadUserByIdORM {
   async loadByUsername (username: string): Promise<UserModel | null> {

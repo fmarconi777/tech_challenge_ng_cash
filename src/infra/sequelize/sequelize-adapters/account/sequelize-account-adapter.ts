@@ -1,6 +1,6 @@
-import { AccountModel } from '../../../../domain/models/account'
 import { LoadAccountByIdORM } from '../sequelize-adapters-protocols'
-import { Accounts } from '../../models/models'
+import { Accounts } from '@/infra/sequelize/models/models'
+import { AccountModel } from '@/domain/models/account'
 
 export class SequelizeAccountAdapter implements LoadAccountByIdORM {
   async loadById (id: number): Promise<AccountModel | null> {

@@ -1,6 +1,6 @@
-import { UserModel } from '../../../domain/models/user'
 import { LoadUserByUserNameORM, LoadUserByIdORM } from './user-protocols'
 import { UserRepository } from '../user/user-repository'
+import { UserModel } from '@/domain/models/user'
 
 const fakeUser = {
   id: 'any_id',

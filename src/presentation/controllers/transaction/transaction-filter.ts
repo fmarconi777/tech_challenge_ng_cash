@@ -1,7 +1,7 @@
 import { LoadFilterByCashTransactions, Controller, LoadFilterByDateTransactions } from './transaction-protocols'
-import { InvalidParamError, MissingParamError } from '../../errors'
-import { badRequest, methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
-import { HttpRequest, HttpResponse, Validator } from '../../protocols'
+import { InvalidParamError, MissingParamError } from '@/presentation/errors'
+import { badRequest, methodNotAllowed, ok, serverError } from '@/presentation/helpers/http-helper'
+import { HttpRequest, HttpResponse, Validator } from '@/presentation/protocols'
 
 export class TransactionFilterController implements Controller {
   constructor (

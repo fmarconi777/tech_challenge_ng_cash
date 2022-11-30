@@ -1,6 +1,6 @@
 import { BalanceModel, LoadBalance } from './balance-protocols'
-import { methodNotAllowed, ok, serverError } from '../../helpers/http-helper'
 import { BalanceController } from './balance'
+import { methodNotAllowed, ok, serverError } from '@/presentation/helpers/http-helper'
 
 const makeLoadBalanceStub = (): LoadBalance => {
   class LoadBalanceStub implements LoadBalance {

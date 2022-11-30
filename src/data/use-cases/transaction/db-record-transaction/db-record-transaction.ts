@@ -1,5 +1,5 @@
-import { Record, RecordTransaction, TransactionData } from '../../../../domain/use-cases/transaction/record-transaction/record-transaction'
 import { LoadAccountByIdRepository, RecordTransactionRepository, LoadUserByUsernameRepository } from './db-record-transaction-protocols'
+import { Record, RecordTransaction, TransactionData } from '@/domain/use-cases/transaction/record-transaction/record-transaction'
 
 export class DbRecordTransaction implements RecordTransaction {
   constructor (

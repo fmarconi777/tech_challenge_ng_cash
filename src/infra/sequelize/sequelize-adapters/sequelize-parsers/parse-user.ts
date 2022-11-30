@@ -1,4 +1,4 @@
-import { UserModel } from '../../../../domain/models/user'
+import { UserModel } from '@/domain/models/user'
 
 export const parseUser = (user: any): UserModel | null => {
   if (user) {

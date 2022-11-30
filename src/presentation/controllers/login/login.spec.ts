@@ -1,7 +1,7 @@
-import { Authentication, AuthenticationModel } from './login-protocols'
-import { MissingParamError } from '../../errors'
-import { badRequest, methodNotAllowed, ok, serverError, unauthorized } from '../../helpers/http-helper'
 import { LoginController } from './login'
+import { Authentication, AuthenticationModel } from './login-protocols'
+import { MissingParamError } from '@/presentation/errors'
+import { badRequest, methodNotAllowed, ok, serverError, unauthorized } from '@/presentation/helpers/http-helper'
 
 const fakeUser = {
   username: 'fake_user',

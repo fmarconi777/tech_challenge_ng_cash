@@ -1,7 +1,7 @@
-import { Middleware, HttpRequest } from '../../presentation/protocols'
+import { Middleware, HttpRequest } from '@/presentation/protocols'
+import { AccessDeniedError } from '@/presentation/errors'
+import { forbidden } from '@/presentation/helpers/http-helper'
 import { NextFunction, Request, Response } from 'express'
-import { AccessDeniedError } from '../../presentation/errors'
-import { forbidden } from '../../presentation/helpers/http-helper'
 
 export const adaptMiddleware = (middleware: Middleware) => {
   return async (req: Request, res: Response, next: NextFunction) => {

@@ -1,6 +1,6 @@
-import { UserModel } from '../../../../domain/models/user'
 import { Hasher, UserData, AddUserAccountRepository, LoadUserByUsernameRepository } from './db-add-user-account-protocols'
 import { DbAddUserAccount } from './db-add-user-accout'
+import { UserModel } from '@/domain/models/user'
 
 const userData = {
   username: 'valid_username',

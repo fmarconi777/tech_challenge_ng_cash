@@ -1,1 +1,1 @@
-export * from '../../protocols/user-account/add-user-account-orm'
+export * from '@/infra/protocols/user-account/add-user-account-orm'

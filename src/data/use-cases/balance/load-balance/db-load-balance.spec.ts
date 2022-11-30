@@ -1,7 +1,7 @@
-import { AccountModel } from '../../../../domain/models/account'
-import { UserModel } from '../../../../domain/models/user'
 import { LoadAccountByIdRepository, LoadUserByIdRepository } from './db-load-balance-protocols'
 import { DbLoadBalance } from './db-load-balance'
+import { AccountModel } from '@/domain/models/account'
+import { UserModel } from '@/domain/models/user'
 
 const userId = 1
 

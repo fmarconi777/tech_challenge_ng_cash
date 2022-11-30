@@ -1,6 +1,6 @@
+import { JwtAdapter } from './jwt-adapter'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import 'dotenv/config'
-import { JwtAdapter } from './jwt-adapter'
 
 const secretKey = process.env.SECRET_KEY
 

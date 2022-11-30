@@ -1,5 +1,5 @@
+import connection from '@/infra/sequelize/models/index'
 import { Sequelize } from 'sequelize'
-import connection from '../../sequelize/models/index'
 
 const sequelizeClient = connection.sequelize
 

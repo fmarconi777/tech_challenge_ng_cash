@@ -1,4 +1,4 @@
-import { FilterValues, RecordsData } from '../../../data/protocols/db/transaction/load-filtered-cash-transactions-repository'
+import { FilterValues, RecordsData } from '@/data/protocols/db/transaction/load-filtered-cash-transactions-repository'
 
 export { FilterValues, RecordsData }
 

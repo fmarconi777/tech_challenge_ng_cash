@@ -1,1 +1,1 @@
-export * from '../../protocols/account/load-account-by-id-orm'
+export * from '@/infra/protocols/account/load-account-by-id-orm'

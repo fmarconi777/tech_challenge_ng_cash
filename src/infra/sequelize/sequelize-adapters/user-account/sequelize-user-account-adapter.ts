@@ -1,8 +1,8 @@
-import { UserData } from '../../../../domain/use-cases/signup/add-user-account/add-user-account'
 import { AddUserAccountORM } from '../sequelize-adapters-protocols'
-import { ConnectionHelper } from '../../../db/helpers/connection-helper'
-import { Accounts } from '../../models/accounts'
-import { Users } from '../../models/users'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { Accounts } from '@/infra/sequelize/models/accounts'
+import { Users } from '@/infra/sequelize/models/users'
+import { UserData } from '@/domain/use-cases/signup/add-user-account/add-user-account'
 
 export class SequelizeUserAccountAdapter implements AddUserAccountORM {
   async addUserAccount (userData: UserData): Promise<string> {

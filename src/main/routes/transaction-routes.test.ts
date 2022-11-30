@@ -1,10 +1,10 @@
-import { ConnectionHelper } from '../../infra/db/helpers/connection-helper'
-import { Accounts } from '../../infra/sequelize/models/accounts'
-import { Transactions } from '../../infra/sequelize/models/transactions'
-import { Users } from '../../infra/sequelize/models/users'
-import request from 'supertest'
 import app from '../config/app'
 import { makeLoginController } from '../factories/login/login'
+import { ConnectionHelper } from '@/infra/db/helpers/connection-helper'
+import { Accounts } from '@/infra/sequelize/models/accounts'
+import { Transactions } from '@/infra/sequelize/models/transactions'
+import { Users } from '@/infra/sequelize/models/users'
+import request from 'supertest'
 
 describe('Transaction Routes', () => {
   beforeAll(async () => {

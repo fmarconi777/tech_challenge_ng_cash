@@ -1,5 +1,5 @@
-import { LoadTransactions, RecordsData } from '../../../../domain/use-cases/transaction/load-transactions/load-transactions'
 import { LoadTransactionsByAccountIdRepository, LoadUserByIdRepository } from './db-load-trasactions-protocols'
+import { LoadTransactions, RecordsData } from '@/domain/use-cases/transaction/load-transactions/load-transactions'
 
 export class DbLoadTransactions implements LoadTransactions {
   constructor (
