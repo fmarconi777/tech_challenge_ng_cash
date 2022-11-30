@@ -1,3 +1,4 @@
+import 'module-alias/register'
 import 'dotenv/config'
 import { ConnectionHelper } from '../infra/db/helpers/connection-helper'
 
