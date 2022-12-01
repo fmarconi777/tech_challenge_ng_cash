@@ -16,10 +16,10 @@ services:
     restart: always
     volumes: 
       - ./database:/var/lib/postgresql/data
-    networks:
-      - postgres-compose-network
     ports:
       - "5432:5432"
+    networks:
+      - postgres-compose-network
 
   pgadmin:
     build: 
@@ -40,3 +40,21 @@ services:
       - postgres
     networks:
       - postgres-compose-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfiles/API/Dockerfile
+    image: tech_challenge_api
+    container_name: api_container
+    command: npm start
+    restart: always
+    volumes: 
+      - ./dist:/usr/src/tech_challenge_ng_cash/dist
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+    networks:
+      - postgres-compose-network
+    
