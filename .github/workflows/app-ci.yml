@@ -34,7 +34,7 @@ jobs:
       - run: npm run create:test
       - run: npm run migrate:test
 
-      - run: npm run test:coveralls
+      - run: npm run test:ci
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
   finish:
