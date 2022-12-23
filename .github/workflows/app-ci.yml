@@ -16,6 +16,17 @@ jobs:
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - run: npm ci
-      - run: npm run up
+      - uses: isbang/compose-action@v1.4.1
+        with:
+          compose-file: "./docker-compose.yml"
+        env:
+          SALT: "12"
+          DB_TEST_NAME: "test_db"
+          DB_TEST_USER: "postgres"
+          DB_TEST_PASSWORD: "123456"
+          DB_TEST_HOST: "localhost"
+          DB_TEST_DIALECT: "postgres"
+          APP_PORT: "5000"
+          SECRET_KEY: "secret_key"
       - run: npm run test:coveralls
       - run: echo "🍏 This job's status is ${{ job.status }}."
