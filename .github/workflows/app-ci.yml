@@ -3,7 +3,7 @@ on:
   push:
     branches: ["*"]
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
@@ -43,6 +43,10 @@ jobs:
       - run: npm run test:coveralls
       - run: echo "🍏 This job's status is ${{ job.status }}."
 
+finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
       - name: Coveralls
       - uses: coverallsapp/github-action@master
         with:
