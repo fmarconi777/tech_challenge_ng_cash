@@ -10,12 +10,19 @@ jobs:
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
         with:
           node-version: '16'
+
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+
+      - name: install dependencies
       - run: npm ci
+  
+      - name: set environment variables
       - run: echo "SALT=12" >> $GITHUB_ENV
       - run: echo "DB_TEST_NAME=test_db" >> $GITHUB_ENV
       - run: echo "DB_TEST_USER=postgres" >> $GITHUB_ENV
@@ -24,10 +31,19 @@ jobs:
       - run: echo "DB_TEST_DIALECT=postgres" >> $GITHUB_ENV
       - run: echo "APP_PORT=5000" >> $GITHUB_ENV
       - run: echo "SECRET_KEY=secret_key" >> $GITHUB_ENV
-      - uses: isbang/compose-action@v1.4.1
+
+      - name: start up database
+        uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "./docker-compose.ci.yml"
       - run: npm run create:test
       - run: npm run migrate:test
+
+      - name: run tests
       - run: npm run test:coveralls
       - run: echo "🍏 This job's status is ${{ job.status }}."
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
