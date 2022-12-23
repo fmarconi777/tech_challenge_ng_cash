@@ -18,7 +18,7 @@ jobs:
       - run: npm ci
       - uses: isbang/compose-action@v1.4.1
         with:
-          compose-file: "./docker-compose.yml"
+          compose-file: "./docker-compose.ci.yml"
         env:
           SALT: "12"
           DB_TEST_NAME: "test_db"
