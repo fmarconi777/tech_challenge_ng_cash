@@ -27,5 +27,7 @@ jobs:
       - uses: isbang/compose-action@v1.4.1
         with:
           compose-file: "./docker-compose.ci.yml"
+      - run: npm run create:test
+      - run: npm run migrate:test
       - run: npm run test:coveralls
       - run: echo "🍏 This job's status is ${{ job.status }}."
