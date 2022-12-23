@@ -2,7 +2,7 @@ name: GitHub Actions Tech Challenge
 on: 
   push:
     branches: ["*"]
-job:
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
