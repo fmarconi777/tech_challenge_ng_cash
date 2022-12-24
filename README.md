@@ -1,3 +1,6 @@
+[![GitHub Actions Tech Challenge](https://github.com/fmarconi777/tech_challenge_ng_cash/actions/workflows/app-ci.yml/badge.svg)](https://github.com/fmarconi777/tech_challenge_ng_cash/actions/workflows/app-ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/fmarconi777/tech_challenge_ng_cash/badge.svg)](https://coveralls.io/github/fmarconi777/tech_challenge_ng_cash)
+
 # Backend processo seletivo NG.CASH <> TRYBE
 
 ## Geral
