@@ -15,7 +15,6 @@
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
-    "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info",
     "migrate:dev": "export NODE_ENV=development && export DB_DEV_HOST=localhost && npx sequelize db:migrate",
     "create:dev": "export NODE_ENV=development && export DB_DEV_HOST=localhost && npx sequelize db:create",
     "migrate:test": "export NODE_ENV=test && export DB_TEST_HOST=localhost && npx sequelize db:migrate",
