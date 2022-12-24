@@ -39,7 +39,7 @@ jobs:
     - run: npm run migrate:test
 
     - name: Check tests
-      run: npm run test:coveralls
+      run: npm run test:ci
 
     - name: Check linting
       run: npm run lint
