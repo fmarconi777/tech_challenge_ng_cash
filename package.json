@@ -9,6 +9,7 @@
     "down": "docker-compose down",
     "build": "rimraf dist && tsc -p tsconfig-build.json",
     "test": "jest --passWithNoTests --silent --noStackTrace --no-cache --runInBand",
+    "lint": "eslint src --ext ts",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:verbose": "jest --passWithNoTests --no-cache --runInBand",
