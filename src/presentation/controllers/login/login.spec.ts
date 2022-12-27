@@ -17,12 +17,12 @@ const makeAuthenticationStub = (): Authentication => {
   return new AuthenticationStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: LoginController
   authenticationStub: Authentication
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const authenticationStub = makeAuthenticationStub()
   const sut = new LoginController(authenticationStub)
   return {

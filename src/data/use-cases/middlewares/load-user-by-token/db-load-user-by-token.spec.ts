@@ -27,13 +27,13 @@ const makeLoadUserByIdRepositoryStub = (): LoadUserByIdRepository => {
   return new LoadUserByIdRepositoryStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbLoadUserByToken
   decrypterStub: Decrypter
   loadUserByIdRepositoryStub: LoadUserByIdRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
   const decrypterStub = makeDecrypterStub()
   const sut = new DbLoadUserByToken(decrypterStub, loadUserByIdRepositoryStub)

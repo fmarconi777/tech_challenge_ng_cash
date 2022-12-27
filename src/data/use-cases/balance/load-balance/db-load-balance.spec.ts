@@ -35,13 +35,13 @@ const makeLoadAccountByIdRepositoryStub = (): LoadAccountByIdRepository => {
   return new LoadAccountByIdRepositoryStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbLoadBalance
   loadUserByIdRepositoryStub: LoadUserByIdRepository
   loadAccountByIdRepositoryStub: LoadAccountByIdRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepositoryStub()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
   const sut = new DbLoadBalance(loadUserByIdRepositoryStub, loadAccountByIdRepositoryStub)

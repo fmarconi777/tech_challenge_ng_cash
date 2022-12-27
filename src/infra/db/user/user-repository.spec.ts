@@ -27,13 +27,13 @@ const makeLoadUserByIdORMStub = (): LoadUserByIdORM => {
   return new LoadUserByIdORMStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: UserRepository
   loadUserByUserNameORMStub: LoadUserByUserNameORM
   loadUserByIdORMStub: LoadUserByIdORM
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadUserByIdORMStub = makeLoadUserByIdORMStub()
   const loadUserByUserNameORMStub = makeLoadUserByUserNameORMStub()
   const sut = new UserRepository(loadUserByUserNameORMStub, loadUserByIdORMStub)

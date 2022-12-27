@@ -16,12 +16,12 @@ const makeLoadAccountByIdORMStub = (): LoadAccountByIdORM => {
   return new LoadAccountByIdORMStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: AccountRepository
   loadAccountByIdORMStub: LoadAccountByIdORM
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadAccountByIdORMStub = makeLoadAccountByIdORMStub()
   const sut = new AccountRepository(loadAccountByIdORMStub)
   return {

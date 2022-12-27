@@ -81,7 +81,7 @@ const makeLoadFilterByDateTransactionsORMStub = (): LoadFilterByDateTransactions
   return new LoadFilterByDateTransactionsORMStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: TransactionRepository
   recordTransactionORMStub: RecordTransactionORM
   loadTransactionsByAccountIdORMStub: LoadTransactionsByAccountIdORM
@@ -89,7 +89,7 @@ type SubTypes = {
   loadFilterByDateTransactionsORMStub: LoadFilterByDateTransactionsORM
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadFilterByDateTransactionsORMStub = makeLoadFilterByDateTransactionsORMStub()
   const loadFilterByCashTransactionsORMStub = makeLoadFilterByCashTransactionsORMStub()
   const loadTransactionsByAccountIdORMStub = makeLoadTransactionsByAccountIdORMStub()

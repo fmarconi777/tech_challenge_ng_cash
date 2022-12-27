@@ -30,14 +30,14 @@ const makeAddUserAccountStub = (): AddUserAccount => {
   return new AddUserAccountStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: SignUpController
   userValidatorStub: Validator
   passwordValidatorStub: Validator
   addUserAccountStub: AddUserAccount
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const addUserAccountStub = makeAddUserAccountStub()
   const passwordValidatorStub = makePasswordValidatorStub()
   const userValidatorStub = makeUserValidatorStub()

@@ -16,12 +16,12 @@ const makeAddUserAccountORMStub = (): AddUserAccountORM => {
   return new AddUserAccountORMStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: UserAccountRepository
   addUserAccountORMStub: AddUserAccountORM
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const addUserAccountORMStub = makeAddUserAccountORMStub()
   const sut = new UserAccountRepository(addUserAccountORMStub)
   return {

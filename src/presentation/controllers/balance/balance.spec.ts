@@ -11,12 +11,12 @@ const makeLoadBalanceStub = (): LoadBalance => {
   return new LoadBalanceStub()
 }
 
-type Subtypes = {
+type SutTypes = {
   sut: BalanceController
   loadBalanceStub: LoadBalance
 }
 
-const makeSut = (): Subtypes => {
+const makeSut = (): SutTypes => {
   const loadBalanceStub = makeLoadBalanceStub()
   const sut = new BalanceController(loadBalanceStub)
   return {

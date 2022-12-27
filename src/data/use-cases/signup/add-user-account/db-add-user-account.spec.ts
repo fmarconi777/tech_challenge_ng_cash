@@ -41,14 +41,14 @@ const makeLoadUserByUsernameRepositoryStub = (): LoadUserByUsernameRepository =>
   return new LoadUserByUsernameRepositoryStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbAddUserAccount
   hasherStub: Hasher
   addUserAccountRepositoryStub: AddUserAccountRepository
   loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()
   const addUserAccountRepositoryStub = makeAddUserAccountRepositoryStub()
   const hasherStub = makeHasherStub()

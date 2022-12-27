@@ -41,14 +41,14 @@ const makeEncrypterStub = (): Encrypter => {
   return new EncrypterStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbAuthentication
   loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
   hashComparerStub: HashComparer
   encrypterStub: Encrypter
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypterStub()
   const hashComparerStub = makeHashComparerStub()
   const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()

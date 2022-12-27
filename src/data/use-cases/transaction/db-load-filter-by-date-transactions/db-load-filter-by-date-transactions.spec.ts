@@ -38,13 +38,13 @@ const makeLoadFilterByDateTransactionsRepositoryStub = (): LoadFilterByDateTrans
   return new LoadFilterByDateTransactionsRepositoryStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbLoadFilterByDateTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
   loadFilterByDateTransactionsRepositoryStub: LoadFilterByDateTransactionsRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadFilterByDateTransactionsRepositoryStub = makeLoadFilterByDateTransactionsRepositoryStub()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
   const sut = new DbLoadFilterByDateTransactions(loadUserByIdRepositoryStub, loadFilterByDateTransactionsRepositoryStub)

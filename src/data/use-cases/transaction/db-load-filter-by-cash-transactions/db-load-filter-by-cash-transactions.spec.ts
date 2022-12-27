@@ -38,13 +38,13 @@ const makeLoadFilterByCashTransactionsRepositoryStub = (): LoadFilterByCashTrans
   return new LoadFilterByCashTransactionsRepositoryStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbLoadFilterByCashTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
   loadFilterByCashTransactionsRepositoryStub: LoadFilterByCashTransactionsRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadFilterByCashTransactionsRepositoryStub = makeLoadFilterByCashTransactionsRepositoryStub()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
   const sut = new DbLoadFilterByCashTransactions(loadUserByIdRepositoryStub, loadFilterByCashTransactionsRepositoryStub)

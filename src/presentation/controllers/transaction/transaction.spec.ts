@@ -51,14 +51,14 @@ const makeLoadTransactionsStub = (): LoadTransactions => {
   return new LoadTransactionsStub()
 }
 
-type Subtypes = {
+type SutTypes = {
   sut: TransactionController
   recordTransactionStub: RecordTransaction
   currencyValidatorStub: Validator
   loadTransactionsStub: LoadTransactions
 }
 
-const makeSut = (): Subtypes => {
+const makeSut = (): SutTypes => {
   const loadTransactionsStub = makeLoadTransactionsStub()
   const currencyValidatorStub = makesCurrencyValidatorStub()
   const recordTransactionStub = makeRecordTransactionStub()

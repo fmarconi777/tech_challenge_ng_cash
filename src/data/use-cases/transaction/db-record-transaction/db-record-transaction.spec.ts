@@ -48,14 +48,14 @@ const makeRecordTransactionRepositoryStub = (): RecordTransactionRepository => {
   return new RecordTransactionRepositoryStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbRecordTransaction
   loadUserByUsernameRepositoryStub: LoadUserByUsernameRepository
   loadAccountByIdRepositoryStub: LoadAccountByIdRepository
   recordTransactionRepositoryStub: RecordTransactionRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const recordTransactionRepositoryStub = makeRecordTransactionRepositoryStub()
   const loadAccountByIdRepositoryStub = makeLoadAccountByIdRepositoryStub()
   const loadUserByUsernameRepositoryStub = makeLoadUserByUsernameRepositoryStub()

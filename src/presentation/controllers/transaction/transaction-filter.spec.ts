@@ -58,14 +58,14 @@ const makeDateValidatorStub = (): Validator => {
   return new DateValidatorStub()
 }
 
-type Subtypes = {
+type SutTypes = {
   sut: TransactionFilterController
   loadFilterByCashTransactionsStub: LoadFilterByCashTransactions
   dateValidatorStub: Validator
   loadFilterByDateTransactionsStub: LoadFilterByDateTransactions
 }
 
-const makeSut = (): Subtypes => {
+const makeSut = (): SutTypes => {
   const loadFilterByDateTransactionsStub = makeLoadFilterByDateTransactionsStub()
   const dateValidatorStub = makeDateValidatorStub()
   const loadFilterByCashTransactionsStub = makeLoadFilterByCashTransactionsStub()

@@ -33,13 +33,13 @@ const makeLoadTransactionsByAccountIdRepository = (): LoadTransactionsByAccountI
   return new LoadTransactionsByAccountIdRepository()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: DbLoadTransactions
   loadUserByIdRepositoryStub: LoadUserByIdRepository
   loadTransactionsByAccountIdRepository: LoadTransactionsByAccountIdRepository
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadTransactionsByAccountIdRepository = makeLoadTransactionsByAccountIdRepository()
   const loadUserByIdRepositoryStub = makeLoadUserByIdRepositoryStub()
   const sut = new DbLoadTransactions(loadUserByIdRepositoryStub, loadTransactionsByAccountIdRepository)

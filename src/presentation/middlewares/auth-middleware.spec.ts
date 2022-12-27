@@ -23,12 +23,12 @@ const makeLoadUserByTokenStub = (): LoadUserByToken => {
   return new LoadUserByTokenStub()
 }
 
-type SubTypes = {
+type SutTypes = {
   sut: AuthMiddleware
   loadUserByTokenStub: LoadUserByToken
 }
 
-const makeSut = (): SubTypes => {
+const makeSut = (): SutTypes => {
   const loadUserByTokenStub = makeLoadUserByTokenStub()
   const sut = new AuthMiddleware(loadUserByTokenStub)
   return {
