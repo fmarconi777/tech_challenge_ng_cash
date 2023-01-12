@@ -4,3 +4,4 @@ coverage
 .env
 database
 pgadmin-data
+.vscode
