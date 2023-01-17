@@ -6,10 +6,7 @@ networks:
 
 services:
   postgres:
-    build: 
-      context: .
-      dockerfile: Dockerfiles/PostgreSQL/Dockerfile
-    image: ng_cash_db
+    image: postgres:14
     container_name: postgres_ng_cash_db
     environment:
       POSTGRES_PASSWORD: 123456

@@ -6,10 +6,7 @@ networks:
 
 services:
   postgres:
-    build: 
-      context: .
-      dockerfile: Dockerfiles/PostgreSQL/Dockerfile
-    image: ng_cash_db
+    image: postgres:14
     container_name: postgres_ng_cash_db
     environment:
       POSTGRES_PASSWORD: 123456
@@ -22,10 +19,7 @@ services:
       - postgres-compose-network
 
   pgadmin:
-    build: 
-      context: .
-      dockerfile: Dockerfiles/PGAdmin/Dockerfile
-    image: pgadmin
+    image: dpage/pgadmin4:6.14
     container_name: postgres_pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
@@ -42,15 +36,15 @@ services:
       - postgres-compose-network
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfiles/API/Dockerfile
-    image: tech_challenge_api
+    image: node:16
     container_name: api_container
-    command: npm start
+    working_dir: /usr/src/tech_challenge_ng_cash
+    command: bash -c "npm install --omit=dev && npm start"
     restart: always
     volumes: 
       - ./dist:/usr/src/tech_challenge_ng_cash/dist
+      - ./package.json:/usr/src/tech_challenge_ng_cash/package.json
+      - ./.env:/usr/src/tech_challenge_ng_cash/.env
     ports:
       - "5000:5000"
     depends_on:
