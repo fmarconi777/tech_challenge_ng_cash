@@ -42,7 +42,7 @@ services:
     command: bash -c "npm install --omit=dev && npm start"
     restart: always
     volumes: 
-      - ./dist:/usr/src/tech_challenge_ng_cash/dist
+      - ./dist/:/usr/src/tech_challenge_ng_cash/dist
       - ./package.json:/usr/src/tech_challenge_ng_cash/package.json
       - ./.env:/usr/src/tech_challenge_ng_cash/.env
     ports:
