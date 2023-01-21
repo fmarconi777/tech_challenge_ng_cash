@@ -1,25 +1,90 @@
 [![GitHub Actions Tech Challenge](https://github.com/fmarconi777/tech_challenge_ng_cash/actions/workflows/app-ci.yml/badge.svg)](https://github.com/fmarconi777/tech_challenge_ng_cash/actions/workflows/app-ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/fmarconi777/tech_challenge_ng_cash/badge.svg)](https://coveralls.io/github/fmarconi777/tech_challenge_ng_cash)
 
-# [Backend processo seletivo NG.CASH <> TRYBE](https://ngcash.notion.site/Processo-Seletivo-NG-TRYBE-223de32e1ed047f2aa90cc0da84754ee/)
+# **[Backend processo seletivo NG.CASH <> TRYBE](https://ngcash.notion.site/Processo-Seletivo-NG-TRYBE-223de32e1ed047f2aa90cc0da84754ee/)**
 
-## Geral
+> ## Geral
 Projeto desenvolvido em
 * Typescript / Javascript
 
 Framework de teste
 * Jest
 
-## Dependências
+> ## Dependências
 
 * Node: versão 16.x
 * Docker
 * Docker Compose
 
 <br>
+
+> ## Princípios
+
+* Single Responsibility Principle (SRP)
+* Open Closed Principle (OCP)
+* Liskov Substitution Principle (LSP)
+* Interface Segregation Principle (ISP)
+* Dependency Inversion Principle (DIP)
+* Separation of Concerns (SOC)
+* Don't Repeat Yourself (DRY)
+* You Aren't Gonna Need It (YAGNI)
+* Keep It Simple, Silly (KISS)
+* Composition Over Inheritance
+* Small Commits
+
+> ## Design Patterns
+
+* Factory
+* Adapter
+* Decorator
+* Proxy
+* Dependency Injection
+* Abstract Server
+* Composition Root
+* Builder
+* Singleton
+
+> ## Metodologias e Designs
+
+* TDD
+* Clean Architecture
+* DDD
+* Conventional Commits
+* GitFlow
+* Modular Design
+* Dependency Diagrams
+* Use Cases
+* Continuous Integration
+* Continuous Delivery
+* Continuous Deployment
+
+> ## Bibliotecas e Ferramentas
+
+* NPM
+* Typescript
+* Git
+* Docker
+* Jest
+* PostgreSQL
+* Sequelize
+* GitHub Actions
+* Bcrypt
+* JsonWebToken
+* Coveralls
+* Validator
+* Express
+* Supertest
+* Husky
+* Lint Staged
+* Eslint
+* Standard Javascript Style
+* Nodemon
+* Rimraf
+* Module-Alias
+
 <br>
 
-## Instalação
+> ## Instalação
 
 Na raíz do projeto execute
 
@@ -134,7 +199,7 @@ npm test
 
 <br>
 
-## Executando a aplicação
+> ## Executando a aplicação
 Para que a aplicação possa ser executada corretamente execute o comando abaixo para garantir que todos os serviços
 do docker-compose estão parados
 ```
